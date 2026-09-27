@@ -2,15 +2,15 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Home from './pages/Home';
-import CorporateTax from './pages/services/CorporateTax';
-import BankAccount from './pages/services/BankAccount';
-import Accounting from './pages/services/Accounting';
-import DigitalMarketing from './pages/services/DigitalMarketing';
-import WebDevelopment from './pages/services/WebDevelopment';
-import SEO from './pages/services/SEO';
-import Compliance from './pages/services/Compliance';
-import GoldenVisa from './pages/services/GoldenVisa';
-import ProServices from './pages/services/ProServices';
+import CorporateTax from './pages/Services/CorporateTax';
+import BankAccount from './pages/Services/BankAccount';
+import Accounting from './pages/Services/Accounting';
+import DigitalMarketing from './pages/Services/DigitalMarketing';
+import WebDevelopment from './pages/Services/WebDevelopment';
+import SEO from './pages/Services/SEO';
+import Compliance from './pages/Services/Compliance';
+import GoldenVisa from './pages/Services/GoldenVisa';
+import ProServices from './pages/Services/ProServices';
 import DubaiSouth from './pages/freezones/DubaiSouth';
 import DubaiSiliconOasis from './pages/freezones/DubaiSiliconOasis';
 import DubaiAirportFreeZone from './pages/freezones/DubaiAirportFreeZone';
@@ -42,13 +42,13 @@ import HiringEmployeeManagement from './pages/mainland/HiringEmployeeManagement'
 import OfficeSpaceSolutions from './pages/mainland/OfficeSpaceSolutions';
 import MainlandVisa from './pages/mainland/MainlandVisa';
 import LaunchOperateExpand from './pages/mainland/LaunchOperateExpand';
-import CompanyFormation from './pages/services/business-setup/CompanyFormation';
-import OffshoreCompanySetup from './pages/services/business-setup/OffshoreCompanySetup';
-import LocalCorporateSponsor from './pages/services/business-setup/LocalCorporateSponsor';
-import ResidenceVisa from './pages/services/business-setup/ResidenceVisa';
-import MainlandCompanyFormation from './pages/services/business-setup/MainlandCompanyFormation';
-import CompanyRegistration from './pages/services/business-setup/CompanyRegistration';
-import EcommerceLicense from './pages/services/business-setup/EcommerceLicense';
+import CompanyFormation from './pages/Services/business-setup/CompanyFormation';
+import OffshoreCompanySetup from './pages/Services/business-setup/OffshoreCompanySetup';
+import LocalCorporateSponsor from './pages/Services/business-setup/LocalCorporateSponsor';
+import ResidenceVisa from './pages/Services/business-setup/ResidenceVisa';
+import MainlandCompanyFormation from './pages/Services/business-setup/MainlandCompanyFormation';
+import CompanyRegistration from './pages/Services/business-setup/CompanyRegistration';
+import EcommerceLicense from './pages/Services/business-setup/EcommerceLicense';
 
 export default function App() {
   return (
