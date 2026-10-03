@@ -1,0 +1,27 @@
+fragment PackagesParts on Packages {
+  __typename
+  heroTitle
+  heroSubtitle
+  heroBadge
+  heroImage
+  stats {
+    __typename
+    value
+    label
+  }
+  packages {
+    __typename
+    title
+    price
+    tagline
+    category
+    badge
+    icon
+    includes
+  }
+  faqs {
+    __typename
+    q
+    a
+  }
+}
