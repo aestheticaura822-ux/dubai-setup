@@ -34,9 +34,9 @@ const contactCards = [
   {
     icon: Mail,
     label: 'Email Us',
-    value: 'info@setupzonedubai.ae',
+    value: 'info@brightlinkconsulting.ae',
     sub: 'We reply within 24 hours',
-    href: 'mailto:info@setupzonedubai.ae',
+    href: 'mailto:info@brightlinkconsulting.ae',
     gradient: 'from-violet-400 to-purple-600',
     glow: 'rgba(139,92,246,0.5)',
   },

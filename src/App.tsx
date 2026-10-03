@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import ScrollToTop from './components/ScrollToTop'; // ✅ ADD THIS
 import Home from './pages/Home';
 import CorporateTax from './pages/Services/CorporateTax';
 import BankAccount from './pages/Services/BankAccount';
@@ -49,10 +50,43 @@ import ResidenceVisa from './pages/Services/business-setup/ResidenceVisa';
 import MainlandCompanyFormation from './pages/Services/business-setup/MainlandCompanyFormation';
 import CompanyRegistration from './pages/Services/business-setup/CompanyRegistration';
 import EcommerceLicense from './pages/Services/business-setup/EcommerceLicense';
+import GoldenVisaServices from './pages/Services/business-setup/GoldenVisaServices';
+import ResidenceVisaServices from './pages/Services/business-setup/ResidenceVisaServices';
+import DependentVisa from './pages/Services/business-setup/DependentVisa';
+import CompanyNameRegistration from './pages/Services/business-setup/CompanyNameRegistration';
+import LocalBusinessPartner from './pages/Services/business-setup/LocalBusinessPartner';
+import FreeZoneCompanySetup from './pages/Services/business-setup/FreeZoneCompanySetup';
+import IFZASetupPackage from './pages/packages/IFZASetupPackage';
+import SPCSetupPackage from './pages/packages/SPCSetupPackage';
+import DIFCCompanySetup from './pages/packages/DIFCCompanySetup';
+import CreativeCitySetup from './pages/packages/CreativeCitySetup';
+import SHAMSSetupPackage from './pages/packages/SHAMSSetupPackage';
+import SRTIPSetupPackage from './pages/packages/SRTIPSetupPackage'; // ✅ NEW
+import MeydanSetupPackage from './pages/packages/MeydanSetupPackage'; // ✅ NEW
+import RAKEZSetupPackage from './pages/packages/RAKEZSetupPackage'; // ✅ NEW
+import JAFZASetupPackage from './pages/packages/JAFZASetupPackage'; // ✅ NEW
+import About from './pages/About';
+import Blog from './pages/Blog';
+import Contact from './pages/Contact';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import BusinessBay from './pages/service-areas/BusinessBay';
+import DubaiMarina from './pages/service-areas/DubaiMarina';
+import JVC from './pages/service-areas/JVC';
+import AlBarsha from './pages/service-areas/AlBarsha';
+import SiliconOasis from './pages/service-areas/SiliconOasis';
+import TradeCenter from './pages/service-areas/TradeCenter';
+import DIFC from './pages/service-areas/DIFC';
+import DowntownDubai from './pages/service-areas/DowntownDubai';
+import BlogPostPage from './pages/BlogPostPage';
+import BlogCategoryPage from './pages/BlogCategoryPage';
+import BlogTagPage from './pages/BlogTagPage';
+import BlogArchivePage from './pages/BlogArchivePage';
+import Calculator from './pages/Calculator';
 
 export default function App() {
   return (
     <div className="min-h-screen bg-bg text-txt">
+      <ScrollToTop />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -85,24 +119,56 @@ export default function App() {
         <Route path="/free-zones/ajman-free-zone" element={<AjmanFreeZone />} />
         <Route path="/free-zones/dubai-media-city" element={<DubaiMediaCity />} /> {/* ✅ NEW */}
         <Route path="/free-zones/dubai-knowledge-park" element={<DubaiKnowledgePark />} />
-<Route path="/free-zones/dubai-commercity" element={<DubaiCommerCity />} />
-<Route path="/free-zones/kizad" element={<KIZAD />} />
-<Route path="/free-zones/duqe" element={<DUQE />} />
-<Route path="/free-zones/locations" element={<FreeZoneLocations />} />
-<Route path="/free-zones/uaq-free-zone" element={<UAQFreeZone />} />
-<Route path="/free-zones/rakez" element={<RAKEZ />} />
-<Route path="/mainland/mainland-activities" element={<MainlandActivities />} />
-<Route path="/mainland/hiring-employee-management" element={<HiringEmployeeManagement />} />
-<Route path="/mainland/office-space-solutions" element={<OfficeSpaceSolutions />} />
-<Route path="/mainland/mainland-visa" element={<MainlandVisa />} />
-<Route path="/mainland/launch-operate-expand" element={<LaunchOperateExpand />} />
-<Route path="/services/company-formation" element={<CompanyFormation />} />
-<Route path="/services/offshore-company-setup" element={<OffshoreCompanySetup />} />
-<Route path="/services/local-corporate-sponsor" element={<LocalCorporateSponsor />} />
-<Route path="/services/residence-visa" element={<ResidenceVisa />} />
-<Route path="/services/mainland-company-formation" element={<MainlandCompanyFormation />} />
-<Route path="/services/company-registration" element={<CompanyRegistration />} />
-<Route path="/services/ecommerce-license" element={<EcommerceLicense />} />
+        <Route path="/free-zones/dubai-commercity" element={<DubaiCommerCity />} />
+        <Route path="/free-zones/kizad" element={<KIZAD />} />
+        <Route path="/free-zones/duqe" element={<DUQE />} />
+        <Route path="/free-zones/locations" element={<FreeZoneLocations />} />
+        <Route path="/free-zones/uaq-free-zone" element={<UAQFreeZone />} />
+        <Route path="/free-zones/rakez" element={<RAKEZ />} />
+        <Route path="/mainland/mainland-activities" element={<MainlandActivities />} />
+        <Route path="/mainland/hiring-employee-management" element={<HiringEmployeeManagement />} />
+        <Route path="/mainland/office-space-solutions" element={<OfficeSpaceSolutions />} />
+        <Route path="/mainland/mainland-visa" element={<MainlandVisa />} />
+        <Route path="/mainland/launch-operate-expand" element={<LaunchOperateExpand />} />
+        <Route path="/services/company-formation" element={<CompanyFormation />} />
+        <Route path="/services/offshore-company-setup" element={<OffshoreCompanySetup />} />
+        <Route path="/services/local-corporate-sponsor" element={<LocalCorporateSponsor />} />
+        <Route path="/services/residence-visa" element={<ResidenceVisa />} />
+        <Route path="/services/mainland-company-formation" element={<MainlandCompanyFormation />} />
+        <Route path="/services/company-registration" element={<CompanyRegistration />} />
+        <Route path="/services/ecommerce-license" element={<EcommerceLicense />} />
+        <Route path="/services/golden-visa-services" element={<GoldenVisaServices />} />
+        <Route path="/services/residence-visa" element={<ResidenceVisaServices />} />
+        <Route path="/services/dependent-visa" element={<DependentVisa />} />
+        <Route path="/services/company-name-registration" element={<CompanyNameRegistration />} />
+        <Route path="/services/local-business-partner" element={<LocalBusinessPartner />} />
+        <Route path="/services/free-zone-company-setup" element={<FreeZoneCompanySetup />} />
+        <Route path="/packages/ifza-setup-package" element={<IFZASetupPackage />} />
+        <Route path="/packages/spc-setup-package" element={<SPCSetupPackage />} />
+        <Route path="/packages/difc-company-setup" element={<DIFCCompanySetup />} />
+        <Route path="/packages/creative-city-setup" element={<CreativeCitySetup />} />
+        <Route path="/packages/shams-setup-package" element={<SHAMSSetupPackage />} />
+        <Route path="/packages/srtip-setup-package" element={<SRTIPSetupPackage />} /> {/* ✅ NEW */}
+        <Route path="/packages/meydan-setup-package" element={<MeydanSetupPackage />} /> {/* ✅ NEW */}
+<Route path="/packages/rakez-setup-package" element={<RAKEZSetupPackage />} /> {/* ✅ NEW */}
+<Route path="/packages/jafza-setup-package" element={<JAFZASetupPackage />} /> {/* ✅ NEW */}
+<Route path="/about" element={<About />} />
+<Route path="/blog" element={<Blog />} />
+<Route path="/contact" element={<Contact />} />
+<Route path="/privacy-policy" element={<PrivacyPolicy />} />
+<Route path="/service-areas/business-bay" element={<BusinessBay />} />
+<Route path="/service-areas/dubai-marina" element={<DubaiMarina />} />
+<Route path="/service-areas/jvc" element={<JVC />} />
+<Route path="/service-areas/al-barsha" element={<AlBarsha />} />
+<Route path="/service-areas/silicon-oasis" element={<SiliconOasis />} />
+<Route path="/service-areas/trade-center" element={<TradeCenter />} />
+<Route path="/service-areas/difc" element={<DIFC />} />
+<Route path="/service-areas/downtown-dubai" element={<DowntownDubai />} />
+<Route path="/blog/:slug" element={<BlogPostPage />} />
+<Route path="/blog/category/:slug" element={<BlogCategoryPage />} />
+<Route path="/blog/tag/:slug" element={<BlogTagPage />} />
+<Route path="/blog/archive/:slug" element={<BlogArchivePage />} />
+<Route path="/calculator" element={<Calculator />} />
 
       </Routes>
       <Footer />

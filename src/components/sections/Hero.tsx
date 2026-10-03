@@ -1,5 +1,8 @@
+// File: src/components/Home/Hero.tsx
+
 import { motion } from 'framer-motion';
-import { ArrowRight, Play, Sparkles, Building2, Globe, CreditCard, Check } from 'lucide-react';
+import { ArrowRight, Sparkles, Building2, Globe, CreditCard, Check, Star, MessageCircle } from 'lucide-react';
+import { getWhatsAppLink } from '../../lib/whatsapp';
 
 const floatingCards = [
   {
@@ -34,12 +37,111 @@ const floatingCards = [
   },
 ];
 
+// ============ REAL GOOGLE REVIEWS ============
+const realReviews = [
+  {
+    name: 'ZeeShan Butt',
+    initials: 'ZB',
+    rating: 5,
+    date: '3 months ago',
+    text: 'Brightlink management deserved 100/100. Muhammad Bilal Saleem & his team is amazing, and they prove with work. Golden Visa and nationality change service A 2 Z completed in less than 36 hours. Entire process was smooth and stress-free. It\'s really VIP service (Super Sonic Team).',
+    color: 'from-blue-500 to-blue-700',
+  },
+  {
+    name: 'Muhammad',
+    initials: 'M',
+    rating: 5,
+    date: '3 months ago',
+    text: 'Great experience working with Brightlink Team for my Golden Visa. They were professional, responsive, and handled the entire process smoothly. Got the visa within 2 days. Highly recommended for anyone looking for fast and smooth golden visa process.',
+    color: 'from-violet-500 to-purple-700',
+  },
+  {
+    name: 'Ritik Gupta',
+    initials: 'RG',
+    rating: 5,
+    date: '6 months ago',
+    text: 'Hi, I got my 2 year residency visa done through Brightlink Management Consultancy and they were thoroughly professional and got it done in 4 business days — that too during Ramadan with shortened working hours. Highly recommend their VIP package!',
+    color: 'from-emerald-500 to-teal-700',
+  },
+  {
+    name: 'Sina Behfard',
+    initials: 'SB',
+    rating: 5,
+    date: '8 months ago',
+    text: 'The team is working very efficiently, professionally, and transparently. They were very supportive to quickly takeover my application which had got stuck for days with another company and took care of each step with great care.',
+    color: 'from-amber-500 to-orange-700',
+  },
+  {
+    name: 'M J',
+    initials: 'MJ',
+    rating: 5,
+    date: '3 months ago',
+    text: 'Excellent service with prompt response and follow-up action. Used their service for Golden Visa which took three days to process from start to finish.',
+    color: 'from-rose-500 to-pink-700',
+  },
+  {
+    name: 'Hakan TEKERCIOGLU',
+    initials: 'HT',
+    rating: 5,
+    date: '2 months ago',
+    text: 'Our family\'s Golden Visa application process was completed smoothly, on time, and at reasonable prices. I would definitely recommend this service to anyone who needs it.',
+    color: 'from-cyan-500 to-blue-700',
+  },
+  {
+    name: 'Amin K',
+    initials: 'AK',
+    rating: 5,
+    date: '8 months ago',
+    text: 'The service provided by Brightlink was nothing but excellent! From getting details and a price quote to fulfillment of my Emirates ID in hand was a seamless and expeditious process. Thank you Mr. Bilal, Mr. Abbas and the entire team!',
+    color: 'from-fuchsia-500 to-purple-700',
+  },
+  {
+    name: 'Tausif Ahmad',
+    initials: 'TA',
+    rating: 5,
+    date: '3 months ago',
+    text: 'Excellent service. Very honest and helpful team. Got all paperwork done in a week with no hidden charges. Especially thanks to Mr. Abbas.',
+    color: 'from-green-500 to-emerald-700',
+  },
+  {
+    name: 'Clay Mullens',
+    initials: 'CM',
+    rating: 5,
+    date: '10 months ago',
+    text: 'Abbas and the Brightlink team were amazing!! From my initial contact they were extremely helpful and responded swiftly. They delivered exactly what I was after. I highly recommend them to anyone looking for fast golden visa service.',
+    color: 'from-indigo-500 to-blue-700',
+  },
+  {
+    name: 'Manaqib Ashraf',
+    initials: 'MA',
+    rating: 5,
+    date: '1 year ago',
+    text: 'I recently processed my family visa through Brightlink, and I couldn\'t be happier with the service. The entire process was handled very quickly and professionally. Now I can live with my family here in the UAE. Highly recommended!',
+    color: 'from-red-500 to-rose-700',
+  },
+  {
+    name: 'Ahmed Ullah',
+    initials: 'AU',
+    rating: 5,
+    date: '1 year ago',
+    text: 'Just wanted to say a big thank you for the amazing support in getting my wife\'s visa done — and that too in just 2 days! I really appreciate how smoothly and quickly everything was handled. Your team\'s professionalism is truly exceptional.',
+    color: 'from-teal-500 to-cyan-700',
+  },
+  {
+    name: 'Numan Shabbir',
+    initials: 'NS',
+    rating: 5,
+    date: '2 years ago',
+    text: 'Loved the whole experience. Got our visas in just 3 days. Their whole team is very experienced and provide updates at all steps. Would recommend to anyone looking to setup business in Dubai or get Golden Visas.',
+    color: 'from-yellow-500 to-amber-700',
+  },
+];
+
 export default function Hero() {
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-white">
       {/* === BACKGROUND LAYERS === */}
 
-      {/* Layer 1: Video — FULL OPACITY (fix) */}
       <video
         autoPlay
         loop
@@ -51,17 +153,12 @@ export default function Hero() {
         <source src="/videos/hero-bg.mp4" type="video/mp4" />
       </video>
 
-      {/* Layer 2: Light overlay — SIRF LEFT SIDE (text ke peeche) */}
       <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent" />
-
-      {/* Layer 3: Bottom fade (text ke liye) */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/70" />
 
-      {/* Layer 4: Soft gradient blobs (halka) */}
       <div className="absolute top-0 left-0 w-[700px] h-[700px] rounded-full bg-brand-sky/15 blur-[140px] animate-float-slow pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full bg-brand-violet/15 blur-[140px] animate-float pointer-events-none" />
 
-      {/* Layer 5: Dot grid (bahut halka) */}
       <div
         className="absolute inset-0 opacity-20 pointer-events-none"
         style={{
@@ -72,7 +169,6 @@ export default function Hero() {
         }}
       />
 
-      {/* Top gradient accent */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-sky/50 to-transparent" />
 
       {/* === CONTENT === */}
@@ -164,14 +260,24 @@ export default function Hero() {
                 />
               </a>
 
+              {/* ✅ WhatsApp Button (replaces video button) */}
               <a
-                href="#video"
-                className="group inline-flex items-center gap-3 px-6 py-4 rounded-full bg-white/95 backdrop-blur-xl border border-border hover:border-brand-sky/40 hover:shadow-soft transition-all duration-300"
+                href={getWhatsAppLink("Hi! I'd like to discuss my Dubai business setup.")}
+                target="_blank"
+                rel="noreferrer"
+                className="group inline-flex items-center gap-3 px-6 py-4 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-[0_10px_30px_rgba(16,185,129,0.35)] hover:shadow-[0_15px_40px_rgba(16,185,129,0.5)] hover:scale-105 transition-all duration-300 border border-emerald-400/30"
               >
-                <span className="w-10 h-10 rounded-full bg-gradient-brand flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                  <Play size={16} className="text-white ml-0.5" fill="white" />
+                <span className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm">
+                  <MessageCircle size={20} className="text-white" strokeWidth={2.5} />
+                  <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-white border-2 border-emerald-500">
+                    <span className="absolute inset-0 rounded-full bg-white animate-ping" />
+                  </span>
                 </span>
-                <span className="font-bold text-[#0A0F1F]">Watch 60s Overview</span>
+                <span className="font-bold text-white">WhatsApp Us</span>
+                <ArrowRight
+                  size={16}
+                  className="text-white group-hover:translate-x-1 transition-transform"
+                />
               </a>
             </motion.div>
 
@@ -195,51 +301,41 @@ export default function Hero() {
               ))}
             </motion.div>
 
-            {/* Mini avatars */}
+            {/* ✅ Google Reviews Trust Badge (Static) */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.1 }}
               className="mt-8 flex items-center gap-4"
             >
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="w-10 h-10 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold shadow-md"
-                    style={{
-                      background: `linear-gradient(135deg, ${
-                        i === 1 ? '#0EA5E9' : i === 2 ? '#8B5CF6' : i === 3 ? '#F59E0B' : '#10B981'
-                      }, ${i === 1 ? '#3B82F6' : i === 2 ? '#EC4899' : i === 3 ? '#FBBF24' : '#059669'})`,
-                    }}
-                  >
-                    {String.fromCharCode(64 + i)}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div className="flex items-center gap-1 text-brand-gold">
-                  {'★★★★★'.split('').map((s, i) => (
-                    <span key={i} className="text-sm">{s}</span>
+              <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-border shadow-soft">
+                {/* Google G icon */}
+                <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                <div className="h-5 w-px bg-slate-300" />
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} size={12} className="text-brand-gold" fill="currentColor" />
                   ))}
                 </div>
-                <p className="text-xs font-semibold text-[#1E293B]">
-                  <span className="text-[#0A0F1F]">4.9/5</span> from 75+ reviews
-                </p>
+                <span className="text-sm font-black text-[#0A0F1F]">4.8</span>
+                <span className="text-xs font-semibold text-slate-500">(34 reviews)</span>
               </div>
             </motion.div>
           </div>
 
           {/* RIGHT SIDE — Floating Cards */}
           <div className="lg:col-span-5 relative h-[600px] hidden lg:block">
-            {/* Big cloud blob */}
             <motion.div
               animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.35, 0.2] }}
               transition={{ duration: 6, repeat: Infinity }}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-gradient-brand blur-[120px]"
             />
 
-            {/* Orbiting ring */}
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
@@ -250,7 +346,6 @@ export default function Hero() {
               <div className="absolute top-1/2 left-0 w-2.5 h-2.5 -translate-y-1/2 rounded-full bg-brand-gold" />
             </motion.div>
 
-            {/* Floating Cards */}
             {floatingCards.map((card, index) => {
               const Icon = card.icon;
               const tagColors: Record<string, string> = {
@@ -383,6 +478,144 @@ export default function Hero() {
           />
         </div>
       </motion.div>
+
+      {/* ============ SCROLLING REVIEWS SECTION ============ */}
+      <section className="relative bg-gradient-to-b from-white via-slate-50 to-white py-16 overflow-hidden border-t border-slate-100">
+        {/* Header */}
+        <div className="max-w-7xl mx-auto px-6 mb-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-3xl mx-auto"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-4">
+              <svg viewBox="0 0 24 24" className="w-4 h-4" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              <span className="text-xs font-black tracking-widest uppercase text-slate-700">
+                Google Reviews
+              </span>
+            </div>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-3">
+              What Our <span className="gradient-text">Clients Say</span>
+            </h2>
+            <div className="flex items-center justify-center gap-3 mt-4">
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star key={s} size={18} className="text-amber-400" fill="currentColor" />
+                ))}
+              </div>
+              <span className="text-xl font-black text-[#0A0F1F]">4.8</span>
+              <span className="text-sm font-bold text-slate-500">· 34 Verified Reviews</span>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Scrolling Reviews Row 1 (Left → Right) */}
+        <div className="relative mb-6">
+          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+          
+          <motion.div
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+            className="flex gap-5 w-max"
+          >
+            {[...realReviews, ...realReviews].map((review, i) => (
+              <div
+                key={i}
+                className="flex-shrink-0 w-[380px] p-6 rounded-3xl bg-white border border-slate-200 shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:shadow-[0_15px_40px_rgba(15,23,42,0.12)] hover:-translate-y-1 transition-all duration-300"
+              >
+                {/* Stars */}
+                <div className="flex items-center gap-1 mb-3">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} size={14} className="text-amber-400" fill="currentColor" />
+                  ))}
+                </div>
+
+                {/* Review text */}
+                <p className="text-sm text-slate-700 font-medium leading-relaxed mb-5 line-clamp-4">
+                  "{review.text}"
+                </p>
+
+                {/* Author */}
+                <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${review.color} flex items-center justify-center text-white text-xs font-black shadow-md flex-shrink-0`}>
+                    {review.initials}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-black text-[#0A0F1F] leading-tight truncate">
+                      {review.name}
+                    </div>
+                    <div className="text-[10px] font-semibold text-slate-500 mt-0.5">
+                      {review.date}
+                    </div>
+                  </div>
+                  {/* Google icon */}
+                  <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                  </svg>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        {/* Scrolling Reviews Row 2 (Right → Left) */}
+        <div className="relative">
+          <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+          
+          <motion.div
+            animate={{ x: ['-50%', '0%'] }}
+            transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+            className="flex gap-5 w-max"
+          >
+            {[...realReviews.slice().reverse(), ...realReviews.slice().reverse()].map((review, i) => (
+              <div
+                key={i}
+                className="flex-shrink-0 w-[380px] p-6 rounded-3xl bg-white border border-slate-200 shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:shadow-[0_15px_40px_rgba(15,23,42,0.12)] hover:-translate-y-1 transition-all duration-300"
+              >
+                <div className="flex items-center gap-1 mb-3">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} size={14} className="text-amber-400" fill="currentColor" />
+                  ))}
+                </div>
+                <p className="text-sm text-slate-700 font-medium leading-relaxed mb-5 line-clamp-4">
+                  "{review.text}"
+                </p>
+                <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${review.color} flex items-center justify-center text-white text-xs font-black shadow-md flex-shrink-0`}>
+                    {review.initials}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-black text-[#0A0F1F] leading-tight truncate">
+                      {review.name}
+                    </div>
+                    <div className="text-[10px] font-semibold text-slate-500 mt-0.5">
+                      {review.date}
+                    </div>
+                  </div>
+                  <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                  </svg>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
     </section>
   );
 }

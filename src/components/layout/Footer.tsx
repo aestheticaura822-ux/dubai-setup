@@ -1,3 +1,5 @@
+// File: src/components/layout/Footer.tsx
+
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
@@ -170,6 +172,7 @@ export default function Footer() {
                 </p>
 
                 <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+                  {/* ✅ WhatsApp button — with same MessageCircle icon */}
                   <a
                     href={getWhatsAppLink("Hi! I'd like to start my Dubai business setup.")}
                     target="_blank"
@@ -233,7 +236,6 @@ export default function Footer() {
               {/* Logo */}
               <Link to="/" className="inline-flex flex-col gap-1.5 group mb-6">
                 <div className="flex items-center gap-3">
-                  {/* Logo mark */}
                   <div className="relative">
                     <motion.div
                       animate={{ scale: [1, 1.1, 1], opacity: [0.6, 0.9, 0.6] }}
@@ -300,7 +302,6 @@ export default function Footer() {
                         className={`group relative w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:border-transparent flex items-center justify-center transition-all duration-300 overflow-hidden`}
                         aria-label={social.name}
                       >
-                        {/* Hover gradient */}
                         <div className={`absolute inset-0 bg-gradient-to-br ${social.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                         <Icon size={16} className="relative text-white/70 group-hover:text-white transition-colors" />
                       </motion.a>
@@ -404,7 +405,7 @@ export default function Footer() {
 
                 {/* Email */}
                 <a
-                  href="mailto:info@setupzonedubai.ae"
+                  href="mailto:info@brightlinkconsulting.ae"
                   className="group flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-sky-400/40 transition-all duration-300"
                 >
                   <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-md group-hover:scale-110 transition-transform">
@@ -415,14 +416,14 @@ export default function Footer() {
                       Email Us
                     </p>
                     <p className="text-sm font-black text-white break-all">
-                      info@setupzonedubai.ae
+                      info@brightlinkconsulting.ae
                     </p>
                   </div>
                 </a>
 
                 {/* Location */}
                 <a
-                  href="https://maps.google.com/?q=Crystal+Tower+Business+Bay+Dubai"
+                  href="https://maps.app.goo.gl/LNRyUy4djwMDFsQ46"
                   target="_blank"
                   rel="noreferrer"
                   className="group flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-violet-400/40 transition-all duration-300"
@@ -443,7 +444,7 @@ export default function Footer() {
                   </div>
                 </a>
 
-                {/* WhatsApp */}
+                {/* ✅ WhatsApp — Same MessageCircle icon */}
                 <a
                   href={getWhatsAppLink("Hi! I'd like to know more about your services.")}
                   target="_blank"
@@ -513,7 +514,7 @@ export default function Footer() {
 
               {/* Right — CTA */}
               <a
-                href="https://g.page/r/setupzonedubai/review"
+                href="https://g.page/r/CdQ9UxY-AOkxEAE/review"
                 target="_blank"
                 rel="noreferrer"
                 className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 hover:border-white/40 transition-all duration-300"
@@ -541,25 +542,7 @@ export default function Footer() {
                 </p>
               </div>
 
-              {/* Center — Legal Links */}
-              <div className="flex flex-wrap items-center justify-center gap-4 md:gap-5">
-                {[
-                  { name: 'Privacy Policy', href: '/privacy' },
-                  { name: 'Terms & Conditions', href: '/terms' },
-                  { name: 'Refund Policy', href: '/refund' },
-                  { name: 'Sitemap', href: '/sitemap' },
-                ].map((link, i) => (
-                  <Link
-                    key={i}
-                    to={link.href}
-                    className="text-xs font-bold text-white/50 hover:text-white transition-colors duration-300"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-
-              {/* Right — Made with love */}
+              {/* Right — Made with love (Privacy/Terms/Refund/Sitemap REMOVED) */}
               <p className="text-xs font-bold text-white/40 flex items-center gap-1.5">
                 Made with
                 <motion.span
@@ -573,24 +556,26 @@ export default function Footer() {
               </p>
             </div>
 
-            {/* Trade License & Legal */}
+            {/* === DISCLAIMER SECTION === */}
             <div className="mt-6 pt-6 border-t border-white/5">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-center md:text-left">
-                <p className="text-[10px] text-white/40 font-medium leading-relaxed max-w-4xl">
-                  <span className="font-black text-white/60">Trade License: </span>
-                  Setup Zone Dubai is an independent private consultancy,
-                  licensed by the Dubai Department of Economy and Tourism (DET).
-                  We are not a government authority and are not affiliated with
-                  any UAE government entity.
+              <div className="flex flex-col md:flex-row items-start justify-between gap-4">
+                <p className="text-[10px] text-white/40 font-medium leading-relaxed max-w-5xl">
+                  <span className="font-black text-white/60">Disclaimer: </span>
+                  Setupzonedubai.ae is operated by Brightlink Management Consultancy LLC, a private third-party service provider licensed in Dubai. We are not a government authority and have no affiliation with, or endorsement from, the Government of the UAE or any of its departments. We assist customers with business setup, visa-related typing, documentation, application filling and submission through the relevant official channels (DET, GDRFA Dubai, ICP, MOFA), acting on the customer's behalf and with their consent. Government fees are set by the authorities and paid to them; our service fee is charged separately and disclosed before any commitment. Applicants can complete the same applications directly through the official portals: <span className="text-sky-400">icp.gov.ae</span>, <span className="text-sky-400">gdrfad.gov.ae</span>, <span className="text-sky-400">u.ae</span>. Estimates shown are for information only and do not constitute legal advice.
                 </p>
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="relative flex w-2 h-2">
-                    <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
-                    <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+                <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                  <span className="text-[10px] text-white/40 font-medium whitespace-nowrap">
+                    Content last reviewed 01-09-2026
                   </span>
-                  <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">
-                    Verified Business
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex w-2 h-2">
+                      <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
+                      <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
+                    </span>
+                    <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">
+                      Verified Business
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -610,7 +595,6 @@ export default function Footer() {
         className="fixed bottom-24 right-6 z-40 group w-12 h-12 rounded-full bg-white shadow-[0_10px_40px_rgba(15,23,42,0.2)] flex items-center justify-center hover:scale-110 transition-transform duration-300"
         aria-label="Back to top"
       >
-        {/* Glow */}
         <div className="absolute inset-0 rounded-full bg-gradient-brand opacity-0 group-hover:opacity-100 blur-md transition-opacity" />
         <ArrowUp
           size={20}

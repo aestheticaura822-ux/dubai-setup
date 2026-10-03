@@ -1,3 +1,5 @@
+// File: src/components/layout/Navbar.tsx
+
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,27 +26,31 @@ import {
   UserCheck,
   Target,
   FileText,
-  Scale,
-  Shield,
-  UserPlus,
-  Home,
-  Wallet,
-  Store,
-  ShoppingCart,
-  Plane,
-  Award,
-  Network,
-  GitBranch,
-  Globe2,
-  Layers,
-  BadgeCheck,
   IdCard,
-  Fingerprint,
   Handshake,
-  Building,
-  Banknote,
+  Package,
+  Award,
+  Zap,
+  Shield,
+  Layers,
+  Scale,
+  TrendingUp,
+  DollarSign,
+  Gift,
+  Box,
+  Gift as GiftIcon,
+  BookOpen,
+  Info,
+  Mail,
+  ShieldCheck,
+  Check,
 } from 'lucide-react';
 import { getWhatsAppLink } from '../../lib/whatsapp';
+
+// ============ LANGUAGE DATA ============
+const languages = [
+  { code: 'EN', name: 'English', native: 'English', flag: '🇬🇧' },
+];
 
 // ============ FREE ZONE DATA ============
 const freeZoneCategories = [
@@ -167,7 +173,6 @@ const businessSetupCategories = [
       { name: 'Mainland Company Formation Dubai', slug: 'mainland-company-formation' },
       { name: 'Free Zone Company Setup', slug: 'free-zone-company-setup' },
       { name: 'Offshore Company Setup', slug: 'offshore-company-setup' },
-      { name: 'UAE Branch Office Setup', slug: 'branch-office-setup' },
       { name: 'UAE Free Zone Company Setup', slug: 'uae-free-zone-company' },
     ],
   },
@@ -203,13 +208,88 @@ const businessSetupCategories = [
   },
 ];
 
+// ============ PACKAGES DATA ============
+const packageCategories = [
+  {
+    title: 'Dubai Free Zones',
+    icon: Building2,
+    color: 'from-sky-400 to-blue-600',
+    packages: [
+      { name: 'IFZA Setup Package', slug: 'ifza-setup-package' },
+      { name: 'DMCC Setup Package', slug: 'dmcc-setup-package' },
+      { name: 'Meydan Setup Package', slug: 'meydan-setup-package' },
+      { name: 'DIFC Company Setup Dubai', slug: 'difc-company-setup' },
+      { name: 'JAFZA Setup Package', slug: 'jafza-setup-package' },
+    ],
+  },
+  {
+    title: 'Sharjah Free Zones',
+    icon: Landmark,
+    color: 'from-emerald-400 to-teal-600',
+    packages: [
+      { name: 'SPC Setup Package – Sharjah', slug: 'spc-setup-package' },
+      { name: 'SHAMS Setup Package', slug: 'shams-setup-package' },
+      { name: 'SRTIP Setup Package – Sharjah', slug: 'srtip-setup-package' },
+    ],
+  },
+  {
+    title: 'Other Emirates',
+    icon: MapPin,
+    color: 'from-amber-400 to-orange-600',
+    packages: [
+      { name: 'Creative City Free Zone Setup – Fujairah', slug: 'creative-city-setup' },
+      { name: 'RAKEZ Setup Package', slug: 'rakez-setup-package' },
+    ],
+  },
+];
+
+// ============ RESOURCES DATA ============
+const resourceCategories = [
+  {
+    title: 'About Us',
+    icon: Info,
+    color: 'from-indigo-400 to-blue-600',
+    links: [
+      { name: 'About DubaiSetupNow – Your Trusted UAE Business Setup Partner', slug: 'about', external: false },
+    ],
+  },
+  {
+    title: 'Blog & Guides',
+    icon: BookOpen,
+    color: 'from-violet-400 to-purple-600',
+    links: [
+      { name: 'Business Setup Blog – Dubai Company Blog', slug: 'blog', external: false },
+    ],
+  },
+  {
+    title: 'Contact & Legal',
+    icon: Mail,
+    color: 'from-rose-400 to-pink-600',
+    links: [
+      { name: 'Contact Us | DubaiSetupNow', slug: 'contact', external: false },
+      { name: 'Privacy Policy', slug: 'privacy-policy', external: false },
+    ],
+  },
+];
+
+const serviceAreas = [
+  { name: 'Business Bay', slug: 'business-bay' },
+  { name: 'Dubai Marina', slug: 'dubai-marina' },
+  { name: 'JVC', slug: 'jvc' },
+  { name: 'Al Barsha', slug: 'al-barsha' },
+  { name: 'Silicon Oasis', slug: 'silicon-oasis' },
+  { name: 'Trade Center (DWTC)', slug: 'trade-center' },
+  { name: 'DIFC', slug: 'difc' },
+  { name: 'Downtown Dubai', slug: 'downtown-dubai' },
+];
+
 const navLinks = [
   { name: 'Home', href: '/', hasDropdown: false },
   { name: 'Free Zone', href: '#', hasDropdown: true, dropdownType: 'freezone' },
   { name: 'Mainland', href: '#', hasDropdown: true, dropdownType: 'mainland' },
   { name: 'Business Setup', href: '#', hasDropdown: true, dropdownType: 'businesssetup' },
-  { name: 'Our Packages', href: '/#packages', hasDropdown: false },
-  { name: 'Resources', href: '/resources', hasDropdown: false },
+  { name: 'Our Packages', href: '#', hasDropdown: true, dropdownType: 'packages' },
+  { name: 'Resources', href: '#', hasDropdown: true, dropdownType: 'resources' },
 ];
 
 // ============ COMPONENT ============
@@ -220,7 +300,13 @@ export default function Navbar() {
   const [mobileFreeZoneOpen, setMobileFreeZoneOpen] = useState(false);
   const [mobileMainlandOpen, setMobileMainlandOpen] = useState(false);
   const [mobileBusinessSetupOpen, setMobileBusinessSetupOpen] = useState(false);
+  const [mobilePackagesOpen, setMobilePackagesOpen] = useState(false);
+  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
+  const [mobileLanguageOpen, setMobileLanguageOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(languages[0]);
   const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const languageRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -232,7 +318,19 @@ export default function Navbar() {
   useEffect(() => {
     setMobileOpen(false);
     setActiveDropdown(null);
+    setLanguageOpen(false);
   }, [location.pathname]);
+
+  // Close language dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (languageRef.current && !languageRef.current.contains(event.target as Node)) {
+        setLanguageOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleMouseEnter = (name: string) => {
     if (dropdownTimeoutRef.current) {
@@ -247,69 +345,17 @@ export default function Navbar() {
     }, 200);
   };
 
+  const handleLanguageSelect = (lang: typeof languages[0]) => {
+    setSelectedLanguage(lang);
+    setLanguageOpen(false);
+    setMobileLanguageOpen(false);
+    // TODO: Connect with i18n library here (e.g., i18next)
+    // i18n.changeLanguage(lang.code.toLowerCase());
+  };
+
   return (
     <>
-      {/* ============ TOP BAR (New Premium Design) ============ */}
-      <div className="hidden md:block relative bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-white/5 overflow-hidden">
-        {/* Animated glow line */}
-        <motion.div
-          animate={{ x: ['-100%', '100%'] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-          className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-sky-400 to-transparent"
-        />
-
-        {/* Radial pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-          }}
-        />
-
-        <div className="relative max-w-7xl mx-auto px-6 py-2.5 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-6 text-white/70">
-            <div className="flex items-center gap-2">
-              <span className="relative flex w-2 h-2">
-                <span className="absolute inline-flex w-full h-full rounded-full bg-emerald-400 opacity-75 animate-ping" />
-                <span className="relative inline-flex w-2 h-2 rounded-full bg-emerald-500" />
-              </span>
-              <span className="font-semibold tracking-wide">Mon – Fri: 8.00 am – 6.00pm</span>
-            </div>
-            <div className="h-4 w-px bg-white/20" />
-            <div className="flex items-center gap-2">
-              <Globe size={12} className="text-white/50" />
-              <span className="font-semibold tracking-wide">English</span>
-              <ChevronDown size={10} className="text-white/50" />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-5">
-            <a
-              href="tel:+971566556645"
-              className="group flex items-center gap-2 text-white/70 hover:text-white transition-colors font-semibold tracking-wide"
-            >
-              <div className="w-6 h-6 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center group-hover:bg-sky-500/20 group-hover:border-sky-400/30 transition-all">
-                <Phone size={11} />
-              </div>
-              +971 56 655 6645
-            </a>
-            <a
-              href={getWhatsAppLink("Hi! I'd like to know more about your services.")}
-              target="_blank"
-              rel="noreferrer"
-              className="group flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors font-semibold tracking-wide"
-            >
-              <div className="w-6 h-6 rounded-lg bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center group-hover:bg-emerald-500/20 transition-all">
-                <MessageCircle size={11} />
-              </div>
-              WhatsApp
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* ============ MAIN NAVBAR (New Style) ============ */}
+      {/* ============ MAIN NAVBAR ============ */}
       <header
         className={`sticky top-0 z-50 transition-all duration-500 ${
           scrolled
@@ -320,7 +366,7 @@ export default function Navbar() {
       >
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between py-3.5">
-            {/* === LOGO (New Style) === */}
+            {/* === LOGO === */}
             <Link to="/" className="group flex items-center gap-3">
               <div className="relative">
                 <motion.div
@@ -344,7 +390,7 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* === DESKTOP MENU (New Pill Style) === */}
+            {/* === DESKTOP MENU === */}
             <nav className="hidden lg:flex items-center gap-0.5 bg-slate-100/60 p-1 rounded-2xl border border-slate-200/50">
               {navLinks.map((link) => (
                 <div
@@ -788,42 +834,423 @@ export default function Navbar() {
                           </div>
                         </motion.div>
                       )}
+
+                    {/* ========== OUR PACKAGES DROPDOWN ========== */}
+                    {link.hasDropdown &&
+                      activeDropdown === link.name &&
+                      link.dropdownType === 'packages' && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 12, scale: 0.97 }}
+                          transition={{ duration: 0.2, ease: 'easeOut' }}
+                          onMouseEnter={() => handleMouseEnter(link.name)}
+                          className="fixed top-[72px] left-0 right-0 mx-auto w-[calc(100vw-3rem)] max-w-[1120px] z-50"
+                        >
+                          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-slate-200 rotate-45 z-10 rounded-sm" />
+
+                          <div className="relative rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_rgba(15,23,42,0.18)] overflow-hidden">
+                            <div className="h-1 bg-gradient-to-r from-fuchsia-400 via-purple-500 to-violet-500" />
+
+                            <div className="relative grid grid-cols-12 gap-0">
+                              <div className="col-span-10 p-5">
+                                <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
+                                  <div className="flex items-center gap-2.5">
+                                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-400 to-purple-600 flex items-center justify-center shadow-md">
+                                      <Package size={17} className="text-white" strokeWidth={2.5} />
+                                    </div>
+                                    <div>
+                                      <h3 className="text-base font-black text-slate-900 leading-tight">
+                                        Our Setup Packages
+                                      </h3>
+                                      <p className="text-[10px] text-slate-500 font-medium">10 premium packages across all UAE Free Zones</p>
+                                    </div>
+                                  </div>
+                                  <span className="text-[10px] font-black text-fuchsia-700 bg-fuchsia-50 border border-fuchsia-200 px-2.5 py-1 rounded-full uppercase tracking-widest">
+                                    Best Value
+                                  </span>
+                                </div>
+
+                                <div className="grid grid-cols-3 gap-x-6 gap-y-4">
+                                  {packageCategories.map((category, ci) => {
+                                    const CatIcon = category.icon;
+                                    return (
+                                      <div key={ci}>
+                                        <div className="flex items-center gap-2 mb-2">
+                                          <div className={`w-5 h-5 rounded-md bg-gradient-to-br ${category.color} flex items-center justify-center shadow-sm`}>
+                                            <CatIcon size={11} className="text-white" strokeWidth={2.5} />
+                                          </div>
+                                          <span className="text-[10px] font-black text-slate-900 uppercase tracking-wider">
+                                            {category.title}
+                                          </span>
+                                          <span className="text-[9px] font-bold text-slate-400">
+                                            ({category.packages.length})
+                                          </span>
+                                        </div>
+
+                                        <div className="space-y-0.5">
+                                          {category.packages.map((pkg, pi) => (
+                                            <Link
+                                              key={pi}
+                                              to={`/packages/${pkg.slug}`}
+                                              className="group/item flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-fuchsia-700 hover:bg-gradient-to-r hover:from-fuchsia-50 hover:to-transparent transition-all duration-150"
+                                            >
+                                              <div className={`w-1 h-1 rounded-full bg-gradient-to-r ${category.color} opacity-0 group-hover/item:opacity-100 transition-opacity`} />
+                                              <span className="truncate">{pkg.name}</span>
+                                            </Link>
+                                          ))}
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+
+                              <div className="col-span-2 relative bg-gradient-to-br from-fuchsia-950 via-slate-950 to-purple-950 p-5 overflow-hidden">
+                                <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-fuchsia-500/20 blur-3xl" />
+                                <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-purple-500/20 blur-3xl" />
+                                <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+
+                                <motion.div
+                                  animate={{ y: [0, -6, 0], rotate: [0, 8, 0] }}
+                                  transition={{ duration: 5, repeat: Infinity }}
+                                  className="absolute top-3 right-3 opacity-15"
+                                >
+                                  <GiftIcon size={48} className="text-white" />
+                                </motion.div>
+
+                                <div className="relative flex flex-col h-full">
+                                  <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center mb-4">
+                                    <Sparkles size={18} className="text-white" strokeWidth={2.2} />
+                                  </div>
+
+                                  <h4 className="text-sm font-black text-white leading-tight mb-2">
+                                    Not Sure Which Package?
+                                  </h4>
+                                  <p className="text-[11px] text-white/70 font-medium leading-relaxed mb-4 flex-1">
+                                    Free consultation to match you with the perfect package.
+                                  </p>
+
+                                  <a
+                                    href={getWhatsAppLink("Hi! I need help choosing the right setup package.")}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="group/cta inline-flex items-center justify-center gap-2 w-full px-3 py-2.5 rounded-lg bg-white text-slate-900 font-bold text-[11px] shadow-lg hover:scale-105 transition-all duration-300"
+                                  >
+                                    <MessageCircle size={13} strokeWidth={2.5} />
+                                    Ask Expert
+                                    <ArrowRight size={12} className="group-hover/cta:translate-x-0.5 transition-transform" strokeWidth={2.5} />
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="relative px-5 py-3 border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Star size={12} className="text-amber-400" fill="currentColor" />
+                                <span className="text-[11px] font-bold text-slate-600">
+                                  <span className="text-slate-900">All-inclusive packages</span> with no hidden fees
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-4 text-[11px] font-bold text-slate-600">
+                                <span className="flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-500" />
+                                  Trade License
+                                </span>
+                                <span className="flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+                                  Visa Support
+                                </span>
+                                <span className="flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                                  Bank Account
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+
+                    {/* ========== RESOURCES DROPDOWN ========== */}
+                    {link.hasDropdown &&
+                      activeDropdown === link.name &&
+                      link.dropdownType === 'resources' && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 12, scale: 0.97 }}
+                          transition={{ duration: 0.2, ease: 'easeOut' }}
+                          onMouseEnter={() => handleMouseEnter(link.name)}
+                          className="fixed top-[72px] left-0 right-0 mx-auto w-[calc(100vw-3rem)] max-w-[1120px] z-50"
+                        >
+                          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-slate-200 rotate-45 z-10 rounded-sm" />
+
+                          <div className="relative rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_rgba(15,23,42,0.18)] overflow-hidden">
+                            <div className="h-1 bg-gradient-to-r from-indigo-400 via-blue-500 to-cyan-500" />
+
+                            <div className="relative grid grid-cols-12 gap-0">
+                              <div className="col-span-10 p-5">
+                                <div className="flex items-center justify-between mb-4 pb-4 border-b border-slate-100">
+                                  <div className="flex items-center gap-2.5">
+                                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-400 to-blue-600 flex items-center justify-center shadow-md">
+                                      <BookOpen size={17} className="text-white" strokeWidth={2.5} />
+                                    </div>
+                                    <div>
+                                      <h3 className="text-base font-black text-slate-900 leading-tight">
+                                        Resources & Guides
+                                      </h3>
+                                      <p className="text-[10px] text-slate-500 font-medium">Learn, connect & explore</p>
+                                    </div>
+                                  </div>
+                                  <span className="text-[10px] font-black text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-full uppercase tracking-widest">
+                                    Free
+                                  </span>
+                                </div>
+
+                                <div className="grid grid-cols-12 gap-x-6 gap-y-4">
+                                  {/* Left: About + Blog + Contact */}
+                                  <div className="col-span-5 grid grid-cols-1 gap-y-4">
+                                    {resourceCategories.map((category, ci) => {
+                                      const CatIcon = category.icon;
+                                      return (
+                                        <div key={ci}>
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <div className={`w-5 h-5 rounded-md bg-gradient-to-br ${category.color} flex items-center justify-center shadow-sm`}>
+                                              <CatIcon size={11} className="text-white" strokeWidth={2.5} />
+                                            </div>
+                                            <span className="text-[10px] font-black text-slate-900 uppercase tracking-wider">
+                                              {category.title}
+                                            </span>
+                                          </div>
+
+                                          <div className="space-y-0.5">
+                                            {category.links.map((item, li) => (
+                                              <Link
+                                                key={li}
+                                                to={item.slug === 'about' ? '/about' : item.slug === 'blog' ? '/blog' : item.slug === 'contact' ? '/contact' : '/privacy-policy'}
+                                                className={`group/item flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 transition-all duration-150 hover:bg-gradient-to-r hover:to-transparent ${
+                                                  ci === 0
+                                                    ? 'hover:text-indigo-700 hover:from-indigo-50'
+                                                    : ci === 1
+                                                    ? 'hover:text-violet-700 hover:from-violet-50'
+                                                    : 'hover:text-rose-700 hover:from-rose-50'
+                                                }`}
+                                              >
+                                                <div className={`w-1 h-1 rounded-full bg-gradient-to-r ${category.color} opacity-0 group-hover/item:opacity-100 transition-opacity flex-shrink-0`} />
+                                                <span className="truncate">{item.name}</span>
+                                              </Link>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+
+                                  {/* Right: Service Areas (2 cols) */}
+                                  <div className="col-span-7">
+                                    <div className="flex items-center gap-2 mb-2">
+                                      <div className="w-5 h-5 rounded-md bg-gradient-to-br from-cyan-400 to-sky-600 flex items-center justify-center shadow-sm">
+                                        <MapPin size={11} className="text-white" strokeWidth={2.5} />
+                                      </div>
+                                      <span className="text-[10px] font-black text-slate-900 uppercase tracking-wider">
+                                        Service Areas
+                                      </span>
+                                      <span className="text-[9px] font-bold text-slate-400">
+                                        (8 locations in Dubai)
+                                      </span>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-x-4 gap-y-0.5">
+                                      {serviceAreas.map((area, i) => (
+                                        <Link
+                                          key={i}
+                                          to={`/service-areas/${area.slug}`}
+                                          className="group/item flex items-center gap-2 px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-cyan-700 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-transparent transition-all duration-150"
+                                        >
+                                          <MapPin size={10} className="text-cyan-500 opacity-0 group-hover/item:opacity-100 transition-opacity flex-shrink-0" />
+                                          <span className="truncate">{area.name}</span>
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="col-span-2 relative bg-gradient-to-br from-indigo-950 via-slate-950 to-cyan-950 p-5 overflow-hidden">
+                                <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-indigo-500/20 blur-3xl" />
+                                <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-cyan-500/20 blur-3xl" />
+                                <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+
+                                <motion.div
+                                  animate={{ y: [0, -6, 0], rotate: [0, 8, 0] }}
+                                  transition={{ duration: 5, repeat: Infinity }}
+                                  className="absolute top-3 right-3 opacity-15"
+                                >
+                                  <Sparkles size={48} className="text-white" />
+                                </motion.div>
+
+                                <div className="relative flex flex-col h-full">
+                                  <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center mb-4">
+                                    <Sparkles size={18} className="text-white" strokeWidth={2.2} />
+                                  </div>
+
+                                  <h4 className="text-sm font-black text-white leading-tight mb-2">
+                                    Need Guidance?
+                                  </h4>
+                                  <p className="text-[11px] text-white/70 font-medium leading-relaxed mb-4 flex-1">
+                                    Talk to our experts about setup, visas, and costs.
+                                  </p>
+
+                                  <a
+                                    href={getWhatsAppLink("Hi! I need guidance on UAE business setup.")}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="group/cta inline-flex items-center justify-center gap-2 w-full px-3 py-2.5 rounded-lg bg-white text-slate-900 font-bold text-[11px] shadow-lg hover:scale-105 transition-all duration-300"
+                                  >
+                                    <MessageCircle size={13} strokeWidth={2.5} />
+                                    Ask Expert
+                                    <ArrowRight size={12} className="group-hover/cta:translate-x-0.5 transition-transform" strokeWidth={2.5} />
+                                  </a>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="relative px-5 py-3 border-t border-slate-100 bg-slate-50/70 flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <Star size={12} className="text-amber-400" fill="currentColor" />
+                                <span className="text-[11px] font-bold text-slate-600">
+                                  <span className="text-slate-900">Free resources</span> to grow your UAE business
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-4 text-[11px] font-bold text-slate-600">
+                                <span className="flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+                                  About
+                                </span>
+                                <span className="flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+                                  Blog
+                                </span>
+                                <span className="flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                                  Contact
+                                </span>
+                                <span className="flex items-center gap-1.5">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
+                                  Areas
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
                   </AnimatePresence>
                 </div>
               ))}
             </nav>
 
-            {/* === RIGHT SIDE — CTAs (New Style) === */}
-            <div className="hidden lg:flex items-center gap-2.5">
-              <a
-                href={getWhatsAppLink("Hi! I'd like to know more about your services.")}
-                target="_blank"
-                rel="noreferrer"
-                className="group relative w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 hover:border-emerald-300 flex items-center justify-center transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/20"
-                aria-label="WhatsApp"
+            {/* === RIGHT SIDE — LANGUAGE SELECTOR === */}
+            <div className="hidden lg:flex items-center relative" ref={languageRef}>
+              <button
+                onClick={() => setLanguageOpen(!languageOpen)}
+                className="group relative inline-flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-white border border-slate-200 hover:border-sky-300 shadow-[0_4px_15px_rgba(15,23,42,0.06)] hover:shadow-[0_8px_25px_rgba(56,189,248,0.15)] transition-all duration-300"
+                aria-label="Select language"
               >
-                <MessageCircle size={18} className="text-emerald-600" strokeWidth={2.2} />
-                <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white">
-                  <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping" />
+                <Globe size={16} className="text-slate-700 group-hover:text-sky-600 transition-colors" strokeWidth={2.5} />
+                <span className="text-xs font-black text-slate-800 uppercase tracking-wider">
+                  {selectedLanguage.code}
                 </span>
-              </a>
+                <ChevronDown
+                  size={13}
+                  className={`text-slate-500 group-hover:text-sky-600 transition-all duration-300 ${languageOpen ? 'rotate-180' : ''}`}
+                  strokeWidth={2.5}
+                />
+              </button>
 
-              <a
-                href="tel:+971566556645"
-                className="group w-10 h-10 rounded-xl bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200 hover:border-sky-300 flex items-center justify-center transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20"
-                aria-label="Call"
-              >
-                <Phone size={18} className="text-sky-600" strokeWidth={2.2} />
-              </a>
+              {/* === LANGUAGE DROPDOWN === */}
+              <AnimatePresence>
+                {languageOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 12, scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                    className="absolute top-[110%] right-0 w-[280px] z-50"
+                  >
+                    <div className="absolute -top-2 right-8 w-4 h-4 bg-white border-l border-t border-slate-200 rotate-45 z-10 rounded-sm" />
 
-              <Link
-                to="/contact"
-                className="group relative inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-slate-900 to-slate-800 text-white font-bold text-xs shadow-[0_8px_30px_rgba(15,23,42,0.25)] hover:shadow-[0_12px_45px_rgba(15,23,42,0.4)] hover:scale-105 transition-all duration-300 overflow-hidden"
-              >
-                <span className="absolute inset-0 bg-gradient-to-r from-transparent via-sky-400/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                <Rocket size={14} className="relative" strokeWidth={2.5} />
-                <span className="relative">Free Consultation</span>
-              </Link>
+                    <div className="relative rounded-3xl bg-white border border-slate-200 shadow-[0_30px_80px_rgba(15,23,42,0.18)] overflow-hidden">
+                      {/* Header */}
+                      <div className="px-5 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+                        <div className="flex items-center gap-2">
+                          <Globe size={14} className="text-sky-600" strokeWidth={2.5} />
+                          <span className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">
+                            Select Language
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Language List */}
+                      <div className="p-2 max-h-[400px] overflow-y-auto">
+                        {languages.map((lang, i) => {
+                          const isActive = selectedLanguage.code === lang.code;
+                          return (
+                            <motion.button
+                              key={lang.code}
+                              onClick={() => handleLanguageSelect(lang)}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.2, delay: i * 0.03 }}
+                              className={`w-full group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 ${
+                                isActive
+                                  ? 'bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200'
+                                  : 'hover:bg-slate-50 border border-transparent hover:border-slate-200'
+                              }`}
+                            >
+                              {/* Flag */}
+                              <span className="text-xl flex-shrink-0 leading-none">
+                                {lang.flag}
+                              </span>
+
+                              {/* Native Name */}
+                              <div className="flex-1 text-left min-w-0">
+                                <div className={`text-sm font-black leading-tight truncate ${
+                                  isActive ? 'text-amber-900' : 'text-slate-800 group-hover:text-slate-900'
+                                }`}>
+                                  {lang.native}
+                                </div>
+                                <div className={`text-[10px] font-semibold leading-tight mt-0.5 ${
+                                  isActive ? 'text-amber-700' : 'text-slate-400'
+                                }`}>
+                                  {lang.name}
+                                </div>
+                              </div>
+
+                              {/* Language Code */}
+                              <span className={`text-[11px] font-black tracking-wider flex-shrink-0 ${
+                                isActive ? 'text-amber-700' : 'text-slate-400 group-hover:text-slate-600'
+                              }`}>
+                                {lang.code}
+                              </span>
+
+                              {/* Check icon for active */}
+                              {isActive && (
+                                <motion.div
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: 1 }}
+                                  className="w-4 h-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-sm"
+                                >
+                                  <Check size={10} className="text-white" strokeWidth={3.5} />
+                                </motion.div>
+                              )}
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* === MOBILE TOGGLE === */}
@@ -1020,6 +1447,176 @@ export default function Navbar() {
                           )}
                         </AnimatePresence>
                       </div>
+                    ) : link.hasDropdown && link.dropdownType === 'packages' ? (
+                      <div>
+                        <button
+                          onClick={() => setMobilePackagesOpen(!mobilePackagesOpen)}
+                          className="w-full flex items-center justify-between p-3.5 rounded-xl text-sm font-bold text-slate-900 hover:bg-fuchsia-50 transition-colors"
+                        >
+                          <span className="flex items-center gap-3">
+                            <Package size={16} className="text-fuchsia-600" strokeWidth={2.5} />
+                            {link.name}
+                          </span>
+                          <ChevronDown
+                            size={16}
+                            className={`text-slate-500 transition-transform ${mobilePackagesOpen ? 'rotate-180' : ''}`}
+                            strokeWidth={2.5}
+                          />
+                        </button>
+
+                        <AnimatePresence>
+                          {mobilePackagesOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="overflow-hidden pl-4 ml-6 border-l-2 border-fuchsia-100"
+                            >
+                              <div className="py-2 space-y-3">
+                                {packageCategories.map((category, ci) => {
+                                  const CatIcon = category.icon;
+                                  return (
+                                    <div key={ci} className="pt-2">
+                                      <div className="flex items-center gap-2 mb-1.5 px-3">
+                                        <div className={`w-4 h-4 rounded bg-gradient-to-br ${category.color} flex items-center justify-center`}>
+                                          <CatIcon size={9} className="text-white" strokeWidth={2.5} />
+                                        </div>
+                                        <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                                          {category.title}
+                                        </span>
+                                      </div>
+                                      {category.packages.map((pkg, pi) => (
+                                        <Link
+                                          key={pi}
+                                          to={`/packages/${pkg.slug}`}
+                                          className="block px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:text-fuchsia-600 hover:bg-fuchsia-50 transition-colors"
+                                        >
+                                          {pkg.name}
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : link.hasDropdown && link.dropdownType === 'resources' ? (
+                      <div>
+                        <button
+                          onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
+                          className="w-full flex items-center justify-between p-3.5 rounded-xl text-sm font-bold text-slate-900 hover:bg-indigo-50 transition-colors"
+                        >
+                          <span className="flex items-center gap-3">
+                            <BookOpen size={16} className="text-indigo-600" strokeWidth={2.5} />
+                            {link.name}
+                          </span>
+                          <ChevronDown
+                            size={16}
+                            className={`text-slate-500 transition-transform ${mobileResourcesOpen ? 'rotate-180' : ''}`}
+                            strokeWidth={2.5}
+                          />
+                        </button>
+
+                        <AnimatePresence>
+                          {mobileResourcesOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="overflow-hidden pl-4 ml-6 border-l-2 border-indigo-100"
+                            >
+                              <div className="py-2 space-y-3">
+                                {/* About Us */}
+                                <div className="pt-2">
+                                  <div className="flex items-center gap-2 mb-1.5 px-3">
+                                    <div className="w-4 h-4 rounded bg-gradient-to-br from-indigo-400 to-blue-600 flex items-center justify-center">
+                                      <Info size={9} className="text-white" strokeWidth={2.5} />
+                                    </div>
+                                    <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                                      About Us
+                                    </span>
+                                  </div>
+                                  <Link
+                                    to="/about"
+                                    className="block px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                                  >
+                                    About DubaiSetupNow
+                                  </Link>
+                                </div>
+
+                                {/* Blog */}
+                                <div className="pt-2">
+                                  <div className="flex items-center gap-2 mb-1.5 px-3">
+                                    <div className="w-4 h-4 rounded bg-gradient-to-br from-violet-400 to-purple-600 flex items-center justify-center">
+                                      <BookOpen size={9} className="text-white" strokeWidth={2.5} />
+                                    </div>
+                                    <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                                      Blog & Guides
+                                    </span>
+                                  </div>
+                                  <Link
+                                    to="/blog"
+                                    className="block px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:text-violet-600 hover:bg-violet-50 transition-colors"
+                                  >
+                                    Business Setup Blog
+                                  </Link>
+                                </div>
+
+                                {/* Contact & Legal */}
+                                <div className="pt-2">
+                                  <div className="flex items-center gap-2 mb-1.5 px-3">
+                                    <div className="w-4 h-4 rounded bg-gradient-to-br from-rose-400 to-pink-600 flex items-center justify-center">
+                                      <Mail size={9} className="text-white" strokeWidth={2.5} />
+                                    </div>
+                                    <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                                      Contact & Legal
+                                    </span>
+                                  </div>
+                                  <Link
+                                    to="/contact"
+                                    className="block px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                                  >
+                                    Contact Us
+                                  </Link>
+                                  <Link
+                                    to="/privacy-policy"
+                                    className="block px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                                  >
+                                    Privacy Policy
+                                  </Link>
+                                </div>
+
+                                {/* Service Areas */}
+                                <div className="pt-2">
+                                  <div className="flex items-center gap-2 mb-1.5 px-3">
+                                    <div className="w-4 h-4 rounded bg-gradient-to-br from-cyan-400 to-sky-600 flex items-center justify-center">
+                                      <MapPin size={9} className="text-white" strokeWidth={2.5} />
+                                    </div>
+                                    <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">
+                                      Service Areas
+                                    </span>
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-x-2">
+                                    {serviceAreas.map((area, ai) => (
+                                      <Link
+                                        key={ai}
+                                        to={`/service-areas/${area.slug}`}
+                                        className="block px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:text-cyan-600 hover:bg-cyan-50 transition-colors"
+                                      >
+                                        {area.name}
+                                      </Link>
+                                    ))}
+                                  </div>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
                     ) : (
                       <Link
                         to={link.href}
@@ -1030,6 +1627,87 @@ export default function Navbar() {
                     )}
                   </motion.div>
                 ))}
+
+                {/* === MOBILE LANGUAGE SELECTOR === */}
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                  className="pt-3"
+                >
+                  <button
+                    onClick={() => setMobileLanguageOpen(!mobileLanguageOpen)}
+                    className="w-full flex items-center justify-between p-3.5 rounded-xl text-sm font-bold text-slate-900 hover:bg-sky-50 transition-colors"
+                  >
+                    <span className="flex items-center gap-3">
+                      <Globe size={16} className="text-sky-600" strokeWidth={2.5} />
+                      Language
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-xs font-black text-slate-500 uppercase tracking-wider">
+                        {selectedLanguage.code}
+                      </span>
+                      <ChevronDown
+                        size={16}
+                        className={`text-slate-500 transition-transform ${mobileLanguageOpen ? 'rotate-180' : ''}`}
+                        strokeWidth={2.5}
+                      />
+                    </span>
+                  </button>
+
+                  <AnimatePresence>
+                    {mobileLanguageOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden pl-4 ml-6 border-l-2 border-sky-100"
+                      >
+                        <div className="py-2 space-y-0.5">
+                          {languages.map((lang, li) => {
+                            const isActive = selectedLanguage.code === lang.code;
+                            return (
+                              <button
+                                key={li}
+                                onClick={() => handleLanguageSelect(lang)}
+                                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                                  isActive
+                                    ? 'bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200'
+                                    : 'hover:bg-slate-50'
+                                }`}
+                              >
+                                <span className="text-xl leading-none">{lang.flag}</span>
+                                <div className="flex-1 text-left min-w-0">
+                                  <div className={`text-[13px] font-black leading-tight truncate ${
+                                    isActive ? 'text-amber-900' : 'text-slate-800'
+                                  }`}>
+                                    {lang.native}
+                                  </div>
+                                  <div className={`text-[10px] font-semibold leading-tight ${
+                                    isActive ? 'text-amber-700' : 'text-slate-400'
+                                  }`}>
+                                    {lang.name}
+                                  </div>
+                                </div>
+                                <span className={`text-[11px] font-black tracking-wider ${
+                                  isActive ? 'text-amber-700' : 'text-slate-400'
+                                }`}>
+                                  {lang.code}
+                                </span>
+                                {isActive && (
+                                  <div className="w-4 h-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0">
+                                    <Check size={10} className="text-white" strokeWidth={3.5} />
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}

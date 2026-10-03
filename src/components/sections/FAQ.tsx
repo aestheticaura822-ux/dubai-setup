@@ -285,35 +285,6 @@ export default function FAQ() {
                 </div>
               </div>
             </div>
-
-            {/* Trust line */}
-            <div className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-border shadow-soft">
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white text-[10px] font-black shadow-md"
-                    style={{
-                      background: `linear-gradient(135deg, ${
-                        i === 1 ? '#0EA5E9' : i === 2 ? '#8B5CF6' : i === 3 ? '#F59E0B' : '#10B981'
-                      }, ${i === 1 ? '#3B82F6' : i === 2 ? '#EC4899' : i === 3 ? '#FBBF24' : '#059669'})`,
-                    }}
-                  >
-                    {String.fromCharCode(64 + i)}
-                  </div>
-                ))}
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-1 mb-0.5">
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} size={11} className="text-amber-400" fill="currentColor" />
-                  ))}
-                </div>
-                <p className="text-[10px] font-bold text-[#64748B] uppercase tracking-wider">
-                  <span className="text-[#0A0F1F]">500+</span> businesses helped
-                </p>
-              </div>
-            </div>
           </motion.div>
 
           {/* === RIGHT SIDE — Search + Categories + Accordion === */}
