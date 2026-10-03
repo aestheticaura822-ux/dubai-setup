@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tinacms dev -c \"vite\"",
-  "build": "tinacms build && tsc && vite build",
-  "tina:build": "tinacms build",
+    "build": "tinacms build && tsc && vite build",
+    "tina:build": "tinacms build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^24.13.6",
+    "@types/node": "^24.19.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
