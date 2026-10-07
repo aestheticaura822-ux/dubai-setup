@@ -3,330 +3,42 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTina, tinaField } from 'tinacms/dist/react';
 import {
   Globe, ArrowRight, Sparkles, CheckCircle2, Building2, TrendingUp,
-  Briefcase, Phone, MessageCircle, Home as HomeIcon, Clock,
-   Award, FileText, DollarSign,  Target, Crown, Share2,
-  UserCheck,  MapPin, ShoppingCart,PieChart,
-   Layers, Shield, Rocket,  Wallet, 
-  RefreshCw, Home, Globe2, ShieldCheck, 
-  ChevronLeft, ChevronRight,
-  ClipboardCheck, FileSignature, Gavel,
-  UserPlus,  Anchor,
-   Building,
-  FileCheck, 
-  Receipt,
-  Lock, Key, 
-  Eye, EyeOff, Send,  Building as Bank
+  Briefcase, Phone, MessageCircle, Home as HomeIcon, Clock, Award,
+  FileText, DollarSign, Target, Crown, Share2, UserCheck, MapPin,
+  ShoppingCart, PieChart, Layers, Shield, Rocket, Wallet, RefreshCw,
+  Home, Globe2, ShieldCheck, ChevronLeft, ChevronRight, ClipboardCheck,
+  FileSignature, Gavel, UserPlus, Anchor, Building, FileCheck, Receipt,
+  Lock, Key, Eye, EyeOff, Send, Building as Bank,
 } from 'lucide-react';
 import { getWhatsAppLink } from '../../../lib/whatsapp';
+import offshoreData from '../../../content/business-setup/offshore-company-setup.json';
+import WhatsAppIcon from '../../../components/icons/WhatsAppIcon';
 
-// ============ DATA ============
+const iconMap: any = {
+  Globe, ArrowRight, Sparkles, CheckCircle2, Building2, TrendingUp,
+  Briefcase, Phone, MessageCircle, HomeIcon, Clock, Award, FileText,
+  DollarSign, Target, Crown, Share2, UserCheck, MapPin, ShoppingCart,
+  PieChart, Layers, Shield, Rocket, Wallet, RefreshCw, Home, Globe2,
+  ShieldCheck, ClipboardCheck, FileSignature, Gavel, UserPlus, Anchor,
+  Building, FileCheck, Receipt, Lock, Key, Eye, EyeOff, Send, Bank,
+};
 
-const stats = [
-  { icon: Clock, value: '3-5', label: 'Days Setup', color: 'from-cyan-400 to-blue-600' },
-  { icon: DollarSign, value: '0%', label: 'Corporate Tax', color: 'from-blue-400 to-indigo-600' },
-  { icon: Globe, value: '100%', label: 'Foreign Ownership', color: 'from-indigo-400 to-violet-600' },
-  { icon: Lock, value: 'Total', label: 'Confidentiality', color: 'from-violet-400 to-purple-600' },
-];
-
-const benefits = [
-  {
-    icon: DollarSign,
-    title: 'Zero Corporate & Personal Tax',
-    description: 'Complete tax exemption — no corporate, personal income, capital gains, or withholding taxes. Maximize profits legally and efficiently.',
-    color: 'from-cyan-400 to-blue-600'
-  },
-  {
-    icon: Globe,
-    title: '100% Foreign Ownership',
-    description: 'Jurisdictions like JAFZA Offshore and RAK ICC allow 100% ownership without a UAE national partner — full operational control.',
-    color: 'from-blue-400 to-indigo-600'
-  },
-  {
-    icon: Wallet,
-    title: 'Full Repatriation of Capital',
-    description: 'Repatriate all capital and profits without limits. No exchange control — the ideal structure for global investors.',
-    color: 'from-indigo-400 to-violet-600'
-  },
-  {
-    icon: Lock,
-    title: 'Absolute Confidentiality',
-    description: 'Shareholder and director information is not publicly disclosed. Protection for beneficial owners with private management.',
-    color: 'from-violet-400 to-purple-600'
-  },
-  {
-    icon: Bank,
-    title: 'Simple Bank Account Setup',
-    description: 'Open corporate bank accounts with UAE or international banks. Multi-currency accounts and efficient online banking.',
-    color: 'from-purple-400 to-fuchsia-600'
-  },
-  {
-    icon: Wallet,
-    title: 'Minimal Annual Ongoing Costs',
-    description: 'No office space or staff required. Perfect for holding IP, real estate, shares, and international assets.',
-    color: 'from-fuchsia-400 to-pink-600'
-  },
-];
-
-const audiences = [
-  {
-    icon: Briefcase,
-    title: 'Entrepreneurs & Business Owners',
-    tagline: 'Tax-Efficient Corporate Structures',
-    description: 'Ideal for entrepreneurs and established business owners who want to reduce international tax exposure through 0% corporate and personal income tax structures while enabling cross-border transactions legally and efficiently.',
-    image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80',
-    color: 'from-cyan-500 to-blue-700'
-  },
-  {
-    icon: ShoppingCart,
-    title: 'E-commerce & Digital Businesses',
-    tagline: 'International Clients Ready',
-    description: 'Best for online stores, SaaS companies, digital service providers, and IT firms serving international clients who want tax-efficient structures with global reach.',
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80',
-    color: 'from-blue-500 to-indigo-700'
-  },
-  {
-    icon: Crown,
-    title: 'Asset Owners & HNIs',
-    tagline: 'Asset Protection',
-    description: 'High net worth individuals looking for asset protection, wealth structuring, and complete privacy for their global asset portfolio.',
-    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80',
-    color: 'from-indigo-500 to-violet-700'
-  },
-  {
-    icon: TrendingUp,
-    title: 'Investors & Traders',
-    tagline: 'Complete Control',
-    description: 'Investors and traders wanting to expand internationally with complete control over investments, portfolios, and global trading operations.',
-    image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80',
-    color: 'from-violet-500 to-purple-700'
-  },
-  {
-    icon: EyeOff,
-    title: 'Companies Seeking Privacy',
-    tagline: 'Beneficial Ownership Protection',
-    description: 'Companies requiring complete privacy for beneficial ownership and financial transactions with legal compliance and international standards.',
-    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80',
-    color: 'from-purple-500 to-fuchsia-700'
-  },
-];
-
-const jurisdictions = [
-  {
-    id: 'jafza',
-    icon: Building,
-    title: 'JAFZA Offshore',
-    tagline: 'Dubai\'s Premier Offshore Jurisdiction',
-    description: 'The singular offshore jurisdiction allowing foreign investors to own property in particular zones in Dubai, such as Palm Jumeirah and Downtown. Supportive legal framework with an extremely reputable international branding and security assurance for asset protection, real estate ownership, and cross-border trade.',
-    image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&q=80',
-    color: 'from-cyan-500 to-blue-700',
-    features: [
-      'Property Ownership in Dubai Zones',
-      'Palm Jumeirah & Downtown',
-      'Strong Legal Framework',
-      'Asset Protection',
-      'Cross-Border Trade'
-    ],
-    bestFor: 'Property & Asset Holding'
-  },
-  {
-    id: 'rakicc',
-    icon: Anchor,
-    title: 'RAK ICC',
-    tagline: 'Flexible & Cost-Effective',
-    description: 'An offshore jurisdiction in the UAE characterized as extremely flexible and inexpensive. Simple structure — perfect for holding companies, international trade, and intellectual property. Allows nominee directors and shareholders, redomiciliation, and even merging with foreign entities.',
-    image: 'https://images.unsplash.com/photo-1546412414-e1885259563a?w=1200&q=80',
-    color: 'from-blue-500 to-indigo-700',
-    features: [
-      'Extremely Flexible Structure',
-      'Nominee Directors & Shareholders',
-      'Hassle-Free Redomiciliation',
-      'Merging with Foreign Entities',
-      'Ideal for IP & Holding'
-    ],
-    bestFor: 'Holding & IP Protection'
-  },
-];
-
-const activities = [
-  { icon: Globe, label: 'International Trading', color: 'from-cyan-400 to-blue-600' },
-  { icon: Share2, label: 'Holding Shares in UAE or Global Companies', color: 'from-blue-400 to-indigo-600' },
-  { icon: Key, label: 'Owning IP, Trademarks & Patents', color: 'from-indigo-400 to-violet-600' },
-  { icon: Home, label: 'Owning Real Estate (JAFZA Only)', color: 'from-violet-400 to-purple-600' },
-  { icon: PieChart, label: 'Managing Investments & Portfolios', color: 'from-purple-400 to-fuchsia-600' },
-  { icon: Briefcase, label: 'Acting as Holding or SPV', color: 'from-fuchsia-400 to-pink-600' },
-];
-
-const processSteps = [
-  { icon: FileSignature, title: 'Trade Name Reservation', description: 'Reserve your offshore company name with the jurisdiction.', color: 'from-cyan-400 to-blue-600' },
-  { icon: FileCheck, title: 'Document Notarization', description: 'Notarize and legally translate required documents.', color: 'from-blue-400 to-indigo-600' },
-  { icon: Send, title: 'Filing with Authorities', description: 'Submit complete application to RAK ICC or JAFZA.', color: 'from-indigo-400 to-violet-600' },
-  { icon: Bank, title: 'Offshore Bank Account', description: 'Open corporate bank account with our banking partners.', color: 'from-violet-400 to-purple-600' },
-  { icon: UserPlus, title: 'Nominee Services', description: 'Optional nominee director and shareholder services.', color: 'from-purple-400 to-fuchsia-600' },
-];
-
-const services = [
-  {
-    icon: FileSignature,
-    title: 'Company Name Reservation',
-    description: 'Reserve your offshore company name and prepare all legal documents required by authorities.',
-    color: 'from-cyan-400 to-blue-600'
-  },
-  {
-    icon: Bank,
-    title: 'Offshore Bank Account Opening',
-    description: 'Facilitate bank account opening with our partners — secure multi-currency account access.',
-    color: 'from-blue-400 to-indigo-600'
-  },
-  {
-    icon: EyeOff,
-    title: 'Nominee Directors & Shareholders',
-    description: 'Additional privacy with nominee directors, shareholders, and registered agents for legal compliance.',
-    color: 'from-indigo-400 to-violet-600'
-  },
-  {
-    icon: Receipt,
-    title: 'VAT & ESR Compliance',
-    description: 'VAT advisory, Economic Substance Regulation (ESR) compliance, and ongoing annual reporting.',
-    color: 'from-violet-400 to-purple-600'
-  },
-  {
-    icon: RefreshCw,
-    title: 'Company Maintenance & Renewals',
-    description: 'Complete annual compliance management and reminders to keep your business worry-free.',
-    color: 'from-purple-400 to-fuchsia-600'
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Registered Agent Services',
-    description: 'Offshore office address and registered agent services to comply with legal obligations.',
-    color: 'from-fuchsia-400 to-pink-600'
-  },
-];
-
-const documents = [
-  { icon: Home, label: 'Proof of Address', desc: 'Utility bill or bank statement' },
-  { icon: FileText, label: 'CV / Professional Profile', desc: 'Background and experience' },
-  { icon: ClipboardCheck, label: 'Business Activity Plan', desc: 'If required' },
-  { icon: Gavel, label: 'Board Resolution', desc: 'Notarized (for corporate shareholders)' },
-  { icon: UserPlus, label: 'Nominee Instructions', desc: 'Optional (for anonymity)' },
-];
-
-const compliance = [
-  {
-    icon: Eye,
-    title: 'Beneficial Ownership Disclosure',
-    description: 'Per UAE Cabinet Decision No. 58 of 2020, offshore companies must maintain internal records of Ultimate Beneficial Owners (UBOs). Records remain internal — not publicly disclosed.',
-    color: 'from-cyan-400 to-blue-600'
-  },
-  {
-    icon: Layers,
-    title: 'Economic Substance Regulations',
-    description: 'Companies engaged in relevant activities (banking, insurance, holding, IP) must have economic substance in the UAE with local management and operations.',
-    color: 'from-blue-400 to-indigo-600'
-  },
-  {
-    icon: Shield,
-    title: 'Anti-Money Laundering (AML)',
-    description: 'Offshore companies comply with stricter AML and CTF laws — accurate records, due diligence, and timely suspicion transaction reporting.',
-    color: 'from-indigo-400 to-violet-600'
-  },
-  {
-    icon: Globe2,
-    title: 'OECD CRS Compliance',
-    description: 'Comply with OECD Common Reporting Standard for automatic financial account information exchange — keeping your structure globally respected.',
-    color: 'from-violet-400 to-purple-600'
-  },
-];
-
-const maintenance = [
-  { icon: RefreshCw, label: 'License Renewal', color: 'from-cyan-400 to-blue-600' },
-  { icon: UserCheck, label: 'Registered Agent Fees', color: 'from-blue-400 to-indigo-600' },
-  { icon: FileText, label: 'Optional Audit', color: 'from-indigo-400 to-violet-600' },
-  { icon: Layers, label: 'ESR Reporting', color: 'from-violet-400 to-purple-600' },
-  { icon: Bank, label: 'Bank KYC Updates', color: 'from-purple-400 to-fuchsia-600' },
-];
-
-const whyChooseUs = [
-  { icon: DollarSign, label: 'Zero Tax Structure', desc: 'No corporate or personal tax' },
-  { icon: Globe, label: '100% Foreign Ownership', desc: 'No local partner required' },
-  { icon: Lock, label: 'Complete Confidentiality', desc: 'Private ownership details' },
-  { icon: Bank, label: 'International Banking', desc: 'Multi-currency accounts' },
-  { icon: ShieldCheck, label: 'Full Compliance', desc: 'ESR, AML, UBO, CRS' },
-  { icon: RefreshCw, label: 'Ongoing Support', desc: 'Renewals & maintenance' },
-];
-
-const growthStats = [
-  { icon: Building, value: '2', label: 'Top Jurisdictions', color: 'from-cyan-400 to-blue-600' },
-  { icon: DollarSign, value: '0%', label: 'Tax Rate', color: 'from-blue-400 to-indigo-600' },
-  { icon: Globe, value: 'Global', label: 'Business Reach', color: 'from-indigo-400 to-violet-600' },
-  { icon: Lock, value: 'Total', label: 'Privacy', color: 'from-violet-400 to-purple-600' },
-  { icon: Clock, value: '3-5', label: 'Days Setup', color: 'from-purple-400 to-fuchsia-600' },
-  { icon: Crown, value: 'Preferred', label: 'For HNIs', color: 'from-fuchsia-400 to-pink-600' },
-];
-
-const faqs = [
-  {
-    q: 'What is the distinction between an offshore company and a Free Zone company in Dubai?',
-    a: 'An offshore company is mainly for international activities, asset holding, and tax planning. It cannot do business within the UAE. A Free Zone company allows for a local office and trade either in the Free Zone or internationally. Offshore setups are more privacy-focused; Free Zones are for active operational businesses.'
-  },
-  {
-    q: 'How long does it take to register an offshore company in Dubai?',
-    a: 'Typically 3-5 working days depending on documentation and jurisdiction. We streamline the process for trade name reservation, notarization, filing, and bank account setup.'
-  },
-  {
-    q: 'Can a Dubai offshore company own property?',
-    a: 'Yes — but only through JAFZA Offshore, which allows property ownership in specific Dubai zones like Palm Jumeirah and Downtown. RAK ICC does not allow property ownership.'
-  },
-  {
-    q: 'Can a bank account be opened for a Dubai offshore company?',
-    a: 'Yes. We facilitate offshore bank account opening with UAE and international banking partners — including multi-currency accounts and online banking.'
-  },
-  {
-    q: 'Is it possible to have anonymity as a business owner through an offshore company?',
-    a: 'Yes. Offshore structures allow nominee directors and shareholders. Shareholder and director information is not publicly disclosed, though UBO records must be maintained internally for compliance.'
-  },
-  {
-    q: 'Do I need to reside in Dubai to own or run an offshore company?',
-    a: 'No. You can own and manage a Dubai offshore company from anywhere in the world. There is no residency requirement.'
-  },
-  {
-    q: 'What are the tax benefits of setting up an offshore company in Dubai?',
-    a: 'Dubai offshore companies benefit from 0% corporate tax, 0% personal income tax, 0% capital gains tax, and 0% withholding tax — making them ideal for international tax planning.'
-  },
-  {
-    q: 'Can I use a Dubai offshore company for e-commerce or digital services?',
-    a: 'Yes. Offshore companies can be used for e-commerce and digital services with international clients — though they cannot trade within the UAE mainland.'
-  },
-  {
-    q: 'Is Dubai offshore company setup compliant with all worldwide laws?',
-    a: 'Yes. Dubai offshore jurisdictions follow global regulations including UBO disclosure, ESR, AML/CTF, and OECD CRS — keeping your structure fully compliant.'
-  },
-  {
-    q: 'What is the minimum capital to register an offshore company in Dubai?',
-    a: 'There is no minimum capital requirement for Dubai offshore companies — making them highly accessible for investors and holding structures.'
-  },
-];
-
-const relatedServices = [
-  { slug: 'company-formation', title: 'Company Formation in Dubai', description: 'Free Zone, Mainland & Offshore structures.', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', gradient: 'from-cyan-400 to-blue-600' },
-  { slug: 'free-zone-company-setup', title: 'Free Zone Company Setup', description: '100% foreign ownership in tax-free zones.', image: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=800&q=80', gradient: 'from-blue-400 to-indigo-600' },
-  { slug: 'company-registration', title: 'Company Registration in Dubai', description: 'Fast & affordable registration.', image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80', gradient: 'from-indigo-400 to-violet-600' },
-];
-
-// ============ COMPONENT ============
-export default function OffshoreCompanySetup() {
+export default function OffshoreCompanySetup({ tinaData }: { tinaData?: any }) {
+  const data = tinaData?.data?.businessSetup || offshoreData;
   const [activeJurisdiction, setActiveJurisdiction] = useState(0);
 
-  const nextJurisdiction = () => setActiveJurisdiction((prev) => (prev + 1) % jurisdictions.length);
-  const prevJurisdiction = () => setActiveJurisdiction((prev) => (prev - 1 + jurisdictions.length) % jurisdictions.length);
+  const jurisdictions = data.jurisdictionsSection.items;
+  const nextJurisdiction = () => setActiveJurisdiction((p) => (p + 1) % jurisdictions.length);
+  const prevJurisdiction = () => setActiveJurisdiction((p) => (p - 1 + jurisdictions.length) % jurisdictions.length);
 
   return (
     <div className="min-h-screen bg-white">
       {/* === 1. HERO === */}
       <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${data.heroImage})` }} data-tina-field={tinaField(data, 'heroImage')} />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-indigo-950/80 to-cyan-950/50" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
@@ -334,7 +46,6 @@ export default function OffshoreCompanySetup() {
         <motion.div animate={{ y: [0, -20, 0], rotate: [0, 8, 0] }} transition={{ duration: 6, repeat: Infinity }} className="absolute top-32 right-[35%] opacity-15 hidden lg:block">
           <Anchor size={140} className="text-white" />
         </motion.div>
-
         <motion.div animate={{ y: [0, 15, 0], rotate: [0, -10, 0] }} transition={{ duration: 7, repeat: Infinity }} className="absolute bottom-32 left-[10%] opacity-10 hidden lg:block">
           <Lock size={100} className="text-white" />
         </motion.div>
@@ -350,16 +61,15 @@ export default function OffshoreCompanySetup() {
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 mb-6">
                 <Sparkles size={14} className="text-cyan-300" />
-                <span className="text-xs font-bold tracking-wider uppercase text-white">100% Ownership, Tax-Free & Private</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data, 'heroBadge')}>{data.heroBadge}</span>
               </motion.div>
 
-              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-3xl mb-6 drop-shadow-lg">
-                Offshore Company <span className="text-cyan-300">Setup in Dubai</span>
+              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-3xl mb-6 drop-shadow-lg" data-tina-field={tinaField(data, 'heroTitle')}>
+                {data.heroTitle.replace(data.heroTitleHighlight, '')}
+                <span className="text-cyan-300">{data.heroTitleHighlight}</span>
               </motion.h1>
 
-              <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/95 font-medium leading-relaxed max-w-2xl mb-10 drop-shadow">
-                Register a legal business entity outside the UAE mainland & Free Zones for asset holding, tax efficiency, confidentiality, and international business expansion.
-              </motion.p>
+              <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/95 font-medium leading-relaxed max-w-2xl mb-10 drop-shadow" data-tina-field={tinaField(data, 'heroSubtitle')}>{data.heroSubtitle}</motion.p>
 
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-wrap gap-4">
                 <a href="#contact" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-cyan-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
@@ -367,12 +77,13 @@ export default function OffshoreCompanySetup() {
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </a>
                 <a href={getWhatsAppLink("Hi! I'm interested in Offshore Company Setup in Dubai.")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
-                  <MessageCircle size={16} />WhatsApp
+                  <WhatsAppIcon size={16} className="text-emerald-600" />
+WhatsApp
                 </a>
               </motion.div>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.9 }} className="mt-10 flex flex-wrap gap-3">
-                {['0% Tax', '100% Ownership', '3-5 Days Setup', 'Total Privacy'].map((item, i) => (
+                {data.heroChips.map((item: string, i: number) => (
                   <div key={i} className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs">
                     <CheckCircle2 size={12} className="text-cyan-300" strokeWidth={3} />
                     <span className="font-semibold text-white">{item}</span>
@@ -384,7 +95,6 @@ export default function OffshoreCompanySetup() {
             {/* RIGHT — Offshore Dashboard Card */}
             <div className="lg:col-span-5 relative h-[520px] hidden lg:block">
               <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 6, repeat: Infinity }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 opacity-40 blur-[100px]" />
-
               <motion.div animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: 'linear' }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px]">
                 <div className="absolute top-0 left-1/2 w-3 h-3 -translate-x-1/2 rounded-full bg-cyan-300 shadow-[0_0_20px_rgba(34,211,238,0.8)]" />
                 <div className="absolute bottom-0 left-1/2 w-2 h-2 -translate-x-1/2 rounded-full bg-blue-300" />
@@ -402,7 +112,6 @@ export default function OffshoreCompanySetup() {
                       </div>
                       <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">Live</span>
                     </div>
-
                     <div className="p-5">
                       <div className="flex items-center gap-3 mb-5">
                         <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg">
@@ -416,7 +125,6 @@ export default function OffshoreCompanySetup() {
                           <span className="text-[9px] font-black text-white uppercase tracking-widest">Active</span>
                         </div>
                       </div>
-
                       <div className="grid grid-cols-2 gap-3 mb-4">
                         <div className="p-3 rounded-xl bg-gradient-to-br from-cyan-50 to-blue-50 border border-cyan-100">
                           <div className="text-[8px] font-bold text-txt-muted uppercase tracking-widest mb-1">Setup</div>
@@ -427,7 +135,6 @@ export default function OffshoreCompanySetup() {
                           <div className="text-lg font-black text-blue-600">0%</div>
                         </div>
                       </div>
-
                       <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 mb-4">
                         <Building size={18} className="text-cyan-500" />
                         <Anchor size={18} className="text-blue-500" />
@@ -436,7 +143,6 @@ export default function OffshoreCompanySetup() {
                         <EyeOff size={18} className="text-purple-500" />
                         <ShieldCheck size={18} className="text-fuchsia-500" />
                       </div>
-
                       <div className="pt-4 border-t border-dashed border-border flex items-center justify-between">
                         <span className="text-[10px] font-black text-cyan-600 uppercase tracking-widest">Register Now</span>
                         <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center">
@@ -452,12 +158,12 @@ export default function OffshoreCompanySetup() {
         </div>
       </section>
 
-      {/* === 2. STATS ROW === */}
+      {/* === 2. STATS === */}
       <section className="relative py-14 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {stats.map((stat, i) => {
-              const Icon = stat.icon;
+            {data.stats.map((stat: any, i: number) => {
+              const Icon = iconMap[stat.icon] || Clock;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="group relative">
                   <div className="relative overflow-hidden rounded-2xl bg-white border border-border hover:border-transparent transition-all duration-500 p-5 shadow-[0_5px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_15px_40px_rgba(34,211,238,0.15)] hover:-translate-y-1">
@@ -467,8 +173,8 @@ export default function OffshoreCompanySetup() {
                         <Icon size={20} className="text-white" strokeWidth={2.5} />
                       </div>
                       <div>
-                        <div className="text-lg font-black text-[#0A0F1F] leading-none mb-0.5">{stat.value}</div>
-                        <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest">{stat.label}</div>
+                        <div className="text-lg font-black text-[#0A0F1F] leading-none mb-0.5" data-tina-field={tinaField(stat, 'value')}>{stat.value}</div>
+                        <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest" data-tina-field={tinaField(stat, 'label')}>{stat.label}</div>
                       </div>
                     </div>
                   </div>
@@ -479,14 +185,14 @@ export default function OffshoreCompanySetup() {
         </div>
       </section>
 
-      {/* === 3. WHAT IS OFFSHORE — Split === */}
+      {/* === 3. WHAT IS OFFSHORE === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-b from-white to-cyan-50/40 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="lg:col-span-5 relative">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-400 to-blue-600 opacity-20 blur-[80px] rounded-full" />
               <div className="relative rounded-3xl overflow-hidden border border-border shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
-                <img src="https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1200&q=80" alt="Offshore Company" className="w-full h-[500px] object-cover" />
+                <img src={data.whatIsSection.image} alt="Offshore Company" className="w-full h-[500px] object-cover" data-tina-field={tinaField(data.whatIsSection, 'image')} />
                 <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/70 via-transparent to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-2xl bg-white/95 backdrop-blur-xl shadow-lg">
                   <div className="flex items-center gap-3">
@@ -494,8 +200,8 @@ export default function OffshoreCompanySetup() {
                       <Anchor size={18} className="text-white" />
                     </div>
                     <div>
-                      <div className="text-[10px] font-bold text-txt-muted uppercase tracking-wider">Offshore Structure</div>
-                      <div className="text-sm font-black text-[#0A0F1F]">Global Presence</div>
+                      <div className="text-[10px] font-bold text-txt-muted uppercase tracking-wider" data-tina-field={tinaField(data.whatIsSection, 'imageBadgeTitle')}>{data.whatIsSection.imageBadgeTitle}</div>
+                      <div className="text-sm font-black text-[#0A0F1F]" data-tina-field={tinaField(data.whatIsSection, 'imageBadgeText')}>{data.whatIsSection.imageBadgeText}</div>
                     </div>
                   </div>
                 </div>
@@ -505,27 +211,17 @@ export default function OffshoreCompanySetup() {
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="lg:col-span-7">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
                 <Sparkles size={14} className="text-cyan-600" />
-                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">What Is It?</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.whatIsSection, 'badge')}>{data.whatIsSection.badge}</span>
               </div>
-
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6">
-                What Is <span className="gradient-text">Offshore Company Formation</span> in Dubai?
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6" data-tina-field={tinaField(data.whatIsSection, 'title')}>
+                {data.whatIsSection.title.replace(data.whatIsSection.titleHighlight, '')}
+                <span className="gradient-text">{data.whatIsSection.titleHighlight}</span>
               </h2>
-
               <div className="space-y-5 text-base text-[#475569] font-medium leading-relaxed">
-                <p>
-                  Establishing an offshore company setup in Dubai enables entrepreneurs, investors, and businesses to register a <span className="font-black text-[#0A0F1F]">legal business entity outside the UAE mainland and Free Zones</span>.
-                </p>
-                <p>
-                  Offshore entities are typically used for <span className="font-black text-[#0A0F1F]">holding assets, tax effectiveness, confidentiality, and international business expansion</span>. In Dubai, offshore companies are formed through specific jurisdictions — for example, <span className="font-black text-[#0A0F1F]">JAFZA Offshore and RAK ICC</span>.
-                </p>
-                <p>
-                  Registering offshore provides the ultimate control with <span className="font-black text-[#0A0F1F]">full foreign ownership, 0% corporate tax, and global presence</span>. At Setup Zone Dubai, we assist our clients in registering their offshore companies with complete confidentiality, limited liability, legal asset protection, nominee services, and international banking.
-                </p>
+                {data.whatIsSection.paragraphs.map((p: string, i: number) => (<p key={i}>{p}</p>))}
               </div>
-
               <div className="grid sm:grid-cols-2 gap-3 mt-8">
-                {['Asset Holding', 'Tax Effectiveness', 'Confidentiality', 'Global Expansion', 'Full Foreign Ownership', '0% Corporate Tax'].map((item, i) => (
+                {data.whatIsSection.highlights.map((item: string, i: number) => (
                   <div key={i} className="flex items-center gap-2 p-3 rounded-2xl bg-white border border-border">
                     <div className="w-5 h-5 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center">
                       <CheckCircle2 size={12} className="text-white" strokeWidth={3} />
@@ -539,9 +235,9 @@ export default function OffshoreCompanySetup() {
         </div>
       </section>
 
-      {/* === 4. BENEFITS — Dark Premium === */}
+      {/* === 4. BENEFITS === */}
       <section className="relative py-14 md:py-20 overflow-hidden bg-gradient-to-br from-slate-950 via-indigo-950 to-blue-950">
-        <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${data.heroImage})` }} />
         <div className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full bg-cyan-500/20 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[700px] h-[700px] rounded-full bg-indigo-500/20 blur-[150px] pointer-events-none" />
 
@@ -549,17 +245,18 @@ export default function OffshoreCompanySetup() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
               <Award size={14} className="text-cyan-300" />
-              <span className="text-xs font-bold tracking-wider uppercase text-white">Why Choose Dubai</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.benefitsSection, 'badge')}>{data.benefitsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              Benefits of <span className="bg-gradient-to-r from-cyan-300 to-indigo-300 bg-clip-text text-transparent">Dubai Offshore Setup</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.benefitsSection, 'title')}>
+              {data.benefitsSection.title.replace(data.benefitsSection.titleHighlight, '')}
+              <span className="bg-gradient-to-r from-cyan-300 to-indigo-300 bg-clip-text text-transparent">{data.benefitsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-white/70 font-medium">Six powerful advantages that make Dubai the top offshore jurisdiction.</p>
+            <p className="text-base text-white/70 font-medium" data-tina-field={tinaField(data.benefitsSection, 'subtitle')}>{data.benefitsSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {benefits.map((benefit, i) => {
-              const Icon = benefit.icon;
+            {data.benefitsSection.items.map((benefit: any, i: number) => {
+              const Icon = iconMap[benefit.icon] || DollarSign;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.08 }} className="group relative">
                   <div className={`absolute -inset-2 rounded-[28px] bg-gradient-to-r ${benefit.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-500`} />
@@ -567,8 +264,8 @@ export default function OffshoreCompanySetup() {
                     <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${benefit.color} flex items-center justify-center shadow-lg mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                       <Icon size={26} className="text-white" strokeWidth={2.2} />
                     </div>
-                    <h3 className="text-base font-black text-white mb-3 leading-tight">{benefit.title}</h3>
-                    <p className="text-xs text-white/70 font-medium leading-relaxed">{benefit.description}</p>
+                    <h3 className="text-base font-black text-white mb-3 leading-tight" data-tina-field={tinaField(benefit, 'title')}>{benefit.title}</h3>
+                    <p className="text-xs text-white/70 font-medium leading-relaxed" data-tina-field={tinaField(benefit, 'description')}>{benefit.description}</p>
                   </div>
                 </motion.div>
               );
@@ -577,25 +274,26 @@ export default function OffshoreCompanySetup() {
         </div>
       </section>
 
-      {/* === 5. AUDIENCES — 5-Card Image Masonry === */}
+      {/* === 5. AUDIENCES === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-cyan-100/50 blur-[140px] pointer-events-none" />
-
         <div className="relative max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-cyan-200 shadow-soft mb-6">
               <Target size={14} className="text-cyan-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-cyan-700">Find Out If Offshore Is the Smart Choice</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-cyan-700" data-tina-field={tinaField(data.audiencesSection, 'badge')}>{data.audiencesSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Who Should Consider <span className="gradient-text">Offshore Company Setup?</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.audiencesSection, 'title')}>
+              {data.audiencesSection.title.replace(data.audiencesSection.titleHighlight, '')}
+              <span className="gradient-text">{data.audiencesSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">For tax efficiency, privacy, and international expansion.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.audiencesSection, 'subtitle')}>{data.audiencesSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {audiences.map((audience, i) => {
-              const Icon = audience.icon;
+            {data.audiencesSection.items.map((audience: any, i: number) => {
+              const Icon = iconMap[audience.icon] || Briefcase;
+              const isLarge = i === 0 || i === 4;
               return (
                 <motion.div
                   key={i}
@@ -603,33 +301,25 @@ export default function OffshoreCompanySetup() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.08 }}
-                  className={`group relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 ${
-                    i === 0 || i === 4 ? 'lg:col-span-3 h-[360px]' : 'lg:col-span-2 h-[320px]'
-                  }`}
+                  className={`group relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 ${isLarge ? 'lg:col-span-3 h-[360px]' : 'lg:col-span-2 h-[320px]'}`}
                 >
                   <div className="absolute inset-0">
-                    <img src={audience.image} alt={audience.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <img src={audience.image} alt={audience.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-tina-field={tinaField(audience, 'image')} />
                     <div className={`absolute inset-0 bg-gradient-to-br ${audience.color} opacity-80 mix-blend-multiply`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                   </div>
-
                   <div className="relative h-full flex flex-col justify-between p-6">
                     <div className="flex items-start justify-between">
                       <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/40 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
                         <Icon size={22} className="text-white" strokeWidth={2.5} />
                       </div>
-                      <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-[9px] font-black text-white uppercase tracking-widest">
+                      <span className="px-2.5 py-1 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-[9px] font-black text-white uppercase tracking-widest" data-tina-field={tinaField(audience, 'tagline')}>
                         {audience.tagline}
                       </span>
                     </div>
-
                     <div>
-                      <h3 className="text-lg font-black text-white leading-tight mb-2 drop-shadow-lg">
-                        {audience.title}
-                      </h3>
-                      <p className="text-xs text-white/85 font-medium leading-relaxed">
-                        {audience.description}
-                      </p>
+                      <h3 className="text-lg font-black text-white leading-tight mb-2 drop-shadow-lg" data-tina-field={tinaField(audience, 'title')}>{audience.title}</h3>
+                      <p className="text-xs text-white/85 font-medium leading-relaxed" data-tina-field={tinaField(audience, 'description')}>{audience.description}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -639,9 +329,9 @@ export default function OffshoreCompanySetup() {
         </div>
       </section>
 
-      {/* === 6. JURISDICTIONS — Swipe Carousel === */}
+      {/* === 6. JURISDICTIONS CAROUSEL === */}
       <section className="relative py-14 md:py-20 overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: `url(${data.heroImage})` }} />
         <div className="absolute top-0 left-0 w-[700px] h-[700px] rounded-full bg-blue-500/20 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[700px] h-[700px] rounded-full bg-cyan-500/20 blur-[150px] pointer-events-none" />
 
@@ -649,126 +339,85 @@ export default function OffshoreCompanySetup() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
               <MapPin size={14} className="text-blue-300" />
-              <span className="text-xs font-bold tracking-wider uppercase text-white">Top Offshore Jurisdictions</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.jurisdictionsSection, 'badge')}>{data.jurisdictionsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              Best <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">Offshore Jurisdictions</span> in the UAE
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.jurisdictionsSection, 'title')}>
+              {data.jurisdictionsSection.title.replace(data.jurisdictionsSection.titleHighlight, '')}
+              <span className="bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">{data.jurisdictionsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-white/70 font-medium">Swipe through 2 premium jurisdictions — both fully legal and internationally compliant.</p>
+            <p className="text-base text-white/70 font-medium" data-tina-field={tinaField(data.jurisdictionsSection, 'subtitle')}>{data.jurisdictionsSection.subtitle}</p>
           </motion.div>
 
-          {/* Carousel */}
           <div className="relative">
             <div className="relative rounded-[32px] overflow-hidden border border-white/10 shadow-2xl h-[580px]">
               <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeJurisdiction}
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
-                  transition={{ duration: 0.5, ease: 'easeInOut' }}
-                  className="absolute inset-0"
-                >
-                  <div className="absolute inset-0">
-                    <img
-                      src={jurisdictions[activeJurisdiction].image}
-                      alt={jurisdictions[activeJurisdiction].title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-br ${jurisdictions[activeJurisdiction].color} opacity-80 mix-blend-multiply`} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                  </div>
-
-                  <div className="relative h-full flex flex-col justify-between p-8 md:p-12">
-                    <div>
-                      <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br ${jurisdictions[activeJurisdiction].color} flex items-center justify-center shadow-2xl mb-6 backdrop-blur-xl border border-white/30`}>
-                        {(() => {
-                          const Icon = jurisdictions[activeJurisdiction].icon;
-                          return <Icon size={36} className="text-white" strokeWidth={2.2} />;
-                        })()}
-                      </div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="inline-block px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-[10px] font-black text-white uppercase tracking-widest">
-                          Option {String(activeJurisdiction + 1).padStart(2, '0')} / {String(jurisdictions.length).padStart(2, '0')}
-                        </span>
-                        <span className="inline-block px-3 py-1.5 rounded-full bg-cyan-400/90 backdrop-blur-xl border border-cyan-300/50 text-[10px] font-black text-white uppercase tracking-widest">
-                          Best for {jurisdictions[activeJurisdiction].bestFor}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="text-xs font-black text-cyan-300 uppercase tracking-widest mb-2">{jurisdictions[activeJurisdiction].tagline}</div>
-                      <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4 drop-shadow-lg">
-                        {jurisdictions[activeJurisdiction].title}
-                      </h3>
-                      <p className="text-base md:text-lg text-white/90 font-medium leading-relaxed max-w-3xl mb-6 drop-shadow">
-                        {jurisdictions[activeJurisdiction].description}
-                      </p>
-
-                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 max-w-3xl">
-                        {jurisdictions[activeJurisdiction].features.map((feature, fi) => (
-                          <span key={fi} className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-xs font-bold text-white text-center">
-                            {feature}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                <motion.div key={activeJurisdiction} initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.5, ease: 'easeInOut' }} className="absolute inset-0">
+                  {(() => {
+                    const j = jurisdictions[activeJurisdiction];
+                    const Icon = iconMap[j.icon] || Building;
+                    return (
+                      <>
+                        <div className="absolute inset-0">
+                          <img src={j.image} alt={j.title} className="w-full h-full object-cover" data-tina-field={tinaField(j, 'image')} />
+                          <div className={`absolute inset-0 bg-gradient-to-br ${j.color} opacity-80 mix-blend-multiply`} />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                        </div>
+                        <div className="relative h-full flex flex-col justify-between p-8 md:p-12">
+                          <div>
+                            <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br ${j.color} flex items-center justify-center shadow-2xl mb-6 backdrop-blur-xl border border-white/30`}>
+                              <Icon size={36} className="text-white" strokeWidth={2.2} />
+                            </div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="inline-block px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-[10px] font-black text-white uppercase tracking-widest">
+                                Option {String(activeJurisdiction + 1).padStart(2, '0')} / {String(jurisdictions.length).padStart(2, '0')}
+                              </span>
+                              <span className="inline-block px-3 py-1.5 rounded-full bg-cyan-400/90 backdrop-blur-xl border border-cyan-300/50 text-[10px] font-black text-white uppercase tracking-widest">
+                                Best for {j.bestFor}
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-black text-cyan-300 uppercase tracking-widest mb-2" data-tina-field={tinaField(j, 'tagline')}>{j.tagline}</div>
+                            <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4 drop-shadow-lg" data-tina-field={tinaField(j, 'title')}>{j.title}</h3>
+                            <p className="text-base md:text-lg text-white/90 font-medium leading-relaxed max-w-3xl mb-6 drop-shadow" data-tina-field={tinaField(j, 'description')}>{j.description}</p>
+                            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 max-w-3xl">
+                              {j.features.map((feature: string, fi: number) => (
+                                <span key={fi} className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-xs font-bold text-white text-center">{feature}</span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </motion.div>
               </AnimatePresence>
 
-              <button
-                onClick={prevJurisdiction}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group"
-                aria-label="Previous"
-              >
+              <button onClick={prevJurisdiction} className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group" aria-label="Previous">
                 <ChevronLeft size={22} className="text-white group-hover:-translate-x-0.5 transition-transform" strokeWidth={2.5} />
               </button>
-              <button
-                onClick={nextJurisdiction}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group"
-                aria-label="Next"
-              >
+              <button onClick={nextJurisdiction} className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group" aria-label="Next">
                 <ChevronRight size={22} className="text-white group-hover:translate-x-0.5 transition-transform" strokeWidth={2.5} />
               </button>
 
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
-                {jurisdictions.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveJurisdiction(i)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      i === activeJurisdiction ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'
-                    }`}
-                    aria-label={`Go to ${i + 1}`}
-                  />
+                {jurisdictions.map((_: any, i: number) => (
+                  <button key={i} onClick={() => setActiveJurisdiction(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeJurisdiction ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'}`} aria-label={`Go to ${i + 1}`} />
                 ))}
               </div>
             </div>
 
-            {/* Thumbnails */}
             <div className="mt-6 grid grid-cols-2 gap-4 max-w-2xl mx-auto">
-              {jurisdictions.map((j, i) => {
-                const Icon = j.icon;
+              {jurisdictions.map((j: any, i: number) => {
+                const Icon = iconMap[j.icon] || Building;
                 return (
-                  <button
-                    key={i}
-                    onClick={() => setActiveJurisdiction(i)}
-                    className={`group relative rounded-2xl overflow-hidden transition-all duration-300 ${
-                      i === activeJurisdiction
-                        ? 'ring-2 ring-cyan-400 shadow-lg shadow-cyan-500/30 scale-105'
-                        : 'ring-1 ring-white/10 hover:ring-white/30'
-                    }`}
-                  >
+                  <button key={i} onClick={() => setActiveJurisdiction(i)} className={`group relative rounded-2xl overflow-hidden transition-all duration-300 ${i === activeJurisdiction ? 'ring-2 ring-cyan-400 shadow-lg shadow-cyan-500/30 scale-105' : 'ring-1 ring-white/10 hover:ring-white/30'}`}>
                     <div className="relative h-24">
                       <img src={j.image} alt={j.title} className="w-full h-full object-cover" />
                       <div className={`absolute inset-0 bg-gradient-to-br ${j.color} opacity-80 mix-blend-multiply`} />
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
                         <Icon size={22} className="text-white" strokeWidth={2.5} />
-                        <span className="text-[10px] font-black text-white uppercase tracking-wider">
-                          {j.title}
-                        </span>
+                        <span className="text-[10px] font-black text-white uppercase tracking-wider" data-tina-field={tinaField(j, 'title')}>{j.title}</span>
                       </div>
                     </div>
                   </button>
@@ -785,17 +434,18 @@ export default function OffshoreCompanySetup() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
               <Briefcase size={14} className="text-cyan-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Licensing Rules for Offshore Entities</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.activitiesSection, 'badge')}>{data.activitiesSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              What Can a <span className="gradient-text">Dubai Offshore Company</span> Do?
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.activitiesSection, 'title')}>
+              {data.activitiesSection.title.replace(data.activitiesSection.titleHighlight, '')}
+              <span className="gradient-text">{data.activitiesSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Offshore companies cannot trade within the UAE but can conduct business internationally.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.activitiesSection, 'subtitle')}>{data.activitiesSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {activities.map((activity, i) => {
-              const Icon = activity.icon;
+            {data.activitiesSection.items.map((activity: any, i: number) => {
+              const Icon = iconMap[activity.icon] || Globe;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.08 }} className="group relative">
                   <div className={`absolute -inset-2 rounded-[28px] bg-gradient-to-r ${activity.color} opacity-0 group-hover:opacity-25 blur-2xl transition-all duration-500`} />
@@ -805,7 +455,7 @@ export default function OffshoreCompanySetup() {
                       <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${activity.color} flex items-center justify-center shadow-lg flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                         <Icon size={22} className="text-white" strokeWidth={2.2} />
                       </div>
-                      <span className="text-sm font-black text-[#0A0F1F] leading-tight">{activity.label}</span>
+                      <span className="text-sm font-black text-[#0A0F1F] leading-tight" data-tina-field={tinaField(activity, 'label')}>{activity.label}</span>
                     </div>
                   </div>
                 </motion.div>
@@ -818,23 +468,22 @@ export default function OffshoreCompanySetup() {
       {/* === 8. PROCESS + SERVICES === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-cyan-100/50 blur-[140px] pointer-events-none" />
-
         <div className="relative max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-cyan-200 shadow-soft mb-6">
               <Rocket size={14} className="text-cyan-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-cyan-700">Fast Setup Process</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-cyan-700" data-tina-field={tinaField(data.processSection, 'badge')}>{data.processSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              How Long Does <span className="gradient-text">Offshore Registration Take?</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.processSection, 'title')}>
+              {data.processSection.title.replace(data.processSection.titleHighlight, '')}
+              <span className="gradient-text">{data.processSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Typically 3-5 working days. Here's how we streamline the process.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.processSection, 'subtitle')}>{data.processSection.subtitle}</p>
           </motion.div>
 
-          {/* Process Steps */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-14">
-            {processSteps.map((step, i) => {
-              const Icon = step.icon;
+            {data.processSection.steps.map((step: any, i: number) => {
+              const Icon = iconMap[step.icon] || FileSignature;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.1 }} className="group relative">
                   <div className="relative p-5 rounded-3xl bg-white border border-border shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-500 h-full">
@@ -845,26 +494,26 @@ export default function OffshoreCompanySetup() {
                       <Icon size={22} className="text-white" strokeWidth={2.2} />
                     </div>
                     <div className="text-[10px] font-black text-cyan-600 uppercase tracking-widest mb-1">STEP {String(i + 1).padStart(2, '0')}</div>
-                    <h3 className="text-sm font-black text-[#0A0F1F] mb-2 leading-tight">{step.title}</h3>
-                    <p className="text-xs text-[#64748B] font-medium leading-relaxed">{step.description}</p>
+                    <h3 className="text-sm font-black text-[#0A0F1F] mb-2 leading-tight" data-tina-field={tinaField(step, 'title')}>{step.title}</h3>
+                    <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(step, 'description')}>{step.description}</p>
                   </div>
                 </motion.div>
               );
             })}
           </div>
 
-          {/* Services Grid */}
           <div className="max-w-7xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }} className="text-center mb-10 max-w-3xl mx-auto">
-              <h3 className="text-2xl md:text-3xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-3">
-                How We Help You <span className="gradient-text">Setup Your Offshore Company</span>
+              <h3 className="text-2xl md:text-3xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-3" data-tina-field={tinaField(data.servicesSection, 'title')}>
+                {data.servicesSection.title.replace(data.servicesSection.titleHighlight, '')}
+                <span className="gradient-text">{data.servicesSection.titleHighlight}</span>
               </h3>
-              <p className="text-sm text-[#475569] font-medium">Complete offshore company formation services for entrepreneurs, investors, and businesses worldwide.</p>
+              <p className="text-sm text-[#475569] font-medium" data-tina-field={tinaField(data.servicesSection, 'subtitle')}>{data.servicesSection.subtitle}</p>
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {services.map((service, i) => {
-                const Icon = service.icon;
+              {data.servicesSection.items.map((service: any, i: number) => {
+                const Icon = iconMap[service.icon] || FileSignature;
                 return (
                   <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.08 }} className="group relative">
                     <div className={`absolute -inset-2 rounded-[28px] bg-gradient-to-r ${service.color} opacity-0 group-hover:opacity-25 blur-2xl transition-all duration-500`} />
@@ -873,8 +522,8 @@ export default function OffshoreCompanySetup() {
                       <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} flex items-center justify-center shadow-lg mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                         <Icon size={26} className="text-white" strokeWidth={2.2} />
                       </div>
-                      <h3 className="text-base font-black text-[#0A0F1F] mb-3 leading-tight">{service.title}</h3>
-                      <p className="text-xs text-[#64748B] font-medium leading-relaxed">{service.description}</p>
+                      <h3 className="text-base font-black text-[#0A0F1F] mb-3 leading-tight" data-tina-field={tinaField(service, 'title')}>{service.title}</h3>
+                      <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(service, 'description')}>{service.description}</p>
                     </div>
                   </motion.div>
                 );
@@ -890,17 +539,18 @@ export default function OffshoreCompanySetup() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
               <FileText size={14} className="text-cyan-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Essential Paperwork</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.documentsSection, 'badge')}>{data.documentsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Documents Required for <span className="gradient-text">Offshore Registration</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.documentsSection, 'title')}>
+              {data.documentsSection.title.replace(data.documentsSection.titleHighlight, '')}
+              <span className="gradient-text">{data.documentsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">We handle all documentation, translations, and submission to ensure full compliance.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.documentsSection, 'subtitle')}>{data.documentsSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {documents.map((doc, i) => {
-              const Icon = doc.icon;
+            {data.documentsSection.items.map((doc: any, i: number) => {
+              const Icon = iconMap[doc.icon] || Home;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }} className="group relative">
                   <div className="relative p-5 rounded-3xl bg-gradient-to-br from-white to-cyan-50/30 border border-border shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-500 h-full overflow-hidden">
@@ -910,8 +560,8 @@ export default function OffshoreCompanySetup() {
                         <Icon size={22} className="text-white" strokeWidth={2.2} />
                       </div>
                       <div className="flex-1 pt-1">
-                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1">{doc.label}</h3>
-                        <p className="text-xs text-[#64748B] font-medium leading-relaxed">{doc.desc}</p>
+                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1" data-tina-field={tinaField(doc, 'label')}>{doc.label}</h3>
+                        <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(doc, 'desc')}>{doc.desc}</p>
                       </div>
                     </div>
                   </div>
@@ -922,9 +572,9 @@ export default function OffshoreCompanySetup() {
         </div>
       </section>
 
-      {/* === 10. COMPLIANCE — Dark Premium === */}
+      {/* === 10. COMPLIANCE === */}
       <section className="relative py-14 md:py-20 overflow-hidden bg-gradient-to-br from-slate-950 via-cyan-950 to-blue-950">
-        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: `url(${data.heroImage})` }} />
         <div className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full bg-cyan-500/20 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[700px] h-[700px] rounded-full bg-blue-500/20 blur-[150px] pointer-events-none" />
 
@@ -932,17 +582,18 @@ export default function OffshoreCompanySetup() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
               <ShieldCheck size={14} className="text-cyan-300" />
-              <span className="text-xs font-bold tracking-wider uppercase text-white">International Standards</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.complianceSection, 'badge')}>{data.complianceSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              Is Dubai Offshore <span className="bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">Fully Compliant?</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.complianceSection, 'title')}>
+              {data.complianceSection.title.replace(data.complianceSection.titleHighlight, '')}
+              <span className="bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">{data.complianceSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-white/70 font-medium">Absolutely. Dubai offshore jurisdictions follow global regulations for:</p>
+            <p className="text-base text-white/70 font-medium" data-tina-field={tinaField(data.complianceSection, 'subtitle')}>{data.complianceSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {compliance.map((item, i) => {
-              const Icon = item.icon;
+            {data.complianceSection.items.map((item: any, i: number) => {
+              const Icon = iconMap[item.icon] || Eye;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="group relative">
                   <div className={`absolute -inset-2 rounded-[28px] bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-500`} />
@@ -950,8 +601,8 @@ export default function OffshoreCompanySetup() {
                     <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                       <Icon size={26} className="text-white" strokeWidth={2.2} />
                     </div>
-                    <h3 className="text-lg font-black text-white mb-3 leading-tight">{item.title}</h3>
-                    <p className="text-sm text-white/70 font-medium leading-relaxed">{item.description}</p>
+                    <h3 className="text-lg font-black text-white mb-3 leading-tight" data-tina-field={tinaField(item, 'title')}>{item.title}</h3>
+                    <p className="text-sm text-white/70 font-medium leading-relaxed" data-tina-field={tinaField(item, 'description')}>{item.description}</p>
                   </div>
                 </motion.div>
               );
@@ -963,66 +614,62 @@ export default function OffshoreCompanySetup() {
       {/* === 11. MAINTENANCE + WHY US === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-cyan-100/50 blur-[140px] pointer-events-none" />
-
         <div className="relative max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-10">
-            {/* Left — Maintenance */}
+            {/* Maintenance */}
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-400 to-blue-600 opacity-10 blur-[80px] rounded-full" />
               <div className="relative p-8 rounded-3xl bg-white border border-border shadow-lg h-full">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-50 border border-cyan-200 mb-6">
                   <RefreshCw size={14} className="text-cyan-600" />
-                  <span className="text-xs font-bold tracking-wider uppercase text-cyan-700">Annual Maintenance</span>
+                  <span className="text-xs font-bold tracking-wider uppercase text-cyan-700" data-tina-field={tinaField(data.maintenanceSection, 'badge')}>{data.maintenanceSection.badge}</span>
                 </div>
-
-                <h2 className="text-2xl md:text-3xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6">
-                  What Are the <span className="gradient-text">Annual Requirements?</span>
+                <h2 className="text-2xl md:text-3xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6" data-tina-field={tinaField(data.maintenanceSection, 'title')}>
+                  {data.maintenanceSection.title.replace(data.maintenanceSection.titleHighlight, '')}
+                  <span className="gradient-text">{data.maintenanceSection.titleHighlight}</span>
                 </h2>
-
                 <div className="space-y-3">
-                  {maintenance.map((item, i) => {
-                    const Icon = item.icon;
+                  {data.maintenanceSection.items.map((item: any, i: number) => {
+                    const Icon = iconMap[item.icon] || RefreshCw;
                     return (
                       <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }} className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-cyan-50/50 to-blue-50/50 border border-cyan-100">
                         <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-md flex-shrink-0`}>
                           <Icon size={18} className="text-white" strokeWidth={2.5} />
                         </div>
-                        <span className="text-sm font-bold text-[#0A0F1F]">{item.label}</span>
+                        <span className="text-sm font-bold text-[#0A0F1F]" data-tina-field={tinaField(item, 'label')}>{item.label}</span>
                       </motion.div>
                     );
                   })}
                 </div>
-
-                <p className="text-xs text-[#64748B] font-medium leading-relaxed mt-6 pt-6 border-t border-dashed border-border">
-                  We provide full annual compliance management and reminders to keep you worry-free.
+                <p className="text-xs text-[#64748B] font-medium leading-relaxed mt-6 pt-6 border-t border-dashed border-border" data-tina-field={tinaField(data.maintenanceSection, 'footerText')}>
+                  {data.maintenanceSection.footerText}
                 </p>
               </div>
             </motion.div>
 
-            {/* Right — Why Choose Us */}
+            {/* Why Choose Us */}
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-indigo-600 opacity-10 blur-[80px] rounded-full" />
               <div className="relative p-8 rounded-3xl bg-white border border-border shadow-lg h-full">
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 mb-6">
                   <Award size={14} className="text-blue-600" />
-                  <span className="text-xs font-bold tracking-wider uppercase text-blue-700">Why Choose Us</span>
+                  <span className="text-xs font-bold tracking-wider uppercase text-blue-700" data-tina-field={tinaField(data.whyChooseUsSection, 'badge')}>{data.whyChooseUsSection.badge}</span>
                 </div>
-
-                <h2 className="text-2xl md:text-3xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6">
-                  Your Trusted <span className="gradient-text">Offshore Partner</span>
+                <h2 className="text-2xl md:text-3xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6" data-tina-field={tinaField(data.whyChooseUsSection, 'title')}>
+                  {data.whyChooseUsSection.title.replace(data.whyChooseUsSection.titleHighlight, '')}
+                  <span className="gradient-text">{data.whyChooseUsSection.titleHighlight}</span>
                 </h2>
-
                 <div className="grid grid-cols-2 gap-3">
-                  {whyChooseUs.map((item, i) => {
-                    const Icon = item.icon;
+                  {data.whyChooseUsSection.items.map((item: any, i: number) => {
+                    const Icon = iconMap[item.icon] || DollarSign;
                     return (
                       <motion.div key={i} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }} className="flex flex-col gap-2 p-3 rounded-2xl bg-gradient-to-br from-blue-50/50 to-indigo-50/50 border border-blue-100">
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center shadow-md">
                           <Icon size={18} className="text-white" strokeWidth={2.5} />
                         </div>
                         <div>
-                          <div className="text-xs font-black text-[#0A0F1F] leading-tight">{item.label}</div>
-                          <div className="text-[10px] text-[#64748B] font-medium leading-tight mt-0.5">{item.desc}</div>
+                          <div className="text-xs font-black text-[#0A0F1F] leading-tight" data-tina-field={tinaField(item, 'label')}>{item.label}</div>
+                          <div className="text-[10px] text-[#64748B] font-medium leading-tight mt-0.5" data-tina-field={tinaField(item, 'desc')}>{item.desc}</div>
                         </div>
                       </motion.div>
                     );
@@ -1040,28 +687,27 @@ export default function OffshoreCompanySetup() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
               <TrendingUp size={14} className="text-cyan-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Business Growth Outlook</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.growthStatsSection, 'badge')}>{data.growthStatsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Your Global <span className="gradient-text">Business Platform</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.growthStatsSection, 'title')}>
+              {data.growthStatsSection.title.replace(data.growthStatsSection.titleHighlight, '')}
+              <span className="gradient-text">{data.growthStatsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">The ideal structure for international investors and HNIs.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.growthStatsSection, 'subtitle')}>{data.growthStatsSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-5">
-            {growthStats.map((stat, i) => {
-              const Icon = stat.icon;
+            {data.growthStatsSection.items.map((stat: any, i: number) => {
+              const Icon = iconMap[stat.icon] || Building;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.08 }} className="group relative p-6 rounded-3xl bg-white border border-border shadow-md hover:shadow-[0_20px_60px_rgba(34,211,238,0.15)] hover:-translate-y-2 transition-all duration-500 overflow-hidden">
                   <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.color}`} />
                   <div className={`absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br ${stat.color} opacity-[0.06] group-hover:opacity-[0.12] blur-2xl transition-opacity duration-500`} />
-
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                     <Icon size={26} className="text-white" strokeWidth={2.2} />
                   </div>
-
-                  <div className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-none mb-2 tracking-tight">{stat.value}</div>
-                  <div className="text-xs font-bold text-[#64748B] uppercase tracking-widest">{stat.label}</div>
+                  <div className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-none mb-2 tracking-tight" data-tina-field={tinaField(stat, 'value')}>{stat.value}</div>
+                  <div className="text-xs font-bold text-[#64748B] uppercase tracking-widest" data-tina-field={tinaField(stat, 'label')}>{stat.label}</div>
                 </motion.div>
               );
             })}
@@ -1072,22 +718,18 @@ export default function OffshoreCompanySetup() {
       {/* === 13. FAQ === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50 overflow-hidden">
         <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full bg-cyan-100/50 blur-[140px] pointer-events-none" />
-
         <div className="relative max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="lg:col-span-5 lg:sticky lg:top-32">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
                 <MessageCircle size={14} className="text-cyan-600" />
-                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Common Questions</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.faqsSection, 'badge')}>{data.faqsSection.badge}</span>
               </div>
-
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-[1.1] tracking-tight mb-5">
-                Frequently Asked <span className="gradient-text">Questions</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-[1.1] tracking-tight mb-5" data-tina-field={tinaField(data.faqsSection, 'title')}>
+                {data.faqsSection.title.replace(data.faqsSection.titleHighlight, '')}
+                <span className="gradient-text">{data.faqsSection.titleHighlight}</span>
               </h2>
-
-              <p className="text-base text-[#475569] font-medium leading-relaxed mb-8">
-                Everything you need to know about Offshore Company Setup in Dubai. Still have questions? We're one message away.
-              </p>
+              <p className="text-base text-[#475569] font-medium leading-relaxed mb-8" data-tina-field={tinaField(data.faqsSection, 'subtitle')}>{data.faqsSection.subtitle}</p>
 
               <div className="relative rounded-3xl overflow-hidden p-6 bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-700 shadow-2xl">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
@@ -1098,11 +740,12 @@ export default function OffshoreCompanySetup() {
                   <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center mb-4">
                     <Sparkles size={22} className="text-white" strokeWidth={2.2} />
                   </div>
-                  <h3 className="text-xl font-black text-white leading-tight tracking-tight mb-2">Still Have Questions?</h3>
-                  <p className="text-sm text-white/90 font-medium leading-relaxed mb-5">Get a free consultation with our offshore specialists.</p>
+                  <h3 className="text-xl font-black text-white leading-tight tracking-tight mb-2" data-tina-field={tinaField(data.faqsSection.sidebarCard, 'title')}>{data.faqsSection.sidebarCard.title}</h3>
+                  <p className="text-sm text-white/90 font-medium leading-relaxed mb-5" data-tina-field={tinaField(data.faqsSection.sidebarCard, 'text')}>{data.faqsSection.sidebarCard.text}</p>
                   <div className="flex flex-wrap gap-3">
-                    <a href={getWhatsAppLink("Hi! I have a question about Offshore Company Setup in Dubai.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-cyan-700 font-bold text-xs shadow-lg hover:scale-105 transition-all duration-300">
-                      <MessageCircle size={14} />WhatsApp
+                    <a href={getWhatsAppLink(data.faqsSection.sidebarCard.whatsappMessage)} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-cyan-700 font-bold text-xs shadow-lg hover:scale-105 transition-all duration-300">
+                      <WhatsAppIcon size={14} className="text-emerald-600" />
+WhatsApp
                     </a>
                     <a href="tel:+971566556645" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-xs hover:bg-white/25 transition-all duration-300">
                       <Phone size={14} />Call Us
@@ -1113,17 +756,16 @@ export default function OffshoreCompanySetup() {
             </motion.div>
 
             <div className="lg:col-span-7 space-y-4">
-              {faqs.map((faq, i) => (
+              {data.faqsSection.items.map((faq: any, i: number) => (
                 <motion.details key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.04 }} className="group relative rounded-3xl bg-white border border-border hover:border-cyan-200 hover:shadow-[0_20px_60px_rgba(34,211,238,0.15)] transition-all duration-500 overflow-hidden cursor-pointer">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 to-blue-600 opacity-0 group-open:opacity-100 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-400 to-blue-600 opacity-0 group-open:opacity-100 transition-opacity duration-300" />
-
                   <summary className="flex items-start gap-4 p-6 list-none">
                     <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg flex-shrink-0 group-open:scale-110 transition-transform duration-300">
                       <span className="text-sm font-black text-white">{String(i + 1).padStart(2, '0')}</span>
                     </div>
                     <div className="flex-1 pt-1">
-                      <h3 className="font-black text-[#0A0F1F] text-base md:text-lg leading-snug tracking-tight pr-4 group-hover:text-cyan-700 transition-colors">{faq.q}</h3>
+                      <h3 className="font-black text-[#0A0F1F] text-base md:text-lg leading-snug tracking-tight pr-4 group-hover:text-cyan-700 transition-colors" data-tina-field={tinaField(faq, 'q')}>{faq.q}</h3>
                     </div>
                     <div className="relative flex-shrink-0 pt-1">
                       <div className="w-8 h-8 rounded-full bg-cyan-50 border border-cyan-200 flex items-center justify-center group-open:bg-gradient-to-br group-open:from-cyan-400 group-open:to-blue-600 group-open:border-transparent transition-all duration-300">
@@ -1133,7 +775,7 @@ export default function OffshoreCompanySetup() {
                   </summary>
                   <div className="px-6 pb-6 pl-20">
                     <div className="pt-2 border-t border-dashed border-border">
-                      <p className="pt-4 text-sm md:text-base text-[#475569] font-medium leading-relaxed">{faq.a}</p>
+                      <p className="pt-4 text-sm md:text-base text-[#475569] font-medium leading-relaxed" data-tina-field={tinaField(faq, 'a')}>{faq.a}</p>
                     </div>
                   </div>
                 </motion.details>
@@ -1148,23 +790,24 @@ export default function OffshoreCompanySetup() {
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-12 max-w-2xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-3">
-              Related <span className="gradient-text">Services</span>
+              {data.relatedServicesSection.title.replace(data.relatedServicesSection.titleHighlight, '')}
+              <span className="gradient-text">{data.relatedServicesSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Services that pair well with your Offshore setup.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.relatedServicesSection, 'subtitle')}>{data.relatedServicesSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
-            {relatedServices.map((service, i) => (
+            {data.relatedServicesSection.items.map((service: any, i: number) => (
               <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}>
                 <Link to={`/services/${service.slug}`} className="group relative block h-full rounded-3xl bg-white border border-border overflow-hidden shadow-[0_10px_40px_rgba(15,23,42,0.06)] hover:shadow-[0_25px_70px_rgba(15,23,42,0.15)] hover:-translate-y-2 transition-all duration-500">
                   <div className="relative h-40 overflow-hidden">
                     <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] group-hover:scale-110" style={{ backgroundImage: `url(${service.image})` }} />
                     <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-70 mix-blend-multiply`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <h3 className="absolute bottom-4 left-5 right-5 text-xl font-black text-white">{service.title}</h3>
+                    <h3 className="absolute bottom-4 left-5 right-5 text-xl font-black text-white" data-tina-field={tinaField(service, 'title')}>{service.title}</h3>
                   </div>
                   <div className="p-5">
-                    <p className="text-sm text-[#64748B] font-medium leading-relaxed mb-4">{service.description}</p>
+                    <p className="text-sm text-[#64748B] font-medium leading-relaxed mb-4" data-tina-field={tinaField(service, 'description')}>{service.description}</p>
                     <div className="flex items-center gap-2 text-sm font-black">
                       <span className="gradient-text">Read More</span>
                       <ArrowRight size={14} className="text-cyan-600 group-hover:translate-x-1 transition-transform" />
@@ -1176,7 +819,7 @@ export default function OffshoreCompanySetup() {
           </div>
 
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="relative rounded-[32px] overflow-hidden shadow-[0_30px_80px_rgba(15,23,42,0.2)]">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1548574505-5e239809ee19?w=1600&q=80)' }} />
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${data.heroImage})` }} />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-indigo-950/70 to-cyan-950/50" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
             <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
@@ -1186,20 +829,18 @@ export default function OffshoreCompanySetup() {
                 <div className="lg:col-span-7">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 mb-6">
                     <Sparkles size={14} className="text-white" />
-                    <span className="text-xs font-bold tracking-wider uppercase text-white">Opening in Dubai?</span>
+                    <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.finalCTA, 'badge')}>{data.finalCTA.badge}</span>
                   </div>
-
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5 drop-shadow-lg">
-                    Fast Licenses. No Tax. <span className="text-cyan-300">Full Support.</span>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5 drop-shadow-lg" data-tina-field={tinaField(data.finalCTA, 'title')}>
+                    {data.finalCTA.title.replace(data.finalCTA.titleHighlight, '')}
+                    <span className="text-cyan-300">{data.finalCTA.titleHighlight}</span>
                   </h2>
-
-                  <p className="text-base md:text-lg text-white/95 font-medium leading-relaxed mb-8 max-w-xl drop-shadow">
-                    Launch your offshore company with Setup Zone Dubai — the only partner you need to launch fast, cheap, and easily.
-                  </p>
+                  <p className="text-base md:text-lg text-white/95 font-medium leading-relaxed mb-8 max-w-xl drop-shadow" data-tina-field={tinaField(data.finalCTA, 'subtitle')}>{data.finalCTA.subtitle}</p>
 
                   <div className="flex flex-wrap gap-4 mb-8">
-                    <a href={getWhatsAppLink("Hi! I'd like a free consultation for Offshore Company Setup.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-cyan-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
-                      <MessageCircle size={16} />WhatsApp Us
+                    <a href={getWhatsAppLink(data.finalCTA.whatsappMessage)} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-cyan-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
+                      <WhatsAppIcon size={16} className="text-emerald-600" />
+WhatsApp Us
                       <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </a>
                     <a href="tel:+971566556645" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
@@ -1208,7 +849,7 @@ export default function OffshoreCompanySetup() {
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    {['Free Consultation', '3-5 Days Setup', 'Zero Tax'].map((item, i) => (
+                    {data.finalCTA.chips.map((item: string, i: number) => (
                       <div key={i} className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs">
                         <CheckCircle2 size={12} className="text-cyan-300" strokeWidth={3} />
                         <span className="font-semibold text-white">{item}</span>
@@ -1218,10 +859,10 @@ export default function OffshoreCompanySetup() {
                 </div>
 
                 <div className="lg:col-span-5 space-y-4">
-                  <motion.a href={getWhatsAppLink("Hi! I'd like to discuss Offshore Company Setup.")} target="_blank" rel="noreferrer" initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} className="group block relative p-5 rounded-2xl bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl hover:shadow-[0_20px_60px_rgba(255,255,255,0.2)] hover:-translate-y-1 transition-all duration-300">
+                  <motion.a href={getWhatsAppLink(data.finalCTA.whatsappCardMessage)} target="_blank" rel="noreferrer" initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} className="group block relative p-5 rounded-2xl bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl hover:-translate-y-1 transition-all duration-300">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                        <MessageCircle size={22} className="text-white" strokeWidth={2.2} />
+<WhatsAppIcon size={22} className="text-emerald-600" />
                       </div>
                       <div className="flex-1">
                         <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-0.5">WhatsApp Us</p>

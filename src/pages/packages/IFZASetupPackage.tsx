@@ -2,329 +2,35 @@
 
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useTina, tinaField } from 'tinacms/dist/react';
 import {
-  Globe, ArrowRight, Sparkles, CheckCircle2, Building2,  Phone, MessageCircle, Home as HomeIcon, Clock,
-  Users, Award, FileText, DollarSign, Zap, Target, Crown, Store,
-  UserCheck, Landmark, Rocket,  Wallet, Plane, 
-  RefreshCw,  ShieldCheck,  Heart,
-  Calculator,  ShoppingCart,
-  Palette, Dumbbell, Laptop, Package, Gift,  FileSignature,
-  Camera, 
-  ChevronRight, ClipboardCheck,ScrollText, 
+  Globe, ArrowRight, Sparkles, CheckCircle2, Building2, Phone, MessageCircle,
+  Home as HomeIcon, Clock, Users, Award, FileText, DollarSign, Zap, Target,
+  Crown, Store, UserCheck, Landmark, Rocket, Wallet, Plane, RefreshCw,
+  ShieldCheck, Heart, Calculator, ShoppingCart, Palette, Dumbbell, Laptop,
+  Package, Gift, FileSignature, Camera, ChevronRight, ClipboardCheck, ScrollText,
 } from 'lucide-react';
 import { getWhatsAppLink } from '../../lib/whatsapp';
+import ifzaPackageData from '../../content/packages/ifza-setup-package.json';
+import WhatsAppIcon from '../../components/icons/WhatsAppIcon';
 
-// ============ DATA ============
+const iconMap: any = {
+  Globe, Building2, Phone, MessageCircle, Clock, Users, Award, FileText,
+  DollarSign, Zap, Target, Crown, Store, UserCheck, Landmark, Rocket, Wallet,
+  Plane, RefreshCw, ShieldCheck, Heart, Calculator, ShoppingCart, Palette,
+  Dumbbell, Laptop, Package, Gift, FileSignature, Camera, ClipboardCheck,
+  ScrollText, Sparkles, ArrowRight, CheckCircle2, HomeIcon,
+};
 
-const stats = [
-  { icon: DollarSign, value: 'AED 5,999', label: 'Starting From', color: 'from-amber-400 to-orange-600' },
-  { icon: Package, value: '11', label: 'Packages', color: 'from-orange-400 to-red-600' },
-  { icon: Clock, value: '3-7', label: 'Days Setup', color: 'from-red-400 to-rose-600' },
-  { icon: Globe, value: '100%', label: 'Ownership', color: 'from-rose-400 to-pink-600' },
-];
+export default function IFZASetupPackage({ tinaData }: { tinaData?: any }) {
+  const data = tinaData?.data?.packages || ifzaPackageData;
 
-const packages = [
-  {
-    id: 1,
-    icon: Plane,
-    title: 'Travel & Tourism Consultancy',
-    price: 'AED 14,499',
-    tagline: 'With Residency Visa',
-    category: 'Premium',
-    color: 'from-sky-500 to-blue-700',
-    badge: 'Popular',
-    badgeColor: 'from-sky-500 to-blue-600',
-    includes: [
-      'Free zone license',
-      '1 UAE residency / investor visa',
-      'Medical, Emirates ID & status change',
-      'Free lease agreement',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-  },
-  {
-    id: 2,
-    icon: Camera,
-    title: 'Event Management',
-    price: 'AED 14,499',
-    tagline: 'With Residency Visa',
-    category: 'Premium',
-    color: 'from-orange-500 to-red-700',
-    badge: 'Premium',
-    badgeColor: 'from-orange-500 to-red-600',
-    includes: [
-      'Free zone license',
-      '1 UAE residency / investor visa',
-      'Medical, Emirates ID & status change',
-      'Free lease agreement',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-  },
-  {
-    id: 3,
-    icon: ShoppingCart,
-    title: 'General Trading',
-    price: 'AED 15,999',
-    tagline: 'With Residency Visa',
-    category: 'Premium',
-    color: 'from-emerald-500 to-teal-700',
-    badge: 'Best Value',
-    badgeColor: 'from-emerald-500 to-teal-600',
-    includes: [
-      'Free zone license',
-      '1 UAE Residency / Investor Visa',
-      'Medical, Emirates ID & status change',
-      'Free lease agreement',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-  },
-  {
-    id: 4,
-    icon: Palette,
-    title: 'Fashion Design',
-    price: 'AED 5,999',
-    tagline: 'Up to 5 Activities',
-    category: 'Economy',
-    color: 'from-pink-500 to-rose-700',
-    badge: 'Affordable',
-    badgeColor: 'from-pink-500 to-rose-600',
-    includes: [
-      'Free zone license',
-      'Free lease agreement',
-      'Up to 5 business activities',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-  },
-  {
-    id: 5,
-    icon: Dumbbell,
-    title: 'Fitness & Lifestyle',
-    price: 'AED 5,999',
-    tagline: 'Up to 5 Activities',
-    category: 'Economy',
-    color: 'from-violet-500 to-purple-700',
-    badge: 'Affordable',
-    badgeColor: 'from-violet-500 to-purple-600',
-    includes: [
-      'Free zone license',
-      'Free lease agreement',
-      'Up to 5 business activities',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-  },
-  {
-    id: 6,
-    icon: ShoppingCart,
-    title: 'E-Commerce',
-    price: 'AED 5,999',
-    tagline: 'Online Business Ready',
-    category: 'Economy',
-    color: 'from-cyan-500 to-blue-700',
-    badge: 'Popular',
-    badgeColor: 'from-cyan-500 to-blue-600',
-    includes: [
-      'Free zone license',
-      'Free lease agreement',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-  },
-  {
-    id: 7,
-    icon: Laptop,
-    title: 'IT Services',
-    price: 'AED 6,449',
-    tagline: 'Up to 5 Activities',
-    category: 'Professional',
-    color: 'from-indigo-500 to-violet-700',
-    badge: 'Tech',
-    badgeColor: 'from-indigo-500 to-violet-600',
-    includes: [
-      'Free zone license',
-      'Free lease agreement',
-      'Up to 5 business activities',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-  },
-  {
-    id: 8,
-    icon: Store,
-    title: 'General Trading',
-    price: 'AED 7,999',
-    tagline: 'Entry Level Trading',
-    category: 'Standard',
-    color: 'from-amber-500 to-orange-700',
-    badge: 'Best Seller',
-    badgeColor: 'from-amber-500 to-orange-600',
-    includes: [
-      'Free zone license',
-      'Free lease agreement',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-  },
-  {
-    id: 9,
-    icon: Crown,
-    title: 'Free Zone License with Lifetime UAE Residency',
-    price: 'AED 11,999',
-    tagline: 'Lifetime Residency',
-    category: 'Premium',
-    color: 'from-fuchsia-500 to-purple-700',
-    badge: 'Exclusive',
-    badgeColor: 'from-fuchsia-500 to-purple-600',
-    includes: [
-      'Free zone license',
-      'Free UAE residency / investor visa for life',
-      'Free lease agreement',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-  },
-  {
-    id: 10,
-    icon: Landmark,
-    title: 'Dubai Mainland License with UAE Residency',
-    price: 'AED 16,999',
-    tagline: 'Mainland + Residency',
-    category: 'Mainland',
-    color: 'from-slate-600 to-slate-800',
-    badge: 'Mainland',
-    badgeColor: 'from-slate-600 to-slate-700',
-    includes: [
-      'Mainland license',
-      '1 UAE residency / investor visa',
-      'Medical, Emirates ID, and status change',
-      'Free bank account opening assistance',
-      'Free VAT consultation',
-    ],
-    exampleActivities: [
-      'Project management',
-      'Management consultancy',
-      'Commercial broker',
-      'Facility management',
-      'Cleaning services',
-      'Building maintenance',
-    ],
-  },
-  {
-    id: 11,
-    icon: Heart,
-    title: 'Women Entrepreneurship',
-    price: 'AED 5,999',
-    tagline: 'Designed for Women Founders',
-    category: 'Special',
-    color: 'from-rose-500 to-pink-700',
-    badge: 'Special',
-    badgeColor: 'from-rose-500 to-pink-600',
-    includes: [
-      'Free zone license',
-      'Free lease agreement',
-      'Up to 5 business activities',
-      'Free bank account opening assistance',
-      'Premium Dubai address & shared P.O. box',
-      'Free VAT consultation',
-    ],
-    exampleActivities: [
-      'Lifestyle Coaching',
-      'Digital Marketing',
-      'Fashion & clothes designing',
-      'Event management',
-      'Consultancy services',
-    ],
-  },
-];
-
-const whyChooseUs = [
-  { icon: DollarSign, label: 'Transparent Pricing', desc: 'No hidden fees, ever' },
-  { icon: Zap, label: 'Fast 3-7 Day Setup', desc: 'Quick license issuance' },
-  { icon: ShieldCheck, label: '100% Compliance', desc: 'Fully government approved' },
-  { icon: UserCheck, label: 'Dedicated Consultant', desc: 'Personal advisor' },
-  { icon: Globe, label: 'Multilingual Team', desc: 'English, Arabic, Hindi, Urdu' },
-  { icon: RefreshCw, label: 'VAT Consultation', desc: 'Included free' },
-  { icon: Award, label: '10,000+ Companies', desc: 'Successfully launched' },
-];
-
-const benefits = [
-  { icon: Globe, title: '100% Ownership', desc: 'Full foreign ownership', color: 'from-amber-400 to-orange-600' },
-  { icon: DollarSign, title: '0% Tax', desc: 'Tax-free environment', color: 'from-orange-400 to-red-600' },
-  { icon: Zap, title: 'Fast Setup', desc: 'Licensed in 3-7 days', color: 'from-red-400 to-rose-600' },
-  { icon: Wallet, title: 'Low Cost', desc: 'Starting from AED 5,999', color: 'from-rose-400 to-pink-600' },
-  { icon: FileText, title: 'VAT Support', desc: 'Free consultation', color: 'from-fuchsia-400 to-purple-600' },
-];
-
-const processSteps = [
-  { step: '01', icon: Target, title: 'Choose Your Package', desc: 'Select from our pre-designed packages.', color: 'from-amber-400 to-orange-600' },
-  { step: '02', icon: FileSignature, title: 'Submit Documents', desc: 'Passport copies and photos.', color: 'from-orange-400 to-red-600' },
-  { step: '03', icon: ClipboardCheck, title: 'License Application', desc: 'We file with IFZA authority.', color: 'from-red-400 to-rose-600' },
-  { step: '04', icon: ScrollText, title: 'Receive Your License', desc: 'Licensed within 3-7 days.', color: 'from-rose-400 to-pink-600' },
-];
-
-const faqs = [
-  {
-    q: 'What is IFZA Free Zone?',
-    a: 'IFZA (International Free Zone Authority) is one of the most flexible and affordable Free Zones in Dubai, known for low-cost setup, 100% foreign ownership, and quick licensing — typically within 3-7 working days.'
-  },
-  {
-    q: 'What is included in the IFZA setup package?',
-    a: 'Depending on the package, you get the Free Zone license, residency visa, medical & Emirates ID, lease agreement, bank account assistance, premium Dubai address, and free VAT consultation.'
-  },
-  {
-    q: 'How much does an IFZA package cost?',
-    a: 'Our IFZA packages start from AED 5,999 (Economy) and go up to AED 16,999 (Mainland + Residency). Premium packages with visa start at AED 14,499.'
-  },
-  {
-    q: 'How long does setup take?',
-    a: 'Typically 3-7 working days for license issuance, and additional 1-2 weeks for visa processing and bank account opening.'
-  },
-  {
-    q: 'Can I customize my package?',
-    a: 'Yes. All packages are starting points and can be customized to match your business activity, visa needs, and budget.'
-  },
-  {
-    q: 'Do I get a UAE residency visa?',
-    a: 'Yes, select packages include a UAE investor/residency visa with medical, Emirates ID, and status change. The Free Zone License with Lifetime UAE Residency even offers lifetime residency.'
-  },
-  {
-    q: 'Is bank account opening included?',
-    a: 'Yes. All packages include free assistance with corporate bank account opening at top UAE banks.'
-  },
-  {
-    q: 'What business activities can I do?',
-    a: 'IFZA supports over 1,000 business activities — trading, professional services, e-commerce, IT, media, education, and more. Pick up to 5 activities in most economy packages.'
-  },
-  {
-    q: 'Do I need to be physically present?',
-    a: 'Most steps can be done remotely, but medical tests and Emirates ID biometrics require a brief visit to the UAE.'
-  },
-  {
-    q: 'Why choose Setup Zone Dubai for IFZA setup?',
-    a: 'We offer transparent pricing, fast processing, dedicated consultants, and end-to-end support — from license to visa to bank account. All with 10,000+ successful setups.'
-  },
-];
-
-// ============ COMPONENT ============
-export default function IFZASetupPackage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* === 1. HERO === */}
+
+      {/* ============ 1. HERO ============ */}
       <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${data.hero.image})` }} data-tina-field={tinaField(data.hero, 'image')} />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-amber-950/80 to-orange-950/50" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
@@ -343,34 +49,37 @@ export default function IFZASetupPackage() {
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex items-center gap-2 text-sm text-white/80 mb-6 font-medium flex-wrap">
                 <Link to="/" className="hover:text-white transition flex items-center gap-1.5"><HomeIcon size={14} />Home</Link>
                 <span>/</span><span>Packages</span><span>/</span>
-                <span className="text-white font-bold">IFZA Setup Package</span>
+                <span className="text-white font-bold" data-tina-field={tinaField(data.hero, 'breadcrumbLabel')}>{data.hero.breadcrumbLabel}</span>
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 mb-6">
                 <Sparkles size={14} className="text-amber-300" />
-                <span className="text-xs font-bold tracking-wider uppercase text-white">Affordable IFZA Setup Packages</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.hero, 'badge')}>{data.hero.badge}</span>
               </motion.div>
 
-              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-3xl mb-6 drop-shadow-lg">
-                IFZA <span className="text-amber-300">Setup Package</span>
+              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-3xl mb-6 drop-shadow-lg" data-tina-field={tinaField(data.hero, 'title')}>
+                {data.hero.title.replace(data.hero.titleHighlight, '')}
+                <span className="text-amber-300">{data.hero.titleHighlight}</span>
               </motion.h1>
 
-              <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/95 font-medium leading-relaxed max-w-2xl mb-10 drop-shadow">
-                Dubai company setup made simple. Affordable IFZA packages starting from just AED 5,999 — license, visa, bank account, and more.
+              <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/95 font-medium leading-relaxed max-w-2xl mb-10 drop-shadow" data-tina-field={tinaField(data.hero, 'subtitle')}>
+                {data.hero.subtitle}
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-wrap gap-4">
-                <a href="#packages" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
-                  View Packages
+                <a href={data.hero.ctaPrimaryLink} className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
+                  <span data-tina-field={tinaField(data.hero, 'ctaPrimaryText')}>{data.hero.ctaPrimaryText}</span>
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </a>
-                <a href={getWhatsAppLink("Hi! I'm interested in IFZA Setup Packages.")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
-                  <MessageCircle size={16} />WhatsApp
+                <a href={getWhatsAppLink(data.hero.ctaSecondaryMessage)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
+                  <WhatsAppIcon size={16} className="text-emerald-600" />
+
+                  <span data-tina-field={tinaField(data.hero, 'ctaSecondaryText')}>{data.hero.ctaSecondaryText}</span>
                 </a>
               </motion.div>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.9 }} className="mt-10 flex flex-wrap gap-3">
-                {['From AED 5,999', '11 Packages', '3-7 Days Setup', '100% Ownership'].map((item, i) => (
+                {data.hero.badges.map((item: string, i: number) => (
                   <div key={i} className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs">
                     <CheckCircle2 size={12} className="text-amber-300" strokeWidth={3} />
                     <span className="font-semibold text-white">{item}</span>
@@ -389,7 +98,6 @@ export default function IFZASetupPackage() {
                 <div className="absolute top-1/2 left-0 w-2.5 h-2.5 -translate-y-1/2 rounded-full bg-red-300" />
               </motion.div>
 
-              {/* Calculator Card — Links to Calculator Page */}
               <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.8, type: 'spring', stiffness: 80 }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
                 <motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }} className="relative">
                   <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600 opacity-40 blur-2xl rounded-3xl" />
@@ -400,9 +108,7 @@ export default function IFZASetupPackage() {
                           <Calculator size={16} className="text-white" strokeWidth={2.5} />
                           <span className="text-[10px] font-black text-white uppercase tracking-widest">Cost Calculator</span>
                         </div>
-                        <span className="text-[10px] font-black text-white/80 uppercase tracking-widest group-hover:text-white transition">
-                          Try Now →
-                        </span>
+                        <span className="text-[10px] font-black text-white/80 uppercase tracking-widest group-hover:text-white transition">Try Now →</span>
                       </div>
 
                       <div className="p-6">
@@ -417,27 +123,22 @@ export default function IFZASetupPackage() {
                         </div>
 
                         <div className="space-y-3 mb-5">
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
-                            <div className="flex items-center gap-2">
-                              <Package size={16} className="text-amber-600" strokeWidth={2.5} />
-                              <span className="text-xs font-bold text-[#0A0F1F]">Choose Package</span>
-                            </div>
-                            <ChevronRight size={14} className="text-amber-600" strokeWidth={2.5} />
-                          </div>
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
-                            <div className="flex items-center gap-2">
-                              <Users size={16} className="text-amber-600" strokeWidth={2.5} />
-                              <span className="text-xs font-bold text-[#0A0F1F]">Select Visa Count</span>
-                            </div>
-                            <ChevronRight size={14} className="text-amber-600" strokeWidth={2.5} />
-                          </div>
-                          <div className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
-                            <div className="flex items-center gap-2">
-                              <DollarSign size={16} className="text-amber-600" strokeWidth={2.5} />
-                              <span className="text-xs font-bold text-[#0A0F1F]">Get Instant Price</span>
-                            </div>
-                            <ChevronRight size={14} className="text-amber-600" strokeWidth={2.5} />
-                          </div>
+                          {[
+                            { icon: Package, label: 'Choose Package' },
+                            { icon: Users, label: 'Select Visa Count' },
+                            { icon: DollarSign, label: 'Get Instant Price' },
+                          ].map((row, i) => {
+                            const Icon = row.icon;
+                            return (
+                              <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100">
+                                <div className="flex items-center gap-2">
+                                  <Icon size={16} className="text-amber-600" strokeWidth={2.5} />
+                                  <span className="text-xs font-bold text-[#0A0F1F]">{row.label}</span>
+                                </div>
+                                <ChevronRight size={14} className="text-amber-600" strokeWidth={2.5} />
+                              </div>
+                            );
+                          })}
                         </div>
 
                         <div className="pt-5 border-t border-dashed border-amber-200">
@@ -446,9 +147,7 @@ export default function IFZASetupPackage() {
                             <span className="text-xs font-black text-white uppercase tracking-widest">Open Calculator</span>
                             <ArrowRight size={14} className="text-white group-hover:translate-x-0.5 transition-transform" strokeWidth={2.5} />
                           </div>
-                          <p className="text-center text-[10px] font-semibold text-slate-500 mt-3">
-                            💡 Get instant quote in seconds
-                          </p>
+                          <p className="text-center text-[10px] font-semibold text-slate-500 mt-3">💡 Get instant quote in seconds</p>
                         </div>
                       </div>
                     </div>
@@ -460,12 +159,12 @@ export default function IFZASetupPackage() {
         </div>
       </section>
 
-      {/* === 2. STATS ROW === */}
+      {/* ============ 2. STATS ============ */}
       <section className="relative py-14 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {stats.map((stat, i) => {
-              const Icon = stat.icon;
+            {data.stats.map((stat: any, i: number) => {
+              const Icon = iconMap[stat.icon] || DollarSign;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="group relative">
                   <div className="relative overflow-hidden rounded-2xl bg-white border border-border hover:border-transparent transition-all duration-500 p-5 shadow-[0_5px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_15px_40px_rgba(251,191,36,0.15)] hover:-translate-y-1">
@@ -475,8 +174,8 @@ export default function IFZASetupPackage() {
                         <Icon size={20} className="text-white" strokeWidth={2.5} />
                       </div>
                       <div>
-                        <div className="text-lg font-black text-[#0A0F1F] leading-none mb-0.5">{stat.value}</div>
-                        <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest">{stat.label}</div>
+                        <div className="text-lg font-black text-[#0A0F1F] leading-none mb-0.5" data-tina-field={tinaField(stat, 'value')}>{stat.value}</div>
+                        <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest" data-tina-field={tinaField(stat, 'label')}>{stat.label}</div>
                       </div>
                     </div>
                   </div>
@@ -487,14 +186,14 @@ export default function IFZASetupPackage() {
         </div>
       </section>
 
-      {/* === 3. INTRO — Split === */}
+      {/* ============ 3. INTRO — Split ============ */}
       <section className="relative py-14 md:py-20 bg-gradient-to-b from-white to-amber-50/40 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="lg:col-span-5 relative">
               <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600 opacity-20 blur-[80px] rounded-full" />
               <div className="relative rounded-3xl overflow-hidden border border-border shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
-                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&q=80" alt="Dubai Business Setup" className="w-full h-[500px] object-cover" />
+                <img src={data.intro.image} alt="Dubai Business Setup" className="w-full h-[500px] object-cover" data-tina-field={tinaField(data.intro, 'image')} />
                 <div className="absolute inset-0 bg-gradient-to-t from-amber-900/70 via-transparent to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-2xl bg-white/95 backdrop-blur-xl shadow-lg">
                   <div className="flex items-center gap-3">
@@ -502,8 +201,8 @@ export default function IFZASetupPackage() {
                       <Package size={18} className="text-white" />
                     </div>
                     <div>
-                      <div className="text-[10px] font-bold text-txt-muted uppercase tracking-wider">IFZA Free Zone</div>
-                      <div className="text-sm font-black text-[#0A0F1F]">Dubai, UAE</div>
+                      <div className="text-[10px] font-bold text-txt-muted uppercase tracking-wider" data-tina-field={tinaField(data.intro, 'imageBadgeTitle')}>{data.intro.imageBadgeTitle}</div>
+                      <div className="text-sm font-black text-[#0A0F1F]" data-tina-field={tinaField(data.intro, 'imageBadgeText')}>{data.intro.imageBadgeText}</div>
                     </div>
                   </div>
                 </div>
@@ -513,27 +212,22 @@ export default function IFZASetupPackage() {
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="lg:col-span-7">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
                 <Sparkles size={14} className="text-amber-600" />
-                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">We're Here to Help!</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.intro, 'badge')}>{data.intro.badge}</span>
               </div>
 
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6">
-                Affordable IFZA Setup Packages <span className="gradient-text">for Your UAE Business</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6" data-tina-field={tinaField(data.intro, 'title')}>
+                {data.intro.title.replace(data.intro.titleHighlight, '')}
+                <span className="gradient-text">{data.intro.titleHighlight}</span>
               </h2>
 
               <div className="space-y-5 text-base text-[#475569] font-medium leading-relaxed">
-                <p>
-                  Are you looking to establish your business in the thriving UAE market? Our expert team specializes in helping entrepreneurs set up successful companies across <span className="font-black text-[#0A0F1F]">65+ jurisdictions</span>.
-                </p>
-                <p>
-                  Whether you prefer the flexibility of a Free Zone or the prestige of a Mainland trade license, we offer <span className="font-black text-[#0A0F1F]">Dubai's best business setup packages</span> to match your business goals.
-                </p>
-                <p>
-                  All packages offer a starting point for your business journey and can be <span className="font-black text-[#0A0F1F]">customized to suit your needs</span>.
-                </p>
+                <p data-tina-field={tinaField(data.intro, 'paragraph1')}>{data.intro.paragraph1}</p>
+                <p data-tina-field={tinaField(data.intro, 'paragraph2')}>{data.intro.paragraph2}</p>
+                <p data-tina-field={tinaField(data.intro, 'paragraph3')}>{data.intro.paragraph3}</p>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-3 mt-8">
-                {['65+ Jurisdictions', 'Free Zone & Mainland', 'Customizable Packages', 'From AED 5,999', 'Fast 3-7 Day Setup', 'Full Support'].map((item, i) => (
+                {data.intro.features.map((item: string, i: number) => (
                   <div key={i} className="flex items-center gap-2 p-3 rounded-2xl bg-white border border-border">
                     <div className="w-5 h-5 rounded-full bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center">
                       <CheckCircle2 size={12} className="text-white" strokeWidth={3} />
@@ -547,7 +241,7 @@ export default function IFZASetupPackage() {
         </div>
       </section>
 
-      {/* === 4. PACKAGES GRID === */}
+      {/* ============ 4. PACKAGES GRID ============ */}
       <section id="packages" className="relative py-14 md:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-amber-100/50 blur-[140px] pointer-events-none" />
 
@@ -555,29 +249,28 @@ export default function IFZASetupPackage() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-amber-200 shadow-soft mb-6">
               <Package size={14} className="text-amber-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-amber-700">Dubai Affordable Setup Packages</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-amber-700" data-tina-field={tinaField(data.packages, 'badge')}>{data.packages.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Our <span className="gradient-text">IFZA Setup Packages</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.packages, 'title')}>
+              {data.packages.title.replace(data.packages.titleHighlight, '')}
+              <span className="gradient-text">{data.packages.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">11 premium packages designed for every type of entrepreneur. All customizable to your needs.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.packages, 'subtitle')}>{data.packages.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {packages.map((pkg, i) => {
-              const Icon = pkg.icon;
+            {data.packages.items.map((pkg: any, i: number) => {
+              const Icon = iconMap[pkg.icon] || Package;
               return (
                 <motion.div key={pkg.id} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: (i % 3) * 0.1 }} className="group relative">
                   <div className={`absolute -inset-2 rounded-[28px] bg-gradient-to-r ${pkg.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-500`} />
 
                   <div className="relative rounded-3xl bg-white border border-border overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 h-full flex flex-col">
-                    {/* Header */}
                     <div className={`relative h-32 bg-gradient-to-br ${pkg.color} p-5 overflow-hidden`}>
                       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
 
-                      {/* Badge */}
                       <div className="absolute top-4 right-4">
-                        <span className={`px-2.5 py-1 rounded-full bg-gradient-to-r ${pkg.badgeColor} border border-white/30 text-[9px] font-black text-white uppercase tracking-widest shadow-lg`}>
+                        <span className={`px-2.5 py-1 rounded-full bg-gradient-to-r ${pkg.badgeColor} border border-white/30 text-[9px] font-black text-white uppercase tracking-widest shadow-lg`} data-tina-field={tinaField(pkg, 'badge')}>
                           {pkg.badge}
                         </span>
                       </div>
@@ -589,27 +282,25 @@ export default function IFZASetupPackage() {
                       </div>
 
                       <div className="relative mt-4">
-                        <div className="text-[9px] font-black text-white/80 uppercase tracking-widest mb-1">{pkg.category} Package</div>
-                        <h3 className="text-lg font-black text-white leading-tight drop-shadow-lg">{pkg.title}</h3>
+                        <div className="text-[9px] font-black text-white/80 uppercase tracking-widest mb-1" data-tina-field={tinaField(pkg, 'category')}>{pkg.category} Package</div>
+                        <h3 className="text-lg font-black text-white leading-tight drop-shadow-lg" data-tina-field={tinaField(pkg, 'title')}>{pkg.title}</h3>
                       </div>
                     </div>
 
-                    {/* Price */}
                     <div className="p-5 border-b border-dashed border-border">
                       <div className="text-[10px] font-bold text-txt-muted uppercase tracking-widest mb-1">Starting from</div>
                       <div className="flex items-baseline gap-2">
-                        <span className={`text-3xl font-black bg-gradient-to-r ${pkg.color} bg-clip-text text-transparent tracking-tight`}>
+                        <span className={`text-3xl font-black bg-gradient-to-r ${pkg.color} bg-clip-text text-transparent tracking-tight`} data-tina-field={tinaField(pkg, 'price')}>
                           {pkg.price}
                         </span>
                       </div>
-                      <div className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mt-1">{pkg.tagline}</div>
+                      <div className="text-[10px] font-bold text-amber-600 uppercase tracking-widest mt-1" data-tina-field={tinaField(pkg, 'tagline')}>{pkg.tagline}</div>
                     </div>
 
-                    {/* Includes */}
                     <div className="p-5 flex-1">
                       <div className="text-[10px] font-black text-[#0A0F1F] uppercase tracking-widest mb-3">Includes:</div>
                       <ul className="space-y-2">
-                        {pkg.includes.map((item, idx) => (
+                        {pkg.includes.map((item: string, idx: number) => (
                           <li key={idx} className="flex items-start gap-2">
                             <div className={`w-4 h-4 rounded-full bg-gradient-to-br ${pkg.color} flex items-center justify-center flex-shrink-0 mt-0.5`}>
                               <CheckCircle2 size={10} className="text-white" strokeWidth={3} />
@@ -619,11 +310,11 @@ export default function IFZASetupPackage() {
                         ))}
                       </ul>
 
-                      {pkg.exampleActivities && (
+                      {pkg.exampleActivities && pkg.exampleActivities.length > 0 && (
                         <div className="mt-4 pt-4 border-t border-dashed border-border">
                           <div className="text-[10px] font-black text-[#0A0F1F] uppercase tracking-widest mb-2">Example Activities:</div>
                           <div className="flex flex-wrap gap-1.5">
-                            {pkg.exampleActivities.map((activity, idx) => (
+                            {pkg.exampleActivities.map((activity: string, idx: number) => (
                               <span key={idx} className="px-2 py-0.5 rounded-full bg-slate-100 border border-slate-200 text-[10px] font-semibold text-[#475569]">
                                 {activity}
                               </span>
@@ -633,15 +324,10 @@ export default function IFZASetupPackage() {
                       )}
                     </div>
 
-                    {/* CTAs */}
-                    <div className="p-5 pt-0 space-y-2">
-                      <a
-                        href={getWhatsAppLink(`Hi! I'm interested in the ${pkg.title} package (${pkg.price}).`)}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={`group/cta flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r ${pkg.color} text-white font-black text-xs uppercase tracking-widest shadow-lg hover:scale-105 transition-all duration-300`}
-                      >
-                        <MessageCircle size={14} strokeWidth={2.5} />
+                    <div className="p-5 pt-0">
+                      <a href={getWhatsAppLink(`Hi! I'm interested in the ${pkg.title} package (${pkg.price}).`)} target="_blank" rel="noreferrer" className={`group/cta flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r ${pkg.color} text-white font-black text-xs uppercase tracking-widest shadow-lg hover:scale-105 transition-all duration-300`}>
+                        <WhatsAppIcon size={14} className="text-emerald-600" />
+
                         Enquire Now
                         <ArrowRight size={12} className="group-hover/cta:translate-x-0.5 transition-transform" strokeWidth={2.5} />
                       </a>
@@ -661,17 +347,13 @@ export default function IFZASetupPackage() {
                   <Gift size={28} className="text-white" strokeWidth={2.2} />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-black text-white leading-tight mb-1">Need a Custom Package?</h3>
-                  <p className="text-sm text-white/90 font-medium">Tell us your goals and we'll build the perfect package for you.</p>
+                  <h3 className="text-xl font-black text-white leading-tight mb-1" data-tina-field={tinaField(data.customPackageCTA, 'title')}>{data.customPackageCTA.title}</h3>
+                  <p className="text-sm text-white/90 font-medium" data-tina-field={tinaField(data.customPackageCTA, 'subtitle')}>{data.customPackageCTA.subtitle}</p>
                 </div>
-                <a
-                  href={getWhatsAppLink("Hi! I need a custom IFZA setup package.")}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-amber-700 font-bold text-sm shadow-lg hover:scale-105 transition-all duration-300 flex-shrink-0"
-                >
-                  <MessageCircle size={15} />
-                  Custom Quote
+                <a href={getWhatsAppLink(data.customPackageCTA.whatsappMessage)} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-amber-700 font-bold text-sm shadow-lg hover:scale-105 transition-all duration-300 flex-shrink-0">
+                  <WhatsAppIcon size={15} className="text-emerald-600" />
+
+                  <span data-tina-field={tinaField(data.customPackageCTA, 'buttonText')}>{data.customPackageCTA.buttonText}</span>
                   <ArrowRight size={13} className="group-hover:translate-x-0.5 transition-transform" strokeWidth={2.5} />
                 </a>
               </div>
@@ -680,9 +362,9 @@ export default function IFZASetupPackage() {
         </div>
       </section>
 
-      {/* === 5. BENEFITS — Dark Premium === */}
+      {/* ============ 5. BENEFITS — Dark ============ */}
       <section className="relative py-14 md:py-20 overflow-hidden bg-gradient-to-br from-slate-950 via-amber-950 to-orange-950">
-        <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${data.hero.image})` }} />
         <div className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full bg-amber-500/20 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[700px] h-[700px] rounded-full bg-orange-500/20 blur-[150px] pointer-events-none" />
 
@@ -690,17 +372,18 @@ export default function IFZASetupPackage() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
               <Award size={14} className="text-amber-300" />
-              <span className="text-xs font-bold tracking-wider uppercase text-white">Why IFZA</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.benefits, 'badge')}>{data.benefits.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              Benefits of <span className="bg-gradient-to-r from-amber-300 to-orange-300 bg-clip-text text-transparent">IFZA Setup</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.benefits, 'title')}>
+              {data.benefits.title.replace(data.benefits.titleHighlight, '')}
+              <span className="bg-gradient-to-r from-amber-300 to-orange-300 bg-clip-text text-transparent">{data.benefits.titleHighlight}</span>
             </h2>
-            <p className="text-base text-white/70 font-medium">Six powerful advantages of setting up in IFZA Free Zone.</p>
+            <p className="text-base text-white/70 font-medium" data-tina-field={tinaField(data.benefits, 'subtitle')}>{data.benefits.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
-            {benefits.map((benefit, i) => {
-              const Icon = benefit.icon;
+            {data.benefits.items.map((benefit: any, i: number) => {
+              const Icon = iconMap[benefit.icon] || Globe;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }} className="group relative">
                   <div className={`absolute -inset-2 rounded-[28px] bg-gradient-to-r ${benefit.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-500`} />
@@ -708,8 +391,8 @@ export default function IFZASetupPackage() {
                     <div className={`w-12 h-12 mx-auto rounded-2xl bg-gradient-to-br ${benefit.color} flex items-center justify-center shadow-lg mb-3 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                       <Icon size={22} className="text-white" strokeWidth={2.2} />
                     </div>
-                    <h3 className="text-xs font-black text-white mb-1 leading-tight">{benefit.title}</h3>
-                    <p className="text-[10px] text-white/70 font-medium leading-relaxed">{benefit.desc}</p>
+                    <h3 className="text-xs font-black text-white mb-1 leading-tight" data-tina-field={tinaField(benefit, 'title')}>{benefit.title}</h3>
+                    <p className="text-[10px] text-white/70 font-medium leading-relaxed" data-tina-field={tinaField(benefit, 'desc')}>{benefit.desc}</p>
                   </div>
                 </motion.div>
               );
@@ -718,7 +401,7 @@ export default function IFZASetupPackage() {
         </div>
       </section>
 
-      {/* === 6. PROCESS — Step Grid === */}
+      {/* ============ 6. PROCESS ============ */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-amber-100/50 blur-[140px] pointer-events-none" />
 
@@ -726,17 +409,18 @@ export default function IFZASetupPackage() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-amber-200 shadow-soft mb-6">
               <Rocket size={14} className="text-amber-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-amber-700">6-Step Process</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-amber-700" data-tina-field={tinaField(data.process, 'badge')}>{data.process.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              How to <span className="gradient-text">Get Started</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.process, 'title')}>
+              {data.process.title.replace(data.process.titleHighlight, '')}
+              <span className="gradient-text">{data.process.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">From package selection to bank account — we handle everything.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.process, 'subtitle')}>{data.process.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {processSteps.map((step, i) => {
-              const Icon = step.icon;
+            {data.process.steps.map((step: any, i: number) => {
+              const Icon = iconMap[step.icon] || Target;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="group relative">
                   <div className="relative p-6 rounded-3xl bg-white border border-border shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-500 h-full overflow-hidden">
@@ -748,8 +432,8 @@ export default function IFZASetupPackage() {
                       <Icon size={26} className="text-white" strokeWidth={2.2} />
                     </div>
                     <div className="text-xs font-black text-amber-600 mb-2">STEP {step.step}</div>
-                    <h3 className="text-lg font-black text-[#0A0F1F] mb-2 leading-tight">{step.title}</h3>
-                    <p className="text-sm text-[#64748B] font-medium leading-relaxed">{step.desc}</p>
+                    <h3 className="text-lg font-black text-[#0A0F1F] mb-2 leading-tight" data-tina-field={tinaField(step, 'title')}>{step.title}</h3>
+                    <p className="text-sm text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(step, 'description')}>{step.description}</p>
                   </div>
                 </motion.div>
               );
@@ -758,23 +442,24 @@ export default function IFZASetupPackage() {
         </div>
       </section>
 
-      {/* === 7. WHY CHOOSE US === */}
+      {/* ============ 7. WHY CHOOSE US ============ */}
       <section className="relative py-14 md:py-20 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
               <Award size={14} className="text-amber-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Why Choose Us</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.whyChooseUs, 'badge')}>{data.whyChooseUs.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Your Trusted <span className="gradient-text">IFZA Setup Partner</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.whyChooseUs, 'title')}>
+              {data.whyChooseUs.title.replace(data.whyChooseUs.titleHighlight, '')}
+              <span className="gradient-text">{data.whyChooseUs.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Eight reasons why thousands of entrepreneurs trust us.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.whyChooseUs, 'subtitle')}>{data.whyChooseUs.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {whyChooseUs.map((item, i) => {
-              const Icon = item.icon;
+            {data.whyChooseUs.items.map((item: any, i: number) => {
+              const Icon = iconMap[item.icon] || Award;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.06 }} className="group">
                   <div className="relative p-5 rounded-3xl bg-gradient-to-br from-white to-amber-50/30 border border-border shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-500 h-full overflow-hidden">
@@ -784,8 +469,8 @@ export default function IFZASetupPackage() {
                         <Icon size={20} className="text-white" strokeWidth={2.5} />
                       </div>
                       <div className="flex-1 pt-0.5">
-                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1">{item.label}</h3>
-                        <p className="text-xs text-[#64748B] font-medium leading-relaxed">{item.desc}</p>
+                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1" data-tina-field={tinaField(item, 'label')}>{item.label}</h3>
+                        <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(item, 'desc')}>{item.desc}</p>
                       </div>
                     </div>
                   </div>
@@ -796,7 +481,7 @@ export default function IFZASetupPackage() {
         </div>
       </section>
 
-      {/* === 8. FAQ === */}
+      {/* ============ 8. FAQ ============ */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
         <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full bg-amber-100/50 blur-[140px] pointer-events-none" />
 
@@ -804,19 +489,20 @@ export default function IFZASetupPackage() {
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="lg:col-span-5 lg:sticky lg:top-32">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
-                <MessageCircle size={14} className="text-amber-600" />
-                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Common Questions</span>
+                <WhatsAppIcon size={15} className="text-emerald-600" />
+
+                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.faqs, 'badge')}>{data.faqs.badge}</span>
               </div>
 
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-[1.1] tracking-tight mb-5">
-                Frequently Asked <span className="gradient-text">Questions</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-[1.1] tracking-tight mb-5" data-tina-field={tinaField(data.faqs, 'title')}>
+                {data.faqs.title.replace(data.faqs.titleHighlight, '')}
+                <span className="gradient-text">{data.faqs.titleHighlight}</span>
               </h2>
 
-              <p className="text-base text-[#475569] font-medium leading-relaxed mb-8">
-                Everything you need to know about IFZA Setup Packages. Still have questions? We're one message away.
+              <p className="text-base text-[#475569] font-medium leading-relaxed mb-8" data-tina-field={tinaField(data.faqs, 'subtitle')}>
+                {data.faqs.subtitle}
               </p>
 
-              {/* Mini Calculator CTA in FAQ */}
               <Link to="/calculator" className="group block relative rounded-3xl overflow-hidden p-6 bg-gradient-to-br from-amber-500 via-orange-600 to-red-700 shadow-2xl">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                 <motion.div animate={{ y: [0, -10, 0], rotate: [0, 10, 0] }} transition={{ duration: 5, repeat: Infinity }} className="absolute -top-3 -right-3 opacity-20">
@@ -837,7 +523,7 @@ export default function IFZASetupPackage() {
             </motion.div>
 
             <div className="lg:col-span-7 space-y-4">
-              {faqs.map((faq, i) => (
+              {data.faqs.items.map((faq: any, i: number) => (
                 <motion.details key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.04 }} className="group relative rounded-3xl bg-white border border-border hover:border-amber-200 hover:shadow-[0_20px_60px_rgba(251,191,36,0.15)] transition-all duration-500 overflow-hidden cursor-pointer">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400 to-orange-600 opacity-0 group-open:opacity-100 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 to-orange-600 opacity-0 group-open:opacity-100 transition-opacity duration-300" />
@@ -847,7 +533,7 @@ export default function IFZASetupPackage() {
                       <span className="text-sm font-black text-white">{String(i + 1).padStart(2, '0')}</span>
                     </div>
                     <div className="flex-1 pt-1">
-                      <h3 className="font-black text-[#0A0F1F] text-base md:text-lg leading-snug tracking-tight pr-4 group-hover:text-amber-700 transition-colors">{faq.q}</h3>
+                      <h3 className="font-black text-[#0A0F1F] text-base md:text-lg leading-snug tracking-tight pr-4 group-hover:text-amber-700 transition-colors" data-tina-field={tinaField(faq, 'q')}>{faq.q}</h3>
                     </div>
                     <div className="relative flex-shrink-0 pt-1">
                       <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center group-open:bg-gradient-to-br group-open:from-amber-400 group-open:to-orange-600 group-open:border-transparent transition-all duration-300">
@@ -857,7 +543,7 @@ export default function IFZASetupPackage() {
                   </summary>
                   <div className="px-6 pb-6 pl-20">
                     <div className="pt-2 border-t border-dashed border-border">
-                      <p className="pt-4 text-sm md:text-base text-[#475569] font-medium leading-relaxed">{faq.a}</p>
+                      <p className="pt-4 text-sm md:text-base text-[#475569] font-medium leading-relaxed" data-tina-field={tinaField(faq, 'a')}>{faq.a}</p>
                     </div>
                   </div>
                 </motion.details>
@@ -867,11 +553,11 @@ export default function IFZASetupPackage() {
         </div>
       </section>
 
-      {/* === 9. FINAL CTA === */}
+      {/* ============ 9. FINAL CTA ============ */}
       <section className="relative py-14 md:py-20 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="relative rounded-[32px] overflow-hidden shadow-[0_30px_80px_rgba(15,23,42,0.2)]">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80)' }} />
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${data.hero.image})` }} />
             <div className="absolute inset-0 bg-gradient-to-r from-amber-950/90 via-orange-950/70 to-red-950/50" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
             <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
@@ -881,29 +567,32 @@ export default function IFZASetupPackage() {
                 <div className="lg:col-span-7">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 mb-6">
                     <Sparkles size={14} className="text-white" />
-                    <span className="text-xs font-bold tracking-wider uppercase text-white">Start Your UAE Business Today</span>
+                    <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.finalCTA, 'badge')}>{data.finalCTA.badge}</span>
                   </div>
 
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5 drop-shadow-lg">
-                    Ready to Launch with <span className="text-amber-300">IFZA Package?</span>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5 drop-shadow-lg" data-tina-field={tinaField(data.finalCTA, 'title')}>
+                    {data.finalCTA.title.replace(data.finalCTA.titleHighlight, '')}
+                    <span className="text-amber-300">{data.finalCTA.titleHighlight}</span>
                   </h2>
 
-                  <p className="text-base md:text-lg text-white/95 font-medium leading-relaxed mb-8 max-w-xl drop-shadow">
-                    Get a free consultation. We'll help you choose the right package and get your business running in days.
+                  <p className="text-base md:text-lg text-white/95 font-medium leading-relaxed mb-8 max-w-xl drop-shadow" data-tina-field={tinaField(data.finalCTA, 'subtitle')}>
+                    {data.finalCTA.subtitle}
                   </p>
 
                   <div className="flex flex-wrap gap-4 mb-8">
-                    <a href={getWhatsAppLink("Hi! I'd like a free consultation for IFZA Setup Package.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
-                      <MessageCircle size={16} />WhatsApp Us
+                    <a href={getWhatsAppLink(data.finalCTA.whatsappMessage)} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
+                      <WhatsAppIcon size={16} className="text-emerald-600" />
+
+                      <span data-tina-field={tinaField(data.finalCTA, 'primaryCta')}>{data.finalCTA.primaryCta}</span>
                       <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </a>
-                    <a href="tel:+971566556645" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
+                    <a href={data.finalCTA.phoneHref} className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
                       <Phone size={16} />Call Now
                     </a>
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    {['From AED 5,999', '3-7 Days Setup', '100% Ownership'].map((item, i) => (
+                    {data.finalCTA.badges.map((item: string, i: number) => (
                       <div key={i} className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs">
                         <CheckCircle2 size={12} className="text-amber-300" strokeWidth={3} />
                         <span className="font-semibold text-white">{item}</span>
@@ -913,14 +602,15 @@ export default function IFZASetupPackage() {
                 </div>
 
                 <div className="lg:col-span-5 space-y-4">
-                  <motion.a href={getWhatsAppLink("Hi! I'd like to discuss IFZA Setup Packages.")} target="_blank" rel="noreferrer" initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} className="group block relative p-5 rounded-2xl bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl hover:shadow-[0_20px_60px_rgba(255,255,255,0.2)] hover:-translate-y-1 transition-all duration-300">
+                  <motion.a href={getWhatsAppLink(data.finalCTA.whatsappMessage)} target="_blank" rel="noreferrer" initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} className="group block relative p-5 rounded-2xl bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl hover:shadow-[0_20px_60px_rgba(255,255,255,0.2)] hover:-translate-y-1 transition-all duration-300">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                        <MessageCircle size={22} className="text-white" strokeWidth={2.2} />
+                        <WhatsAppIcon size={22} className="text-emerald-600" />
+
                       </div>
                       <div className="flex-1">
                         <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-0.5">WhatsApp Us</p>
-                        <p className="text-base font-black text-[#0A0F1F]">+971 56 655 6645</p>
+                        <p className="text-base font-black text-[#0A0F1F]" data-tina-field={tinaField(data.finalCTA, 'phone')}>{data.finalCTA.phone}</p>
                         <p className="text-[11px] text-green-600 font-semibold mt-0.5">● Instant replies almost anytime</p>
                       </div>
                       <ArrowRight size={18} className="text-txt-muted group-hover:text-amber-600 group-hover:translate-x-1 transition-all" />
@@ -933,10 +623,10 @@ export default function IFZASetupPackage() {
                         <Building2 size={22} className="text-white" strokeWidth={2.2} />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-1">Visit Our Dubai Office</p>
-                        <p className="text-sm font-bold text-[#0A0F1F] leading-snug mb-1">Office M08-27, M1 Floor, Crystal Tower</p>
-                        <p className="text-xs text-[#64748B] font-medium leading-snug">Business Bay, Dubai, U.A.E — PO Box: 554552</p>
-                        <a href="https://maps.google.com/?q=Crystal+Tower+Business+Bay+Dubai" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 mt-2 text-xs font-black text-amber-600 hover:text-amber-700 transition">
+                        <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-1" data-tina-field={tinaField(data.finalCTA.office, 'label')}>{data.finalCTA.office.label}</p>
+                        <p className="text-sm font-bold text-[#0A0F1F] leading-snug mb-1" data-tina-field={tinaField(data.finalCTA.office, 'line1')}>{data.finalCTA.office.line1}</p>
+                        <p className="text-xs text-[#64748B] font-medium leading-snug" data-tina-field={tinaField(data.finalCTA.office, 'line2')}>{data.finalCTA.office.line2}</p>
+                        <a href={data.finalCTA.office.mapLink} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 mt-2 text-xs font-black text-amber-600 hover:text-amber-700 transition">
                           Get Directions<ArrowRight size={12} />
                         </a>
                       </div>
@@ -949,11 +639,11 @@ export default function IFZASetupPackage() {
                         <Clock size={22} className="text-white" strokeWidth={2.2} />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-1">Working Hours</p>
+                        <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-1" data-tina-field={tinaField(data.finalCTA.hours, 'label')}>{data.finalCTA.hours.label}</p>
                         <div className="space-y-1 text-xs">
-                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Mon – Fri</span><span className="font-black text-[#0A0F1F]">9 AM – 6 PM</span></div>
-                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Saturday</span><span className="font-black text-[#0A0F1F]">10 AM – 5 PM</span></div>
-                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Sunday</span><span className="font-black text-red-500">Closed</span></div>
+                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Mon – Fri</span><span className="font-black text-[#0A0F1F]" data-tina-field={tinaField(data.finalCTA.hours, 'monFri')}>{data.finalCTA.hours.monFri}</span></div>
+                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Saturday</span><span className="font-black text-[#0A0F1F]" data-tina-field={tinaField(data.finalCTA.hours, 'saturday')}>{data.finalCTA.hours.saturday}</span></div>
+                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Sunday</span><span className="font-black text-red-500" data-tina-field={tinaField(data.finalCTA.hours, 'sunday')}>{data.finalCTA.hours.sunday}</span></div>
                         </div>
                       </div>
                     </div>
@@ -964,6 +654,7 @@ export default function IFZASetupPackage() {
           </motion.div>
         </div>
       </section>
+
     </div>
   );
 }

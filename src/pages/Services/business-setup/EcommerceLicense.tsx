@@ -3,287 +3,42 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTina, tinaField } from 'tinacms/dist/react';
 import {
   Globe, ArrowRight, Sparkles, CheckCircle2, Building2, TrendingUp,
-  Briefcase, Phone, MessageCircle, Home as HomeIcon, Clock,
-   Award, FileText, DollarSign, Zap, Target, Crown, Store,
-  UserCheck,  MapPin, CreditCard, 
-  Rocket,  Wallet, IdCard,
-   Home, Globe2, ShieldCheck,Percent,ShoppingCart,
-  ChevronLeft, ChevronRight, FileSignature,  Factory, 
-  Laptop, Code,  Palette, Camera,
-  Truck, Building, 
-  FileCheck, ScrollText,  Boxes,Package,
-  ShoppingBag, 
+  Briefcase, Phone, MessageCircle, Home as HomeIcon, Clock, Award,
+  FileText, DollarSign, Zap, Target, Crown, Store, UserCheck, MapPin,
+  CreditCard, Rocket, Wallet, IdCard, Home, Globe2, ShieldCheck, Percent,
+  ShoppingCart, ChevronLeft, ChevronRight, FileSignature, Factory, Laptop,
+  Code, Palette, Camera, Truck, Building, FileCheck, ScrollText, Boxes,
+  Package, ShoppingBag,
 } from 'lucide-react';
 import { getWhatsAppLink } from '../../../lib/whatsapp';
+import ecommerceLicenseData from '../../../content/business-setup/ecommerce-license.json';
+import WhatsAppIcon from '../../../components/icons/WhatsAppIcon';
 
-// ============ DATA ============
+const iconMap: any = {
+  Globe, ArrowRight, Sparkles, CheckCircle2, Building2, TrendingUp,
+  Briefcase, Phone, MessageCircle, HomeIcon, Clock, Award, FileText,
+  DollarSign, Zap, Target, Crown, Store, UserCheck, MapPin, CreditCard,
+  Rocket, Wallet, IdCard, Home, Globe2, ShieldCheck, Percent, ShoppingCart,
+  FileSignature, Factory, Laptop, Code, Palette, Camera, Truck, Building,
+  FileCheck, ScrollText, Boxes, Package, ShoppingBag,
+};
 
-const stats = [
-  { icon: Clock, value: '1-5', label: 'Days Setup', color: 'from-fuchsia-400 to-pink-600' },
-  { icon: DollarSign, value: 'AED 7,500', label: 'Starting Cost', color: 'from-pink-400 to-rose-600' },
-  { icon: Globe, value: '100%', label: 'Foreign Ownership', color: 'from-rose-400 to-red-600' },
-  { icon: Percent, value: '0%', label: 'Corporate Tax', color: 'from-red-400 to-orange-600' },
-];
-
-const whoNeedsIt = [
-  { icon: Package, label: 'Dropshipping Store Owners', desc: 'Sell without inventory management', color: 'from-fuchsia-400 to-pink-600' },
-  { icon: ShoppingBag, label: 'Amazon FBA & Noon Sellers', desc: 'Sell on marketplaces legally', color: 'from-pink-400 to-rose-600' },
-  { icon: UserCheck, label: 'Freelancers with Services', desc: 'Package and sell services online', color: 'from-rose-400 to-red-600' },
-  { icon: Camera, label: 'Social Media Influencers', desc: 'Sell products via social platforms', color: 'from-red-400 to-orange-600' },
-  { icon: Briefcase, label: 'Digital Consultants & Coaches', desc: 'Sell consulting or coaching programs', color: 'from-orange-400 to-amber-600' },
-  { icon: Boxes, label: 'Subscription Box Services', desc: 'Recurring product delivery models', color: 'from-amber-400 to-yellow-600' },
-  { icon: Code, label: 'Digital Products & Software', desc: 'Sell courses, downloads, SaaS', color: 'from-yellow-400 to-lime-600' },
-];
-
-const benefits = [
-  {
-    icon: Globe,
-    title: '100% Foreign Ownership',
-    description: 'Keep full control of your business with no local sponsor required. Full authority over decisions and 100% profit retention.',
-    color: 'from-fuchsia-400 to-pink-600'
-  },
-  {
-    icon: DollarSign,
-    title: '0% Income & Corporate Tax',
-    description: 'E-commerce businesses in eligible Free Zones enjoy 0% personal income tax and 0% corporate tax. Reinvest earnings in growth.',
-    color: 'from-pink-400 to-rose-600'
-  },
-  {
-    icon: Zap,
-    title: 'Quick Establishment',
-    description: 'Licensed in 1-5 days depending on jurisdiction. We handle activity selection, documents, name reservation, and approvals.',
-    color: 'from-rose-400 to-red-600'
-  },
-  {
-    icon: Globe2,
-    title: 'Access to UAE & World Markets',
-    description: 'Ship across UAE and expand to Middle East, Africa, Europe, and Asia. Leverage Dubai\'s ports and free trade jurisdiction.',
-    color: 'from-red-400 to-orange-600'
-  },
-  {
-    icon: Wallet,
-    title: 'Affordable Setup & Renewals',
-    description: 'One of the most affordable business license options — ideal for freelancers, solopreneurs, and small businesses.',
-    color: 'from-orange-400 to-amber-600'
-  },
-  
-  {
-    icon: CreditCard,
-    title: 'Online Payment Gateway Access',
-    description: 'Integrate with PayTabs, Telr, Stripe, and Network International — accept cards, digital wallets, and bank transfers.',
-    color: 'from-yellow-400 to-lime-600'
-  },
-  {
-    icon: Truck,
-    title: 'Logistics Integration',
-    description: 'Partner with Aramex, Fetchr, DHL, Emirates Post for shipping, tracking, warehousing, and fulfillment.',
-    color: 'from-lime-400 to-emerald-600'
-  },
-  {
-    icon: Building2,
-    title: 'Digital Office & Flexi-Desk Options',
-    description: 'No requirement for physical location or warehouse. Operate from flexi-desks and shared workspaces.',
-    color: 'from-emerald-400 to-teal-600'
-  },
-];
-
-const processSteps = [
-  {
-    step: '01',
-    icon: Target,
-    title: 'Define Your Activities',
-    description: 'Choose the specific e-commerce activity (online trading, web portal, online services).',
-    color: 'from-fuchsia-400 to-pink-600'
-  },
-  {
-    step: '02',
-    icon: MapPin,
-    title: 'Choose Jurisdiction',
-    description: 'Decide between Mainland and Free Zone based on your target market and budget.',
-    color: 'from-pink-400 to-rose-600'
-  },
-  {
-    step: '03',
-    icon: FileSignature,
-    title: 'Register Trade Name',
-    description: 'Choose a unique, brandable name for your online business.',
-    color: 'from-rose-400 to-red-600'
-  },
-  {
-    step: '04',
-    icon: FileCheck,
-    title: 'Submit Application',
-    description: 'Prepare passport copies, visa, business plan (if needed), and photos.',
-    color: 'from-red-400 to-orange-600'
-  },
-  {
-    step: '05',
-    icon: Building2,
-    title: 'Lease Digital Office',
-    description: 'Required for license issuance. Flexi-desk or shared workspace.',
-    color: 'from-orange-400 to-amber-600'
-  },
-  {
-    step: '06',
-    icon: ScrollText,
-    title: 'Get Your License',
-    description: 'Issued in 1-5 days depending on jurisdiction.',
-    color: 'from-amber-400 to-yellow-600'
-  },
-  {
-    step: '09',
-    icon: CreditCard,
-    title: 'Connect Payment Gateways',
-    description: 'Stripe, Telr, PayTabs, or your chosen processor.',
-    color: 'from-emerald-400 to-teal-600'
-  },
-  {
-    step: '10',
-    icon: Rocket,
-    title: 'Launch Your Store',
-    description: 'Start selling! Full platform integration support available.',
-    color: 'from-teal-400 to-cyan-600'
-  },
-];
-
-const jurisdictions = [
-  {
-    id: 'freezone',
-    icon: Factory,
-    title: 'Free Zone',
-    tagline: 'Ideal for International & B2B',
-    description: 'Offers 100% ownership, no tax, lower cost. Ideal for selling internationally or B2B. Popular Free Zones: IFZA, SHAMS, CommerCity, SPC.',
-    image: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=1200&q=80',
-    color: 'from-fuchsia-500 to-pink-700',
-    features: ['100% Foreign Ownership', 'No Corporate Tax', 'Lower Setup Cost', 'IFZA · SHAMS · CommerCity · SPC'],
-    bestFor: 'International Sellers'
-  },
-  {
-    id: 'mainland',
-    icon: Building,
-    title: 'Mainland',
-    tagline: 'Required for Local B2C Sales',
-    description: 'Required if you want to sell directly to customers inside the UAE (B2C). You can now own 100% of your business in most sectors with no local partner.',
-    image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&q=80',
-    color: 'from-pink-500 to-rose-700',
-    features: ['Direct Local B2C Sales', '100% Ownership (Most Sectors)', 'UAE Market Access', 'Government Contracts'],
-    bestFor: 'Local UAE Sellers'
-  },
-];
-
-const documents = [
-  { icon: IdCard, label: 'Visa or Entry Stamp', desc: 'If applicable' },
-  { icon: Camera, label: 'Passport-Size Photos', desc: 'Recent, white background' },
-  { icon: FileSignature, label: 'Three Proposed Trade Names', desc: 'Unique & brandable' },
-  { icon: Home, label: 'Office Lease Agreement', desc: 'For some Free Zones or Mainland' },
-  { icon: FileCheck, label: 'NOC Certificate', desc: 'For UAE residents with existing visas' },
-];
-
-const platforms = [
-  { name: 'Amazon.ae', icon: ShoppingBag, color: 'from-fuchsia-400 to-pink-600' },
-  { name: 'Noon.com', icon: Store, color: 'from-pink-400 to-rose-600' },
-  { name: 'Shopify', icon: ShoppingCart, color: 'from-rose-400 to-red-600' },
-  { name: 'WooCommerce', icon: Laptop, color: 'from-red-400 to-orange-600' },
-  { name: 'Wix Store', icon: Globe, color: 'from-orange-400 to-amber-600' },
-  { name: 'AliExpress Dropship', icon: Package, color: 'from-amber-400 to-yellow-600' },
-];
-
-const paymentGateways = [
-  { name: 'Stripe', icon: CreditCard, color: 'from-fuchsia-400 to-pink-600' },
-  { name: 'PayTabs', icon: CreditCard, color: 'from-pink-400 to-rose-600' },
-  { name: 'Telr', icon: CreditCard, color: 'from-rose-400 to-red-600' },
-  { name: 'Network International', icon: CreditCard, color: 'from-red-400 to-orange-600' },
-];
-
-const logisticsPartners = [
-  { name: 'Aramex', icon: Truck, color: 'from-fuchsia-400 to-pink-600' },
-  { name: 'Fetchr', icon: Truck, color: 'from-pink-400 to-rose-600' },
-  { name: 'DHL', icon: Truck, color: 'from-rose-400 to-red-600' },
-  { name: 'Emirates Post', icon: Truck, color: 'from-red-400 to-orange-600' },
-];
-
-const whyChooseUs = [
-  { icon: UserCheck, label: 'Business Launch Specialists', desc: 'Trained personnel guide you A to Z' },
-  { icon: Rocket, label: 'Fast License Approvals', desc: '2-5 days with our proven process' },
-  { icon: ShieldCheck, label: 'Full Government Coordination', desc: 'Accurate applications, smooth approvals' },
-  { icon: CreditCard, label: 'Secure Payment Gateways', desc: 'Set up on day one' },
-  { icon: Laptop, label: 'Platform Training', desc: 'Shopify, Amazon, Noon guidance' },
-  { icon: UserCheck, label: 'Dedicated Account Manager', desc: 'Personal relationship manager' },
-  { icon: Palette, label: 'Branding, CRM & Website', desc: 'Complete digital setup' },
-];
-
-const growthStats = [
-  { icon: Building2, value: '10,000+', label: 'Companies Formed', color: 'from-fuchsia-400 to-pink-600' },
-  { icon: Globe, value: 'Global', label: 'Seller Reach', color: 'from-pink-400 to-rose-600' },
-  { icon: TrendingUp, value: 'Leading', label: 'E-commerce Hub', color: 'from-rose-400 to-red-600' },
-  { icon: DollarSign, value: 'AED 7.5K', label: 'Starting Cost', color: 'from-red-400 to-orange-600' },
-  { icon: Zap, value: '1-5', label: 'Days Setup', color: 'from-orange-400 to-amber-600' },
-  { icon: Crown, value: 'Preferred', label: 'Seller Partner', color: 'from-amber-400 to-yellow-600' },
-];
-
-const faqs = [
-  {
-    q: 'Can I run my e-commerce business from outside of Dubai?',
-    a: 'Yes. Many Free Zones allow you to operate remotely. If you are a UAE resident and want a bank account, you may need to visit Dubai on a temporary basis for KYC.'
-  },
-  {
-    q: 'Is a warehouse needed for the e-commerce license?',
-    a: 'No. Most e-commerce licenses only require a flexi-desk or shared workspace. Warehouses are optional and can be added later if you need physical storage.'
-  },
-  {
-    q: 'Can I sell products and services using the same license?',
-    a: 'Yes. An e-commerce license covers both physical products and digital services — including online trading, web portals, and downloadable products.'
-  },
-  {
-    q: 'What payment gateways can I use?',
-    a: 'You can integrate with Stripe, PayTabs, Telr, Network International, and other regional and international processors. We assist with setup and integration.'
-  },
-  {
-    q: 'Do I need a banking account in the UAE?',
-    a: 'It is highly recommended. A UAE corporate bank account allows you to accept local payments, integrate with payment gateways, and manage finances efficiently.'
-  },
-  {
-    q: 'Can I employ staff with this licence?',
-    a: 'Yes. An e-commerce license allows you to sponsor employment visas for staff and dependent visas for family members, based on your visa quota.'
-  },
-  {
-    q: 'Will I get a visa with this licence?',
-    a: 'Yes. You can apply for an investor visa (as the owner) and employee visas for your team. We handle the entire visa process including medicals and Emirates ID.'
-  },
-  {
-    q: 'Is my business taxed in Dubai?',
-    a: 'E-commerce businesses in eligible Free Zones enjoy 0% personal income tax and 0% corporate tax. We provide full tax advisory and VAT registration guidance.'
-  },
-  {
-    q: 'How long does it take to obtain the licence?',
-    a: 'Typically 1-5 working days depending on your jurisdiction and how quickly documents are provided. We fast-track the entire process.'
-  },
-  {
-    q: 'Can I upgrade or expand the licence at a later date?',
-    a: 'Yes. You can add new activities, upgrade your office space, increase visa quota, or expand to multiple jurisdictions as your business grows.'
-  },
-];
-
-const relatedServices = [
-  { slug: 'company-registration', title: 'Company Registration in Dubai', description: 'Fast & affordable registration from AED 5,750.', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', gradient: 'from-fuchsia-400 to-pink-600' },
-  { slug: 'residence-visa', title: 'UAE Residence Visa', description: '2-10 year residency for entrepreneurs.', image: 'https://images.unsplash.com/photo-1546412414-e1885259563a?w=800&q=80', gradient: 'from-pink-400 to-rose-600' },
-  { slug: 'free-zone-company-setup', title: 'Free Zone Company Setup', description: '100% ownership in tax-free zones.', image: 'https://images.unsplash.com/photo-1545558014-8692077e9b5c?w=800&q=80', gradient: 'from-rose-400 to-red-600' },
-];
-
-// ============ COMPONENT ============
-export default function EcommerceLicense() {
+export default function EcommerceLicense({ tinaData }: { tinaData?: any }) {
+  const data = tinaData?.data?.businessSetup || ecommerceLicenseData;
   const [activeJurisdiction, setActiveJurisdiction] = useState(0);
 
-  const nextJurisdiction = () => setActiveJurisdiction((prev) => (prev + 1) % jurisdictions.length);
-  const prevJurisdiction = () => setActiveJurisdiction((prev) => (prev - 1 + jurisdictions.length) % jurisdictions.length);
+  const jurisdictions = data.jurisdictionsSection.items;
+  const nextJurisdiction = () => setActiveJurisdiction((p) => (p + 1) % jurisdictions.length);
+  const prevJurisdiction = () => setActiveJurisdiction((p) => (p - 1 + jurisdictions.length) % jurisdictions.length);
 
   return (
     <div className="min-h-screen bg-white">
       {/* === 1. HERO === */}
       <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${data.heroImage})` }} data-tina-field={tinaField(data, 'heroImage')} />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-fuchsia-950/80 to-pink-950/50" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
@@ -291,7 +46,6 @@ export default function EcommerceLicense() {
         <motion.div animate={{ y: [0, -20, 0], rotate: [0, 8, 0] }} transition={{ duration: 6, repeat: Infinity }} className="absolute top-32 right-[35%] opacity-15 hidden lg:block">
           <ShoppingCart size={140} className="text-white" />
         </motion.div>
-
         <motion.div animate={{ y: [0, 15, 0], rotate: [0, -10, 0] }} transition={{ duration: 7, repeat: Infinity }} className="absolute bottom-32 left-[10%] opacity-10 hidden lg:block">
           <Rocket size={100} className="text-white" />
         </motion.div>
@@ -307,16 +61,15 @@ export default function EcommerceLicense() {
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 mb-6">
                 <Sparkles size={14} className="text-fuchsia-300" />
-                <span className="text-xs font-bold tracking-wider uppercase text-white">Online Business Setup</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data, 'heroBadge')}>{data.heroBadge}</span>
               </motion.div>
 
-              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-3xl mb-6 drop-shadow-lg">
-                E-commerce License <span className="text-fuchsia-300">in Dubai</span>
+              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-3xl mb-6 drop-shadow-lg" data-tina-field={tinaField(data, 'heroTitle')}>
+                {data.heroTitle.replace(data.heroTitleHighlight, '')}
+                <span className="text-fuchsia-300">{data.heroTitleHighlight}</span>
               </motion.h1>
 
-              <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/95 font-medium leading-relaxed max-w-2xl mb-10 drop-shadow">
-                Start your online business in Dubai with 100% ownership, 0% tax, and full access to UAE and global markets. Launch in as little as 1-5 days.
-              </motion.p>
+              <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/95 font-medium leading-relaxed max-w-2xl mb-10 drop-shadow" data-tina-field={tinaField(data, 'heroSubtitle')}>{data.heroSubtitle}</motion.p>
 
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-wrap gap-4">
                 <a href="#contact" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-fuchsia-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
@@ -324,12 +77,13 @@ export default function EcommerceLicense() {
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </a>
                 <a href={getWhatsAppLink("Hi! I'm interested in E-commerce License in Dubai.")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
-                  <MessageCircle size={16} />WhatsApp
+                  <WhatsAppIcon size={16} className="text-emerald-600" />
+WhatsApp
                 </a>
               </motion.div>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.9 }} className="mt-10 flex flex-wrap gap-3">
-                {['AED 7,500 Start', '1-5 Days Setup', '100% Ownership', '0% Tax'].map((item, i) => (
+                {data.heroChips.map((item: string, i: number) => (
                   <div key={i} className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs">
                     <CheckCircle2 size={12} className="text-fuchsia-300" strokeWidth={3} />
                     <span className="font-semibold text-white">{item}</span>
@@ -341,7 +95,6 @@ export default function EcommerceLicense() {
             {/* RIGHT — Dashboard Card */}
             <div className="lg:col-span-5 relative h-[520px] hidden lg:block">
               <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 6, repeat: Infinity }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[420px] h-[420px] rounded-full bg-gradient-to-br from-fuchsia-400 to-pink-600 opacity-40 blur-[100px]" />
-
               <motion.div animate={{ rotate: 360 }} transition={{ duration: 40, repeat: Infinity, ease: 'linear' }} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[480px] h-[480px]">
                 <div className="absolute top-0 left-1/2 w-3 h-3 -translate-x-1/2 rounded-full bg-fuchsia-300 shadow-[0_0_20px_rgba(232,121,249,0.8)]" />
                 <div className="absolute bottom-0 left-1/2 w-2 h-2 -translate-x-1/2 rounded-full bg-pink-300" />
@@ -359,7 +112,6 @@ export default function EcommerceLicense() {
                       </div>
                       <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">Live</span>
                     </div>
-
                     <div className="p-5">
                       <div className="flex items-center gap-3 mb-5">
                         <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-fuchsia-400 to-pink-600 flex items-center justify-center shadow-lg">
@@ -373,7 +125,6 @@ export default function EcommerceLicense() {
                           <span className="text-[9px] font-black text-white uppercase tracking-widest">Active</span>
                         </div>
                       </div>
-
                       <div className="grid grid-cols-2 gap-3 mb-4">
                         <div className="p-3 rounded-xl bg-gradient-to-br from-fuchsia-50 to-pink-50 border border-fuchsia-100">
                           <div className="text-[8px] font-bold text-txt-muted uppercase tracking-widest mb-1">Setup</div>
@@ -384,7 +135,6 @@ export default function EcommerceLicense() {
                           <div className="text-lg font-black text-pink-600">AED 7.5K</div>
                         </div>
                       </div>
-
                       <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100 mb-4">
                         <ShoppingBag size={18} className="text-fuchsia-500" />
                         <ShoppingCart size={18} className="text-pink-500" />
@@ -393,7 +143,6 @@ export default function EcommerceLicense() {
                         <Globe size={18} className="text-orange-500" />
                         <Rocket size={18} className="text-amber-500" />
                       </div>
-
                       <div className="pt-4 border-t border-dashed border-border flex items-center justify-between">
                         <span className="text-[10px] font-black text-fuchsia-600 uppercase tracking-widest">Launch Now</span>
                         <div className="w-7 h-7 rounded-full bg-gradient-to-br from-fuchsia-400 to-pink-600 flex items-center justify-center">
@@ -409,12 +158,12 @@ export default function EcommerceLicense() {
         </div>
       </section>
 
-      {/* === 2. STATS ROW === */}
+      {/* === 2. STATS === */}
       <section className="relative py-14 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {stats.map((stat, i) => {
-              const Icon = stat.icon;
+            {data.stats.map((stat: any, i: number) => {
+              const Icon = iconMap[stat.icon] || Clock;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="group relative">
                   <div className="relative overflow-hidden rounded-2xl bg-white border border-border hover:border-transparent transition-all duration-500 p-5 shadow-[0_5px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_15px_40px_rgba(232,121,249,0.15)] hover:-translate-y-1">
@@ -424,8 +173,8 @@ export default function EcommerceLicense() {
                         <Icon size={20} className="text-white" strokeWidth={2.5} />
                       </div>
                       <div>
-                        <div className="text-lg font-black text-[#0A0F1F] leading-none mb-0.5">{stat.value}</div>
-                        <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest">{stat.label}</div>
+                        <div className="text-lg font-black text-[#0A0F1F] leading-none mb-0.5" data-tina-field={tinaField(stat, 'value')}>{stat.value}</div>
+                        <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest" data-tina-field={tinaField(stat, 'label')}>{stat.label}</div>
                       </div>
                     </div>
                   </div>
@@ -436,14 +185,14 @@ export default function EcommerceLicense() {
         </div>
       </section>
 
-      {/* === 3. WHAT IS E-COM LICENSE — Split === */}
+      {/* === 3. WHAT IS E-COM LICENSE === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-b from-white to-fuchsia-50/40 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="lg:col-span-5 relative">
               <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-400 to-pink-600 opacity-20 blur-[80px] rounded-full" />
               <div className="relative rounded-3xl overflow-hidden border border-border shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
-                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&q=80" alt="E-commerce" className="w-full h-[500px] object-cover" />
+                <img src={data.whatIsSection.image} alt="E-commerce" className="w-full h-[500px] object-cover" data-tina-field={tinaField(data.whatIsSection, 'image')} />
                 <div className="absolute inset-0 bg-gradient-to-t from-fuchsia-900/70 via-transparent to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-2xl bg-white/95 backdrop-blur-xl shadow-lg">
                   <div className="flex items-center gap-3">
@@ -451,8 +200,8 @@ export default function EcommerceLicense() {
                       <ShoppingCart size={18} className="text-white" />
                     </div>
                     <div>
-                      <div className="text-[10px] font-bold text-txt-muted uppercase tracking-wider">Online Store</div>
-                      <div className="text-sm font-black text-[#0A0F1F]">Legalize Your Business</div>
+                      <div className="text-[10px] font-bold text-txt-muted uppercase tracking-wider" data-tina-field={tinaField(data.whatIsSection, 'imageBadgeTitle')}>{data.whatIsSection.imageBadgeTitle}</div>
+                      <div className="text-sm font-black text-[#0A0F1F]" data-tina-field={tinaField(data.whatIsSection, 'imageBadgeText')}>{data.whatIsSection.imageBadgeText}</div>
                     </div>
                   </div>
                 </div>
@@ -462,27 +211,17 @@ export default function EcommerceLicense() {
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="lg:col-span-7">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
                 <Sparkles size={14} className="text-fuchsia-600" />
-                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Start E-Commerce in UAE</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.whatIsSection, 'badge')}>{data.whatIsSection.badge}</span>
               </div>
-
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6">
-                What Is an <span className="gradient-text">E-commerce License</span> in Dubai?
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6" data-tina-field={tinaField(data.whatIsSection, 'title')}>
+                {data.whatIsSection.title.replace(data.whatIsSection.titleHighlight, '')}
+                <span className="gradient-text">{data.whatIsSection.titleHighlight}</span>
               </h2>
-
               <div className="space-y-5 text-base text-[#475569] font-medium leading-relaxed">
-                <p>
-                  A business license for e-commerce is a <span className="font-black text-[#0A0F1F]">legal license issued by Dubai's Department of Economic Development (DED)</span>, or applicable Free Zone authorities, that allows you to set up and run a business online.
-                </p>
-                <p>
-                  It allows businesses to <span className="font-black text-[#0A0F1F]">advertise, sell, and deliver products or services online</span>, via mobile apps, or marketplaces. The E-Commerce License permits you to trade locally throughout the UAE or globally, depending on your jurisdiction.
-                </p>
-                <p>
-                  Best Free Zone options for e-commerce licenses include <span className="font-black text-[#0A0F1F]">IFZA, Shams, Dubai CommerCity, and RAKEZ</span> — offering low-cost startup, 100% foreign ownership, and minimal restrictions.
-                </p>
+                {data.whatIsSection.paragraphs.map((p: string, i: number) => (<p key={i}>{p}</p>))}
               </div>
-
               <div className="grid sm:grid-cols-2 gap-3 mt-8">
-                {['100% Ownership', '0% Tax', '1-5 Days Setup', 'UAE + Global Markets', 'Payment Gateways', 'Logistics Partners'].map((item, i) => (
+                {data.whatIsSection.highlights.map((item: string, i: number) => (
                   <div key={i} className="flex items-center gap-2 p-3 rounded-2xl bg-white border border-border">
                     <div className="w-5 h-5 rounded-full bg-gradient-to-br from-fuchsia-400 to-pink-600 flex items-center justify-center">
                       <CheckCircle2 size={12} className="text-white" strokeWidth={3} />
@@ -496,9 +235,9 @@ export default function EcommerceLicense() {
         </div>
       </section>
 
-      {/* === 4. WHO NEEDS IT — Dark Premium === */}
+      {/* === 4. WHO NEEDS IT === */}
       <section className="relative py-14 md:py-20 overflow-hidden bg-gradient-to-br from-slate-950 via-fuchsia-950 to-pink-950">
-        <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${data.heroImage})` }} />
         <div className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full bg-fuchsia-500/20 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[700px] h-[700px] rounded-full bg-pink-500/20 blur-[150px] pointer-events-none" />
 
@@ -506,17 +245,18 @@ export default function EcommerceLicense() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
               <UserCheck size={14} className="text-fuchsia-300" />
-              <span className="text-xs font-bold tracking-wider uppercase text-white">Who Needs This License?</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.whoNeedsItSection, 'badge')}>{data.whoNeedsItSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              Anyone Selling <span className="bg-gradient-to-r from-fuchsia-300 to-pink-300 bg-clip-text text-transparent">Online in Dubai</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.whoNeedsItSection, 'title')}>
+              {data.whoNeedsItSection.title.replace(data.whoNeedsItSection.titleHighlight, '')}
+              <span className="bg-gradient-to-r from-fuchsia-300 to-pink-300 bg-clip-text text-transparent">{data.whoNeedsItSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-white/70 font-medium">Without a valid license, promoting or transacting online in the UAE is illegal — heavy fines or bans apply.</p>
+            <p className="text-base text-white/70 font-medium" data-tina-field={tinaField(data.whoNeedsItSection, 'subtitle')}>{data.whoNeedsItSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {whoNeedsIt.map((item, i) => {
-              const Icon = item.icon;
+            {data.whoNeedsItSection.items.map((item: any, i: number) => {
+              const Icon = iconMap[item.icon] || Package;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }} className="group relative">
                   <div className={`absolute -inset-2 rounded-[28px] bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-500`} />
@@ -524,8 +264,8 @@ export default function EcommerceLicense() {
                     <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                       <Icon size={22} className="text-white" strokeWidth={2.2} />
                     </div>
-                    <h3 className="text-sm font-black text-white mb-2 leading-tight">{item.label}</h3>
-                    <p className="text-xs text-white/70 font-medium leading-relaxed">{item.desc}</p>
+                    <h3 className="text-sm font-black text-white mb-2 leading-tight" data-tina-field={tinaField(item, 'label')}>{item.label}</h3>
+                    <p className="text-xs text-white/70 font-medium leading-relaxed" data-tina-field={tinaField(item, 'desc')}>{item.desc}</p>
                   </div>
                 </motion.div>
               );
@@ -540,16 +280,16 @@ export default function EcommerceLicense() {
                   <div className="w-12 h-12 mx-auto rounded-2xl bg-white/25 backdrop-blur-xl border border-white/40 flex items-center justify-center shadow-lg mb-3">
                     <MessageCircle size={22} className="text-white" strokeWidth={2.2} />
                   </div>
-                  <h3 className="text-sm font-black text-white mb-1 leading-tight">Not Sure If You Need One?</h3>
-                  <p className="text-xs text-white/90 font-medium mb-3 leading-tight">Talk to our experts</p>
+                  <h3 className="text-sm font-black text-white mb-1 leading-tight" data-tina-field={tinaField(data.whoNeedsItSection.ctaCard, 'title')}>{data.whoNeedsItSection.ctaCard.title}</h3>
+                  <p className="text-xs text-white/90 font-medium mb-3 leading-tight" data-tina-field={tinaField(data.whoNeedsItSection.ctaCard, 'text')}>{data.whoNeedsItSection.ctaCard.text}</p>
                   <a
-                    href={getWhatsAppLink("Hi! I need to know if I need an E-commerce License in Dubai.")}
+                    href={getWhatsAppLink(data.whoNeedsItSection.ctaCard.whatsappMessage)}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white text-fuchsia-700 font-bold text-[10px] shadow-lg hover:scale-105 transition-all duration-300"
                   >
                     <MessageCircle size={11} />
-                    Ask Expert
+                    {data.whoNeedsItSection.ctaCard.buttonText}
                   </a>
                 </div>
               </div>
@@ -558,25 +298,25 @@ export default function EcommerceLicense() {
         </div>
       </section>
 
-      {/* === 5. BENEFITS — Light Grid === */}
+      {/* === 5. BENEFITS === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-fuchsia-50 via-pink-50 to-rose-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-fuchsia-100/50 blur-[140px] pointer-events-none" />
-
         <div className="relative max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-fuchsia-200 shadow-soft mb-6">
               <Award size={14} className="text-fuchsia-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-fuchsia-700">Legalize Your Online Store</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-fuchsia-700" data-tina-field={tinaField(data.benefitsSection, 'badge')}>{data.benefitsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Benefits of an <span className="gradient-text">E-commerce License</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.benefitsSection, 'title')}>
+              {data.benefitsSection.title.replace(data.benefitsSection.titleHighlight, '')}
+              <span className="gradient-text">{data.benefitsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Nine powerful advantages for launching your online venture in Dubai.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.benefitsSection, 'subtitle')}>{data.benefitsSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {benefits.map((benefit, i) => {
-              const Icon = benefit.icon;
+            {data.benefitsSection.items.map((benefit: any, i: number) => {
+              const Icon = iconMap[benefit.icon] || Globe;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }} className="group relative">
                   <div className={`absolute -inset-2 rounded-[28px] bg-gradient-to-r ${benefit.color} opacity-0 group-hover:opacity-25 blur-2xl transition-all duration-500`} />
@@ -585,8 +325,8 @@ export default function EcommerceLicense() {
                     <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${benefit.color} flex items-center justify-center shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                       <Icon size={22} className="text-white" strokeWidth={2.2} />
                     </div>
-                    <h3 className="text-sm font-black text-[#0A0F1F] mb-2 leading-tight">{benefit.title}</h3>
-                    <p className="text-xs text-[#64748B] font-medium leading-relaxed">{benefit.description}</p>
+                    <h3 className="text-sm font-black text-[#0A0F1F] mb-2 leading-tight" data-tina-field={tinaField(benefit, 'title')}>{benefit.title}</h3>
+                    <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(benefit, 'description')}>{benefit.description}</p>
                   </div>
                 </motion.div>
               );
@@ -595,9 +335,9 @@ export default function EcommerceLicense() {
         </div>
       </section>
 
-      {/* === 6. PROCESS — Dark Vertical Timeline === */}
+      {/* === 6. PROCESS === */}
       <section className="relative py-14 md:py-20 overflow-hidden bg-gradient-to-br from-slate-950 via-fuchsia-950 to-pink-950">
-        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: `url(${data.heroImage})` }} />
         <div className="absolute top-0 left-0 w-[700px] h-[700px] rounded-full bg-fuchsia-500/20 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[700px] h-[700px] rounded-full bg-pink-500/20 blur-[150px] pointer-events-none" />
 
@@ -605,29 +345,30 @@ export default function EcommerceLicense() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
               <Rocket size={14} className="text-fuchsia-300" />
-              <span className="text-xs font-bold tracking-wider uppercase text-white">We Simplify Your Start</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.processSection, 'badge')}>{data.processSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              How to Get an <span className="bg-gradient-to-r from-fuchsia-300 to-pink-300 bg-clip-text text-transparent">E-commerce License</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.processSection, 'title')}>
+              {data.processSection.title.replace(data.processSection.titleHighlight, '')}
+              <span className="bg-gradient-to-r from-fuchsia-300 to-pink-300 bg-clip-text text-transparent">{data.processSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-white/70 font-medium">10 simple steps from activity to launch.</p>
+            <p className="text-base text-white/70 font-medium" data-tina-field={tinaField(data.processSection, 'subtitle')}>{data.processSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {processSteps.map((step, i) => {
-              const Icon = step.icon;
+            {data.processSection.steps.map((step: any, i: number) => {
+              const Icon = iconMap[step.icon] || Target;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }} className="group relative">
                   <div className="relative p-5 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-500 h-full">
                     <div className="absolute -top-3 -right-3 w-11 h-11 rounded-xl bg-gradient-to-br from-fuchsia-400 to-pink-600 flex items-center justify-center shadow-lg opacity-15">
-                      <span className="text-lg font-black text-fuchsia-600">{step.step}</span>
+                      <span className="text-lg font-black text-fuchsia-600" data-tina-field={tinaField(step, 'step')}>{step.step}</span>
                     </div>
                     <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                       <Icon size={22} className="text-white" strokeWidth={2.2} />
                     </div>
                     <div className="text-[10px] font-black text-fuchsia-300 uppercase tracking-widest mb-1">STEP {step.step}</div>
-                    <h3 className="text-sm font-black text-white mb-2 leading-tight">{step.title}</h3>
-                    <p className="text-xs text-white/70 font-medium leading-relaxed">{step.description}</p>
+                    <h3 className="text-sm font-black text-white mb-2 leading-tight" data-tina-field={tinaField(step, 'title')}>{step.title}</h3>
+                    <p className="text-xs text-white/70 font-medium leading-relaxed" data-tina-field={tinaField(step, 'description')}>{step.description}</p>
                   </div>
                 </motion.div>
               );
@@ -636,134 +377,92 @@ export default function EcommerceLicense() {
         </div>
       </section>
 
-      {/* === 7. JURISDICTIONS — Swipe Carousel === */}
+      {/* === 7. JURISDICTIONS CAROUSEL === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-fuchsia-50 via-pink-50 to-rose-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-fuchsia-100/50 blur-[140px] pointer-events-none" />
-
         <div className="relative max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-fuchsia-200 shadow-soft mb-6">
               <MapPin size={14} className="text-fuchsia-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-fuchsia-700">Compare, Choose, Start Smart</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-fuchsia-700" data-tina-field={tinaField(data.jurisdictionsSection, 'badge')}>{data.jurisdictionsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Mainland or <span className="gradient-text">Free Zone?</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.jurisdictionsSection, 'title')}>
+              {data.jurisdictionsSection.title.replace(data.jurisdictionsSection.titleHighlight, '')}
+              <span className="gradient-text">{data.jurisdictionsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Swipe to compare jurisdictions and pick what fits your business.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.jurisdictionsSection, 'subtitle')}>{data.jurisdictionsSection.subtitle}</p>
           </motion.div>
 
-          {/* Carousel */}
           <div className="relative">
             <div className="relative rounded-[32px] overflow-hidden border border-border shadow-2xl h-[520px]">
               <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeJurisdiction}
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
-                  transition={{ duration: 0.5, ease: 'easeInOut' }}
-                  className="absolute inset-0"
-                >
-                  <div className="absolute inset-0">
-                    <img
-                      src={jurisdictions[activeJurisdiction].image}
-                      alt={jurisdictions[activeJurisdiction].title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className={`absolute inset-0 bg-gradient-to-br ${jurisdictions[activeJurisdiction].color} opacity-80 mix-blend-multiply`} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-                  </div>
-
-                  <div className="relative h-full flex flex-col justify-between p-8 md:p-12">
-                    <div>
-                      <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br ${jurisdictions[activeJurisdiction].color} flex items-center justify-center shadow-2xl mb-6 backdrop-blur-xl border border-white/30`}>
-                        {(() => {
-                          const Icon = jurisdictions[activeJurisdiction].icon;
-                          return <Icon size={36} className="text-white" strokeWidth={2.2} />;
-                        })()}
-                      </div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="inline-block px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-[10px] font-black text-white uppercase tracking-widest">
-                          Option {String(activeJurisdiction + 1).padStart(2, '0')} / {String(jurisdictions.length).padStart(2, '0')}
-                        </span>
-                        <span className="inline-block px-3 py-1.5 rounded-full bg-fuchsia-400/90 backdrop-blur-xl border border-fuchsia-300/50 text-[10px] font-black text-white uppercase tracking-widest">
-                          Best for {jurisdictions[activeJurisdiction].bestFor}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div>
-                      <div className="text-xs font-black text-fuchsia-300 uppercase tracking-widest mb-2">{jurisdictions[activeJurisdiction].tagline}</div>
-                      <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4 drop-shadow-lg">
-                        {jurisdictions[activeJurisdiction].title}
-                      </h3>
-                      <p className="text-base md:text-lg text-white/90 font-medium leading-relaxed max-w-3xl mb-6 drop-shadow">
-                        {jurisdictions[activeJurisdiction].description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2">
-                        {jurisdictions[activeJurisdiction].features.map((feature, fi) => (
-                          <span key={fi} className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-xs font-bold text-white">
-                            {feature}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
+                <motion.div key={activeJurisdiction} initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ duration: 0.5, ease: 'easeInOut' }} className="absolute inset-0">
+                  {(() => {
+                    const j = jurisdictions[activeJurisdiction];
+                    const Icon = iconMap[j.icon] || Factory;
+                    return (
+                      <>
+                        <div className="absolute inset-0">
+                          <img src={j.image} alt={j.title} className="w-full h-full object-cover" data-tina-field={tinaField(j, 'image')} />
+                          <div className={`absolute inset-0 bg-gradient-to-br ${j.color} opacity-80 mix-blend-multiply`} />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                        </div>
+                        <div className="relative h-full flex flex-col justify-between p-8 md:p-12">
+                          <div>
+                            <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br ${j.color} flex items-center justify-center shadow-2xl mb-6 backdrop-blur-xl border border-white/30`}>
+                              <Icon size={36} className="text-white" strokeWidth={2.2} />
+                            </div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="inline-block px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-[10px] font-black text-white uppercase tracking-widest">
+                                Option {String(activeJurisdiction + 1).padStart(2, '0')} / {String(jurisdictions.length).padStart(2, '0')}
+                              </span>
+                              <span className="inline-block px-3 py-1.5 rounded-full bg-fuchsia-400/90 backdrop-blur-xl border border-fuchsia-300/50 text-[10px] font-black text-white uppercase tracking-widest">
+                                Best for {j.bestFor}
+                              </span>
+                            </div>
+                          </div>
+                          <div>
+                            <div className="text-xs font-black text-fuchsia-300 uppercase tracking-widest mb-2" data-tina-field={tinaField(j, 'tagline')}>{j.tagline}</div>
+                            <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4 drop-shadow-lg" data-tina-field={tinaField(j, 'title')}>{j.title}</h3>
+                            <p className="text-base md:text-lg text-white/90 font-medium leading-relaxed max-w-3xl mb-6 drop-shadow" data-tina-field={tinaField(j, 'description')}>{j.description}</p>
+                            <div className="flex flex-wrap gap-2">
+                              {j.features.map((feature: string, fi: number) => (
+                                <span key={fi} className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-xs font-bold text-white">{feature}</span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
                 </motion.div>
               </AnimatePresence>
 
-              <button
-                onClick={prevJurisdiction}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group"
-                aria-label="Previous"
-              >
+              <button onClick={prevJurisdiction} className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group" aria-label="Previous">
                 <ChevronLeft size={22} className="text-white group-hover:-translate-x-0.5 transition-transform" strokeWidth={2.5} />
               </button>
-              <button
-                onClick={nextJurisdiction}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group"
-                aria-label="Next"
-              >
+              <button onClick={nextJurisdiction} className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group" aria-label="Next">
                 <ChevronRight size={22} className="text-white group-hover:translate-x-0.5 transition-transform" strokeWidth={2.5} />
               </button>
 
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
-                {jurisdictions.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveJurisdiction(i)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      i === activeJurisdiction ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'
-                    }`}
-                    aria-label={`Go to ${i + 1}`}
-                  />
+                {jurisdictions.map((_: any, i: number) => (
+                  <button key={i} onClick={() => setActiveJurisdiction(i)} className={`h-2 rounded-full transition-all duration-300 ${i === activeJurisdiction ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'}`} aria-label={`Go to ${i + 1}`} />
                 ))}
               </div>
             </div>
 
-            {/* Thumbnails */}
             <div className="mt-6 grid grid-cols-2 gap-4 max-w-2xl mx-auto">
-              {jurisdictions.map((j, i) => {
-                const Icon = j.icon;
+              {jurisdictions.map((j: any, i: number) => {
+                const Icon = iconMap[j.icon] || Factory;
                 return (
-                  <button
-                    key={i}
-                    onClick={() => setActiveJurisdiction(i)}
-                    className={`group relative rounded-2xl overflow-hidden transition-all duration-300 ${
-                      i === activeJurisdiction
-                        ? 'ring-2 ring-fuchsia-400 shadow-lg shadow-fuchsia-500/30 scale-105'
-                        : 'ring-1 ring-slate-200 hover:ring-slate-300'
-                    }`}
-                  >
+                  <button key={i} onClick={() => setActiveJurisdiction(i)} className={`group relative rounded-2xl overflow-hidden transition-all duration-300 ${i === activeJurisdiction ? 'ring-2 ring-fuchsia-400 shadow-lg shadow-fuchsia-500/30 scale-105' : 'ring-1 ring-slate-200 hover:ring-slate-300'}`}>
                     <div className="relative h-24">
                       <img src={j.image} alt={j.title} className="w-full h-full object-cover" />
                       <div className={`absolute inset-0 bg-gradient-to-br ${j.color} opacity-80 mix-blend-multiply`} />
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
                         <Icon size={22} className="text-white" strokeWidth={2.5} />
-                        <span className="text-[10px] font-black text-white uppercase tracking-wider">
-                          {j.title}
-                        </span>
+                        <span className="text-[10px] font-black text-white uppercase tracking-wider">{j.title}</span>
                       </div>
                     </div>
                   </button>
@@ -780,17 +479,18 @@ export default function EcommerceLicense() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
               <FileText size={14} className="text-fuchsia-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">What You'll Need</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.documentsSection, 'badge')}>{data.documentsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Required <span className="gradient-text">Documents</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.documentsSection, 'title')}>
+              {data.documentsSection.title.replace(data.documentsSection.titleHighlight, '')}
+              <span className="gradient-text">{data.documentsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">We handle the complete paperwork and approvals on your behalf.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.documentsSection, 'subtitle')}>{data.documentsSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {documents.map((doc, i) => {
-              const Icon = doc.icon;
+            {data.documentsSection.items.map((doc: any, i: number) => {
+              const Icon = iconMap[doc.icon] || FileText;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }} className="group relative">
                   <div className="relative p-5 rounded-3xl bg-gradient-to-br from-white to-fuchsia-50/30 border border-border shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-500 h-full overflow-hidden">
@@ -800,8 +500,8 @@ export default function EcommerceLicense() {
                         <Icon size={22} className="text-white" strokeWidth={2.2} />
                       </div>
                       <div className="flex-1 pt-1">
-                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1">{doc.label}</h3>
-                        <p className="text-xs text-[#64748B] font-medium leading-relaxed">{doc.desc}</p>
+                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1" data-tina-field={tinaField(doc, 'label')}>{doc.label}</h3>
+                        <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(doc, 'desc')}>{doc.desc}</p>
                       </div>
                     </div>
                   </div>
@@ -812,9 +512,9 @@ export default function EcommerceLicense() {
         </div>
       </section>
 
-      {/* === 9. PLATFORMS + INTEGRATIONS — Dark Premium === */}
+      {/* === 9. PLATFORMS + INTEGRATIONS === */}
       <section className="relative py-14 md:py-20 overflow-hidden bg-gradient-to-br from-slate-950 via-fuchsia-950 to-pink-950">
-        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: `url(${data.heroImage})` }} />
         <div className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full bg-fuchsia-500/20 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[700px] h-[700px] rounded-full bg-pink-500/20 blur-[150px] pointer-events-none" />
 
@@ -822,24 +522,25 @@ export default function EcommerceLicense() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
               <ShoppingBag size={14} className="text-fuchsia-300" />
-              <span className="text-xs font-bold tracking-wider uppercase text-white">Sell Anywhere</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.platformsSection, 'badge')}>{data.platformsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              Sell on <span className="bg-gradient-to-r from-fuchsia-300 to-pink-300 bg-clip-text text-transparent">Any Platform</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.platformsSection, 'title')}>
+              {data.platformsSection.title.replace(data.platformsSection.titleHighlight, '')}
+              <span className="bg-gradient-to-r from-fuchsia-300 to-pink-300 bg-clip-text text-transparent">{data.platformsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-white/70 font-medium">Register, sell, and market on major marketplaces and social platforms.</p>
+            <p className="text-base text-white/70 font-medium" data-tina-field={tinaField(data.platformsSection, 'subtitle')}>{data.platformsSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 gap-3 mb-14">
-            {platforms.map((platform, i) => {
-              const Icon = platform.icon;
+            {data.platformsSection.items.map((platform: any, i: number) => {
+              const Icon = iconMap[platform.icon] || ShoppingBag;
               return (
                 <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.06 }} whileHover={{ y: -4, scale: 1.05 }} className="group">
                   <div className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300 text-center">
                     <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${platform.color} flex items-center justify-center shadow-md group-hover:rotate-12 transition-transform`}>
                       <Icon size={20} className="text-white" strokeWidth={2.5} />
                     </div>
-                    <span className="text-[10px] font-black text-white leading-tight">{platform.name}</span>
+                    <span className="text-[10px] font-black text-white leading-tight" data-tina-field={tinaField(platform, 'name')}>{platform.name}</span>
                   </div>
                 </motion.div>
               );
@@ -847,21 +548,21 @@ export default function EcommerceLicense() {
           </div>
 
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-8 max-w-3xl mx-auto">
-            <h3 className="text-xl md:text-2xl font-black text-white leading-tight tracking-tight mb-2">
-              Payment Gateways & Logistics Partners
+            <h3 className="text-xl md:text-2xl font-black text-white leading-tight tracking-tight mb-2" data-tina-field={tinaField(data.integrationsSection, 'title')}>
+              {data.integrationsSection.title}
             </h3>
           </motion.div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {paymentGateways.map((gateway, i) => {
-              const Icon = gateway.icon;
+            {data.integrationsSection.paymentGateways.map((gateway: any, i: number) => {
+              const Icon = iconMap[gateway.icon] || CreditCard;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }} className="group">
                   <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300">
                     <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${gateway.color} flex items-center justify-center shadow-md flex-shrink-0 group-hover:rotate-12 transition-transform`}>
                       <Icon size={18} className="text-white" strokeWidth={2.5} />
                     </div>
-                    <span className="text-xs font-black text-white leading-tight">{gateway.name}</span>
+                    <span className="text-xs font-black text-white leading-tight" data-tina-field={tinaField(gateway, 'name')}>{gateway.name}</span>
                   </div>
                 </motion.div>
               );
@@ -869,15 +570,15 @@ export default function EcommerceLicense() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-            {logisticsPartners.map((partner, i) => {
-              const Icon = partner.icon;
+            {data.integrationsSection.logisticsPartners.map((partner: any, i: number) => {
+              const Icon = iconMap[partner.icon] || Truck;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }} className="group">
                   <div className="flex items-center gap-3 p-4 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300">
                     <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${partner.color} flex items-center justify-center shadow-md flex-shrink-0 group-hover:rotate-12 transition-transform`}>
                       <Icon size={18} className="text-white" strokeWidth={2.5} />
                     </div>
-                    <span className="text-xs font-black text-white leading-tight">{partner.name}</span>
+                    <span className="text-xs font-black text-white leading-tight" data-tina-field={tinaField(partner, 'name')}>{partner.name}</span>
                   </div>
                 </motion.div>
               );
@@ -892,17 +593,18 @@ export default function EcommerceLicense() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
               <Award size={14} className="text-fuchsia-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Why Choose Us</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.whyChooseUsSection, 'badge')}>{data.whyChooseUsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Business Launch <span className="gradient-text">Specialists</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.whyChooseUsSection, 'title')}>
+              {data.whyChooseUsSection.title.replace(data.whyChooseUsSection.titleHighlight, '')}
+              <span className="gradient-text">{data.whyChooseUsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Eight reasons entrepreneurs trust us for their e-commerce setup.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.whyChooseUsSection, 'subtitle')}>{data.whyChooseUsSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {whyChooseUs.map((item, i) => {
-              const Icon = item.icon;
+            {data.whyChooseUsSection.items.map((item: any, i: number) => {
+              const Icon = iconMap[item.icon] || UserCheck;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.06 }} className="group">
                   <div className="relative p-5 rounded-3xl bg-gradient-to-br from-white to-fuchsia-50/30 border border-border shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-500 h-full overflow-hidden">
@@ -912,8 +614,8 @@ export default function EcommerceLicense() {
                         <Icon size={20} className="text-white" strokeWidth={2.5} />
                       </div>
                       <div className="flex-1 pt-0.5">
-                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1">{item.label}</h3>
-                        <p className="text-xs text-[#64748B] font-medium leading-relaxed">{item.desc}</p>
+                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1" data-tina-field={tinaField(item, 'label')}>{item.label}</h3>
+                        <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(item, 'desc')}>{item.desc}</p>
                       </div>
                     </div>
                   </div>
@@ -927,33 +629,31 @@ export default function EcommerceLicense() {
       {/* === 11. GROWTH STATS === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-fuchsia-50 via-pink-50 to-rose-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-fuchsia-100/50 blur-[140px] pointer-events-none" />
-
         <div className="relative max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-fuchsia-200 shadow-soft mb-6">
               <TrendingUp size={14} className="text-fuchsia-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-fuchsia-700">Business Growth Outlook</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-fuchsia-700" data-tina-field={tinaField(data.growthStatsSection, 'badge')}>{data.growthStatsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Launch Your <span className="gradient-text">Dream Business</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.growthStatsSection, 'title')}>
+              {data.growthStatsSection.title.replace(data.growthStatsSection.titleHighlight, '')}
+              <span className="gradient-text">{data.growthStatsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Your online business in expert hands.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.growthStatsSection, 'subtitle')}>{data.growthStatsSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-5">
-            {growthStats.map((stat, i) => {
-              const Icon = stat.icon;
+            {data.growthStatsSection.items.map((stat: any, i: number) => {
+              const Icon = iconMap[stat.icon] || Building2;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.08 }} className="group relative p-6 rounded-3xl bg-white border border-border shadow-md hover:shadow-[0_20px_60px_rgba(232,121,249,0.15)] hover:-translate-y-2 transition-all duration-500 overflow-hidden">
                   <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.color}`} />
                   <div className={`absolute -top-16 -right-16 w-40 h-40 rounded-full bg-gradient-to-br ${stat.color} opacity-[0.06] group-hover:opacity-[0.12] blur-2xl transition-opacity duration-500`} />
-
                   <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                     <Icon size={26} className="text-white" strokeWidth={2.2} />
                   </div>
-
-                  <div className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-none mb-2 tracking-tight">{stat.value}</div>
-                  <div className="text-xs font-bold text-[#64748B] uppercase tracking-widest">{stat.label}</div>
+                  <div className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-none mb-2 tracking-tight" data-tina-field={tinaField(stat, 'value')}>{stat.value}</div>
+                  <div className="text-xs font-bold text-[#64748B] uppercase tracking-widest" data-tina-field={tinaField(stat, 'label')}>{stat.label}</div>
                 </motion.div>
               );
             })}
@@ -964,22 +664,18 @@ export default function EcommerceLicense() {
       {/* === 12. FAQ === */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-fuchsia-50 via-pink-50 to-rose-50 overflow-hidden">
         <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full bg-fuchsia-100/50 blur-[140px] pointer-events-none" />
-
         <div className="relative max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="lg:col-span-5 lg:sticky lg:top-32">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
                 <MessageCircle size={14} className="text-fuchsia-600" />
-                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Common Questions</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.faqsSection, 'badge')}>{data.faqsSection.badge}</span>
               </div>
-
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-[1.1] tracking-tight mb-5">
-                Frequently Asked <span className="gradient-text">Questions</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-[1.1] tracking-tight mb-5" data-tina-field={tinaField(data.faqsSection, 'title')}>
+                {data.faqsSection.title.replace(data.faqsSection.titleHighlight, '')}
+                <span className="gradient-text">{data.faqsSection.titleHighlight}</span>
               </h2>
-
-              <p className="text-base text-[#475569] font-medium leading-relaxed mb-8">
-                Everything you need to know about E-commerce License in Dubai. Still have questions? We're one message away.
-              </p>
+              <p className="text-base text-[#475569] font-medium leading-relaxed mb-8" data-tina-field={tinaField(data.faqsSection, 'subtitle')}>{data.faqsSection.subtitle}</p>
 
               <div className="relative rounded-3xl overflow-hidden p-6 bg-gradient-to-br from-fuchsia-500 via-pink-600 to-rose-700 shadow-2xl">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
@@ -990,11 +686,12 @@ export default function EcommerceLicense() {
                   <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center mb-4">
                     <Sparkles size={22} className="text-white" strokeWidth={2.2} />
                   </div>
-                  <h3 className="text-xl font-black text-white leading-tight tracking-tight mb-2">Still Have Questions?</h3>
-                  <p className="text-sm text-white/90 font-medium leading-relaxed mb-5">Get a free consultation with our e-commerce specialists.</p>
+                  <h3 className="text-xl font-black text-white leading-tight tracking-tight mb-2" data-tina-field={tinaField(data.faqsSection.sidebarCard, 'title')}>{data.faqsSection.sidebarCard.title}</h3>
+                  <p className="text-sm text-white/90 font-medium leading-relaxed mb-5" data-tina-field={tinaField(data.faqsSection.sidebarCard, 'text')}>{data.faqsSection.sidebarCard.text}</p>
                   <div className="flex flex-wrap gap-3">
-                    <a href={getWhatsAppLink("Hi! I have a question about E-commerce License in Dubai.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-fuchsia-700 font-bold text-xs shadow-lg hover:scale-105 transition-all duration-300">
-                      <MessageCircle size={14} />WhatsApp
+                    <a href={getWhatsAppLink(data.faqsSection.sidebarCard.whatsappMessage)} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-fuchsia-700 font-bold text-xs shadow-lg hover:scale-105 transition-all duration-300">
+                      <WhatsAppIcon size={14} className="text-emerald-600" />
+WhatsApp
                     </a>
                     <a href="tel:+971566556645" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-xs hover:bg-white/25 transition-all duration-300">
                       <Phone size={14} />Call Us
@@ -1005,17 +702,16 @@ export default function EcommerceLicense() {
             </motion.div>
 
             <div className="lg:col-span-7 space-y-4">
-              {faqs.map((faq, i) => (
+              {data.faqsSection.items.map((faq: any, i: number) => (
                 <motion.details key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.04 }} className="group relative rounded-3xl bg-white border border-border hover:border-fuchsia-200 hover:shadow-[0_20px_60px_rgba(232,121,249,0.15)] transition-all duration-500 overflow-hidden cursor-pointer">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-fuchsia-400 to-pink-600 opacity-0 group-open:opacity-100 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-fuchsia-400 to-pink-600 opacity-0 group-open:opacity-100 transition-opacity duration-300" />
-
                   <summary className="flex items-start gap-4 p-6 list-none">
                     <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-fuchsia-400 to-pink-600 flex items-center justify-center shadow-lg flex-shrink-0 group-open:scale-110 transition-transform duration-300">
                       <span className="text-sm font-black text-white">{String(i + 1).padStart(2, '0')}</span>
                     </div>
                     <div className="flex-1 pt-1">
-                      <h3 className="font-black text-[#0A0F1F] text-base md:text-lg leading-snug tracking-tight pr-4 group-hover:text-fuchsia-700 transition-colors">{faq.q}</h3>
+                      <h3 className="font-black text-[#0A0F1F] text-base md:text-lg leading-snug tracking-tight pr-4 group-hover:text-fuchsia-700 transition-colors" data-tina-field={tinaField(faq, 'q')}>{faq.q}</h3>
                     </div>
                     <div className="relative flex-shrink-0 pt-1">
                       <div className="w-8 h-8 rounded-full bg-fuchsia-50 border border-fuchsia-200 flex items-center justify-center group-open:bg-gradient-to-br group-open:from-fuchsia-400 group-open:to-pink-600 group-open:border-transparent transition-all duration-300">
@@ -1025,7 +721,7 @@ export default function EcommerceLicense() {
                   </summary>
                   <div className="px-6 pb-6 pl-20">
                     <div className="pt-2 border-t border-dashed border-border">
-                      <p className="pt-4 text-sm md:text-base text-[#475569] font-medium leading-relaxed">{faq.a}</p>
+                      <p className="pt-4 text-sm md:text-base text-[#475569] font-medium leading-relaxed" data-tina-field={tinaField(faq, 'a')}>{faq.a}</p>
                     </div>
                   </div>
                 </motion.details>
@@ -1040,23 +736,24 @@ export default function EcommerceLicense() {
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-12 max-w-2xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-3">
-              Related <span className="gradient-text">Services</span>
+              {data.relatedServicesSection.title.replace(data.relatedServicesSection.titleHighlight, '')}
+              <span className="gradient-text">{data.relatedServicesSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Services that pair well with your E-commerce License.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.relatedServicesSection, 'subtitle')}>{data.relatedServicesSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
-            {relatedServices.map((service, i) => (
+            {data.relatedServicesSection.items.map((service: any, i: number) => (
               <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}>
                 <Link to={`/services/${service.slug}`} className="group relative block h-full rounded-3xl bg-white border border-border overflow-hidden shadow-[0_10px_40px_rgba(15,23,42,0.06)] hover:shadow-[0_25px_70px_rgba(15,23,42,0.15)] hover:-translate-y-2 transition-all duration-500">
                   <div className="relative h-40 overflow-hidden">
                     <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] group-hover:scale-110" style={{ backgroundImage: `url(${service.image})` }} />
                     <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-70 mix-blend-multiply`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <h3 className="absolute bottom-4 left-5 right-5 text-xl font-black text-white">{service.title}</h3>
+                    <h3 className="absolute bottom-4 left-5 right-5 text-xl font-black text-white" data-tina-field={tinaField(service, 'title')}>{service.title}</h3>
                   </div>
                   <div className="p-5">
-                    <p className="text-sm text-[#64748B] font-medium leading-relaxed mb-4">{service.description}</p>
+                    <p className="text-sm text-[#64748B] font-medium leading-relaxed mb-4" data-tina-field={tinaField(service, 'description')}>{service.description}</p>
                     <div className="flex items-center gap-2 text-sm font-black">
                       <span className="gradient-text">Read More</span>
                       <ArrowRight size={14} className="text-fuchsia-600 group-hover:translate-x-1 transition-transform" />
@@ -1068,7 +765,7 @@ export default function EcommerceLicense() {
           </div>
 
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="relative rounded-[32px] overflow-hidden shadow-[0_30px_80px_rgba(15,23,42,0.2)]">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1600&q=80)' }} />
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${data.heroImage})` }} />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-fuchsia-950/70 to-pink-950/50" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
             <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
@@ -1078,20 +775,18 @@ export default function EcommerceLicense() {
                 <div className="lg:col-span-7">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 mb-6">
                     <Sparkles size={14} className="text-white" />
-                    <span className="text-xs font-bold tracking-wider uppercase text-white">Legalize Your Online Store</span>
+                    <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.finalCTA, 'badge')}>{data.finalCTA.badge}</span>
                   </div>
-
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5 drop-shadow-lg">
-                    Ready to Launch Your <span className="text-fuchsia-300">E-commerce Business?</span>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5 drop-shadow-lg" data-tina-field={tinaField(data.finalCTA, 'title')}>
+                    {data.finalCTA.title.replace(data.finalCTA.titleHighlight, '')}
+                    <span className="text-fuchsia-300">{data.finalCTA.titleHighlight}</span>
                   </h2>
-
-                  <p className="text-base md:text-lg text-white/95 font-medium leading-relaxed mb-8 max-w-xl drop-shadow">
-                    Own your business in Dubai with ease. From licensing and visa to payment gateways and bank accounts — we handle everything.
-                  </p>
+                  <p className="text-base md:text-lg text-white/95 font-medium leading-relaxed mb-8 max-w-xl drop-shadow" data-tina-field={tinaField(data.finalCTA, 'subtitle')}>{data.finalCTA.subtitle}</p>
 
                   <div className="flex flex-wrap gap-4 mb-8">
-                    <a href={getWhatsAppLink("Hi! I'd like a free consultation for E-commerce License.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-fuchsia-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
-                      <MessageCircle size={16} />WhatsApp Us
+                    <a href={getWhatsAppLink(data.finalCTA.whatsappMessage)} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-fuchsia-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
+                      <WhatsAppIcon size={16} className="text-emerald-600" />
+WhatsApp Us
                       <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </a>
                     <a href="tel:+971566556645" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
@@ -1100,7 +795,7 @@ export default function EcommerceLicense() {
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    {['Free Consultation', 'AED 7,500 Start', '1-5 Days Setup'].map((item, i) => (
+                    {data.finalCTA.chips.map((item: string, i: number) => (
                       <div key={i} className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs">
                         <CheckCircle2 size={12} className="text-fuchsia-300" strokeWidth={3} />
                         <span className="font-semibold text-white">{item}</span>
@@ -1110,10 +805,10 @@ export default function EcommerceLicense() {
                 </div>
 
                 <div className="lg:col-span-5 space-y-4">
-                  <motion.a href={getWhatsAppLink("Hi! I'd like to discuss E-commerce License.")} target="_blank" rel="noreferrer" initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} className="group block relative p-5 rounded-2xl bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl hover:shadow-[0_20px_60px_rgba(255,255,255,0.2)] hover:-translate-y-1 transition-all duration-300">
+                  <motion.a href={getWhatsAppLink(data.finalCTA.whatsappCardMessage)} target="_blank" rel="noreferrer" initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} className="group block relative p-5 rounded-2xl bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl hover:-translate-y-1 transition-all duration-300">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                        <MessageCircle size={22} className="text-white" strokeWidth={2.2} />
+<WhatsAppIcon size={22} className="text-emerald-600" />
                       </div>
                       <div className="flex-1">
                         <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-0.5">WhatsApp Us</p>

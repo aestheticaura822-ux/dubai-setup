@@ -1,3 +1,4 @@
+// src/pages/Home.tsx
 import Hero from '../components/sections/Hero';
 import TrustBar from '../components/sections/TrustBar';
 import Intro from '../components/sections/Intro';
@@ -9,19 +10,19 @@ import Comparison from '../components/sections/Comparison';
 import FAQ from '../components/sections/FAQ';
 import Contact from '../components/sections/Contact';
 
-export default function Home() {
+export default function Home({ tinaData }: { tinaData?: any }) {
   return (
     <>
-      <Hero />
-      <TrustBar />
-      <Intro />
-      <Services />
-      <SpecializedServices />
-      <Packages />
-      <Process />
-      <Comparison />
-      <FAQ />
-      <Contact />
+      <Hero tinaData={tinaData} />
+      <TrustBar tinaData={tinaData} />
+      <Intro tinaData={tinaData} />
+      <Services tinaData={tinaData} />
+      <SpecializedServices tinaData={tinaData} />
+      <Packages tinaData={tinaData} />
+      <Process tinaData={tinaData} />
+      <Comparison tinaData={tinaData} />
+      <FAQ tinaData={tinaData} />
+      <Contact tinaData={tinaData} />
     </>
   );
 }

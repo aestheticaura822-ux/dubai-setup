@@ -4,22 +4,10 @@
   "heroBadge": "Creative-First Free Zone",
   "heroImage": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1600&q=80",
   "stats": [
-    {
-      "value": "AED 5,999",
-      "label": "Starting From"
-    },
-    {
-      "value": "11",
-      "label": "Packages"
-    },
-    {
-      "value": "3-7",
-      "label": "Days Setup"
-    },
-    {
-      "value": "100%",
-      "label": "Ownership"
-    }
+    { "value": "AED 5,999", "label": "Starting From" },
+    { "value": "11", "label": "Packages" },
+    { "value": "3-7", "label": "Days Setup" },
+    { "value": "100%", "label": "Ownership" }
   ],
   "packages": [
     {
@@ -202,11 +190,11 @@
   "faqs": [
     {
       "q": "What is Creative City Free Zone?",
-      "a": "Creative City Free Zone in Fujairah is a purpose-built free zone for creative professionals and businesses — design, media, photography, music, content creation, and advertising. It offers low-cost setup, 100% foreign ownership"
+      "a": "Creative City Free Zone in Fujairah is a purpose-built free zone for creative professionals and businesses — design, media, photography, music, content creation, and advertising."
     },
     {
       "q": "Where is Creative City Fujairah located?",
-      "a": "Creative City Free Zone is located in Fujairah, UAE — one of the seven emirates. It provides excellent connectivity to major trade routes and seaports on the Gulf of Oman."
+      "a": "Creative City Free Zone is located in Fujairah, UAE — one of the seven emirates."
     },
     {
       "q": "What is included in the Creative City setup package?",
@@ -214,7 +202,7 @@
     },
     {
       "q": "How much does a Creative City package cost?",
-      "a": "Our Creative City packages start from AED 5,999 (Economy) and go up to AED 16,999 (Mainland + Residency). Premium packages with visa start at AED 14,499."
+      "a": "Our Creative City packages start from AED 5,999 (Economy) and go up to AED 16,999 (Mainland + Residency)."
     },
     {
       "q": "How long does setup take?",

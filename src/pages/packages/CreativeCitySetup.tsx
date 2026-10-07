@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { getWhatsAppLink } from '../../lib/whatsapp';
 import creativeCityData from '../../content/packages/creative-city.json';
+import WhatsAppIcon from '../../components/icons/WhatsAppIcon';
 
 // Icon map — JSON me string hota hai, yahan actual icon
 const iconMap: any = {
@@ -80,7 +81,8 @@ export default function CreativeCitySetup({ tinaData }: { tinaData?: any }) {
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </a>
                 <a href={getWhatsAppLink("Hi! I'm interested in Creative City Free Zone Setup in Fujairah.")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
-                  <MessageCircle size={16} />WhatsApp
+                  <WhatsAppIcon size={16} className="text-emerald-600" />
+WhatsApp
                 </a>
               </motion.div>
             </div>
@@ -231,7 +233,8 @@ export default function CreativeCitySetup({ tinaData }: { tinaData?: any }) {
                         rel="noreferrer"
                         className={`group/cta flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r ${color} text-white font-black text-xs uppercase tracking-widest shadow-lg hover:scale-105 transition-all duration-300`}
                       >
-                        <MessageCircle size={14} strokeWidth={2.5} />
+                        <WhatsAppIcon size={14} className="text-emerald-600" />
+
                         Enquire Now
                         <ArrowRight size={12} className="group-hover/cta:translate-x-0.5 transition-transform" strokeWidth={2.5} />
                       </a>
@@ -249,7 +252,7 @@ export default function CreativeCitySetup({ tinaData }: { tinaData?: any }) {
         <div className="relative max-w-4xl mx-auto px-6">
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
-              <MessageCircle size={14} className="text-purple-600" />
+<WhatsAppIcon size={14} className="text-emerald-600" />
               <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Common Questions</span>
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-5">

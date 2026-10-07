@@ -14,6 +14,7 @@ import {
   Wallet,  Home,
 } from 'lucide-react';
 import { getWhatsAppLink } from '../../lib/whatsapp';
+import WhatsAppIcon from '../../components/icons/WhatsAppIcon';
 
 // ============ DATA ============
 

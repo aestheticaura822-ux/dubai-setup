@@ -3,256 +3,49 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTina, tinaField } from 'tinacms/dist/react';
 import {
   Globe, ArrowRight, Sparkles, CheckCircle2, Building2, TrendingUp,
   Briefcase, Phone, MessageCircle, Home as HomeIcon, Clock,
-  Users, Award, FileText, DollarSign, Zap, 
-  UserCheck, Landmark,  BadgeCheck,
-  Shield, Rocket, Wallet,  HeartHandshake,
+  Users, Award, FileText, DollarSign, Zap,
+  UserCheck, Landmark, BadgeCheck,
+  Shield, Rocket, Wallet, HeartHandshake,
   Fingerprint, RefreshCw, Home, Globe2, ShieldCheck,
-  Camera, Heart, 
-  ChevronLeft, ChevronRight,  IdCard, Stamp,
-  FileSignature, 
-  UserCircle, UsersRound, 
+  Camera, Heart,
+  ChevronLeft, ChevronRight, IdCard, Stamp,
+  FileSignature,
+  UserCircle, UsersRound,
 } from 'lucide-react';
 import { getWhatsAppLink } from '../../lib/whatsapp';
+import visaData from '../../content/mainland/mainland-visa.json';
+import WhatsAppIcon from '../../components/icons/WhatsAppIcon';
 
-// ============ DATA ============
+const iconMap: any = {
+  Globe, Building2, Briefcase, Phone, MessageCircle, Clock, Users, Award,
+  FileText, DollarSign, Zap, UserCheck, Landmark, BadgeCheck, Shield,
+  Rocket, Wallet, HeartHandshake, Fingerprint, RefreshCw, Home, Globe2,
+  ShieldCheck, Camera, Heart, IdCard, Stamp, FileSignature, UserCircle,
+  UsersRound, TrendingUp, Sparkles, ArrowRight, CheckCircle2, HomeIcon,
+  ChevronLeft, ChevronRight,
+};
 
-const stats = [
-  { icon: Clock, value: '2 Yrs', label: 'Renewable Visa', color: 'from-amber-400 to-orange-600' },
-  { icon: Globe, value: '7', label: 'Emirates Access', color: 'from-orange-400 to-red-600' },
-  { icon: Users, value: 'Unlimited', label: 'Employee Visas', color: 'from-red-400 to-rose-600' },
-  { icon: Clock, value: '5-10', label: 'Days Processing', color: 'from-rose-400 to-pink-600' },
-];
-
-const whatIsVisa = [
-  {
-    icon: Landmark,
-    title: 'Work Anywhere in the UAE',
-    description: 'Conduct business and offer services anywhere in the UAE with full access to all emirates for unlimited growth and partnerships.',
-    color: 'from-amber-400 to-orange-600'
-  },
-  {
-    icon: Award,
-    title: 'Bid for Government Contracts',
-    description: 'Qualify to bid on high-value government projects, boosting revenue, credibility, growth, and opportunities.',
-    color: 'from-orange-400 to-red-600'
-  },
-  {
-    icon: HeartHandshake,
-    title: 'Sponsor Dependents & Employees',
-    description: 'Gain long-term UAE stability by sponsoring your family and domestic staff while expanding your business and hiring employees with ease.',
-    color: 'from-red-400 to-rose-600'
-  },
-  {
-    icon: RefreshCw,
-    title: 'Long-Term Residency & Stability',
-    description: 'Valid for 2 years, renewable indefinitely, and can lead to long-term options like the Golden Visa.',
-    color: 'from-rose-400 to-pink-600'
-  },
-];
-
-const advantages = [
-  {
-    icon: Globe2,
-    title: 'Freedom to Operate Throughout UAE',
-    description: 'Start and operate your business across all seven emirates — full flexibility to access the UAE\'s competitive market.',
-    color: 'from-amber-400 to-orange-600'
-  },
-  {
-    icon: TrendingUp,
-    title: 'Unlimited Potential for Growth',
-    description: 'Hire multiple employees based on your office size — seamless team growth and business scaling from small to big.',
-    color: 'from-orange-400 to-red-600'
-  },
-  {
-    icon: Landmark,
-    title: 'Access to Government Projects',
-    description: 'Bid for government contracts in construction, healthcare, energy, and technology — establishing credibility in public projects.',
-    color: 'from-red-400 to-rose-600'
-  },
-  {
-    icon: Heart,
-    title: 'Family Sponsorship',
-    description: 'Sponsor family and household staff — ensuring safety and stability while building your career and life in the UAE.',
-    color: 'from-rose-400 to-pink-600'
-  },
-  {
-    icon: Wallet,
-    title: 'Banking & Financial Stability',
-    description: 'Mainland companies are seen as credible — easier banking, credit access, and partnerships with clients, suppliers, and investors.',
-    color: 'from-pink-400 to-fuchsia-600'
-  },
-  {
-    icon: Shield,
-    title: 'Long-Term Stability',
-    description: 'Valid for two years, renewable indefinitely, offering a pathway to the UAE Golden Visa for lasting business and personal stability.',
-    color: 'from-fuchsia-400 to-purple-600'
-  },
-];
-
-const visaTypes = [
-  {
-    id: 'investor',
-    icon: Briefcase,
-    title: 'Investor / Partner Visa',
-    description: 'Designed for entrepreneurs and investors, this Mainland Visa lets you live, work, manage your business, access local and global markets, and gain credibility for long-term success in the UAE.',
-    image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&q=80',
-    color: 'from-amber-500 to-orange-700',
-    features: ['Live & Work in UAE', 'Manage Your Business', 'Local + Global Access', 'Long-Term Success'],
-    bestFor: 'Entrepreneurs & Investors'
-  },
-  {
-    id: 'employment',
-    icon: UserCheck,
-    title: 'Employment Visa',
-    description: 'This visa is for professionals employed by a UAE mainland company, allowing legal work, Emirates ID, healthcare, and the ability to sponsor dependents.',
-    image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1200&q=80',
-    color: 'from-orange-500 to-red-700',
-    features: ['Legal Work Permit', 'Emirates ID', 'Healthcare Access', 'Dependent Sponsorship'],
-    bestFor: 'Skilled Professionals'
-  },
-  {
-    id: 'dependent',
-    icon: UsersRound,
-    title: 'Dependent Visa',
-    description: 'This visa lets mainland visa holders sponsor family members, ensuring safety and togetherness while pursuing career or business growth in the UAE.',
-    image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=1200&q=80',
-    color: 'from-red-500 to-rose-700',
-    features: ['Family Sponsorship', 'Safe & Legal', 'Togetherness', 'Career Growth'],
-    bestFor: 'Family Members'
-  },
-  {
-    id: 'domestic',
-    icon: Home,
-    title: 'Domestic Worker Visa',
-    description: 'This visa allows hiring domestic staff legally, ensuring residency, protections, and compliance with UAE labor laws.',
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1200&q=80',
-    color: 'from-rose-500 to-pink-700',
-    features: ['Legal Hiring', 'Full Protections', 'UAE Labor Law', 'Full Residency'],
-    bestFor: 'Domestic Staff'
-  },
-];
-
-const steps = [
-  {
-    step: '01',
-    icon: Building2,
-    title: 'Company Registration & Trade License',
-    description: 'Your UAE business must be legally registered. Choose company type, reserve trade name, submit documents, obtain approvals, draft MOA if needed, and pay fees.'
-  },
-  {
-    step: '02',
-    icon: FileText,
-    title: 'Document Preparation',
-    description: 'We prepare your valid passport, photos, entry permit, trade license copy, establishment card, employment contract, and medical certificate.'
-  },
-  {
-    step: '03',
-    icon: BadgeCheck,
-    title: 'Application Submission',
-    description: 'Submit your complete application to UAE immigration authorities with our direct coordination for faster approvals.'
-  },
-  {
-    step: '04',
-    icon: Fingerprint,
-    title: 'Medical Fitness & Emirates ID',
-    description: 'Complete medical fitness tests and Emirates ID biometrics at approved UAE centers.'
-  },
-  {
-    step: '05',
-    icon: Camera,
-    title: 'Visa Stamping',
-    description: 'Final residency visa stamped on your passport — you\'re now a legal UAE mainland resident.'
-  },
-];
-
-const documents = [
-  { icon: Camera, label: 'Passport Photos', desc: 'Recent, white background' },
-  { icon: FileText, label: 'Entry Permit', desc: 'If required' },
-  { icon: Building2, label: 'Trade License Copy', desc: 'For investors or employees' },
-  { icon: IdCard, label: 'Establishment Card', desc: 'If requested' },
-  { icon: FileSignature, label: 'Employment Contract', desc: 'Or partnership agreement' },
-  { icon: Heart, label: 'Medical Certificate', desc: 'For residency' },
-  { icon: Fingerprint, label: 'Emirates ID Form', desc: 'Completed application' },
-];
-
-const whyChooseUs = [
-  { icon: ShieldCheck, label: 'All-Round Residency Solution', desc: 'Designed for long-term success' },
-  { icon: Zap, label: 'Expedited Approvals', desc: 'Strong UAE authority network' },
-  { icon: DollarSign, label: 'Transparent Fees', desc: 'No hidden charges' },
-  { icon: HeartHandshake, label: 'Family Sponsorship', desc: 'End-to-end support' },
-  { icon: RefreshCw, label: 'Renewals & PRO', desc: 'Ongoing assistance' },
-  { icon: Globe, label: 'Compliance & Speed', desc: 'Accurate every time' },
-];
-
-const faqs = [
-  {
-    q: 'What is a Mainland UAE Visa?',
-    a: 'A Mainland UAE Visa is a residence permit issued under a mainland company license, allowing foreign nationals to live, work, and conduct business anywhere in the UAE without restrictions imposed by free zones.'
-  },
-  {
-    q: 'Who can apply for a Mainland UAE Visa?',
-    a: 'Entrepreneurs, investors, business owners, skilled professionals, employees of mainland companies, and their family members or domestic workers can all apply.'
-  },
-  {
-    q: 'What are the main types of Mainland UAE Visas?',
-    a: 'There are 4 main types: Investor/Partner Visa, Employment Visa, Dependent Visa, and Domestic Worker Visa — each tailored to specific profiles.'
-  },
-  {
-    q: 'What are the advantages of a Mainland UAE Visa?',
-    a: 'Key advantages include freedom to operate across all 7 emirates, unlimited potential for growth, government project access, family sponsorship, banking credibility, and long-term stability.'
-  },
-  {
-    q: 'How long is a Mainland UAE Visa valid?',
-    a: 'A Mainland Visa is valid for 2 years and is renewable indefinitely. It also offers a pathway to the UAE Golden Visa for long-term stability.'
-  },
-  {
-    q: 'What documents are required for a Mainland UAE Visa?',
-    a: 'You\'ll typically need a valid passport (6+ months), recent photos, entry permit, trade license copy, establishment card, employment contract, medical certificate, and completed Emirates ID form.'
-  },
-  {
-    q: 'What is the step-by-step process to obtain a Mainland UAE Visa?',
-    a: 'It includes: Company registration & trade license → Document preparation → Application submission → Medical fitness & Emirates ID → Visa stamping.'
-  },
-  {
-    q: 'Can a Mainland UAE Visa holder sponsor family members?',
-    a: 'Yes. Mainland visa holders can sponsor spouses, children, and eligible dependents. We handle the entire family sponsorship process end-to-end.'
-  },
-  {
-    q: 'How does Setup Zone Dubai assist with Mainland UAE Visas?',
-    a: 'We provide full assistance — consultation, documentation, application submission, medical coordination, Emirates ID, and final stamping. Plus family sponsorship, renewals, and PRO services.'
-  },
-  {
-    q: 'Can Mainland UAE Visa holders operate business across all Emirates?',
-    a: 'Yes. A mainland visa allows you to operate freely across all seven emirates without the geographical restrictions that free zone visas impose.'
-  },
-];
-
-const relatedServices = [
-  { slug: 'mainland-activities', title: 'Mainland Activities', description: '2,000+ DED-approved activities across Dubai & UAE.', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80', gradient: 'from-emerald-400 to-teal-600' },
-  { slug: 'office-space-solutions', title: 'UAE Office Space Solutions', description: 'Premium office spaces across Dubai & UAE.', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80', gradient: 'from-cyan-400 to-blue-600' },
-  { slug: 'hiring-employee-management', title: 'Hiring in UAE', description: 'Recruitment & employee management solutions.', image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80', gradient: 'from-blue-400 to-indigo-600' },
-];
-
-// ============ COMPONENT ============
-export default function MainlandVisa() {
+export default function MainlandVisa({ tinaData }: { tinaData?: any }) {
+  const data = tinaData?.data?.mainland || visaData;
   const [activeVisa, setActiveVisa] = useState(0);
 
+  const visaTypes = data.licenseTypes.items;
   const nextVisa = () => setActiveVisa((prev) => (prev + 1) % visaTypes.length);
   const prevVisa = () => setActiveVisa((prev) => (prev - 1 + visaTypes.length) % visaTypes.length);
 
   return (
     <div className="min-h-screen bg-white">
-      {/* === 1. HERO === */}
+
+      {/* ============ 1. HERO ============ */}
       <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${data.hero.image})` }} data-tina-field={tinaField(data.hero, 'image')} />
         <div className="absolute inset-0 bg-gradient-to-r from-amber-950/95 via-orange-900/75 to-red-900/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-
-        
 
         <motion.div animate={{ y: [0, 15, 0], rotate: [0, -10, 0] }} transition={{ duration: 7, repeat: Infinity }} className="absolute bottom-32 left-[10%] opacity-10 hidden lg:block">
           <Stamp size={100} className="text-white" />
@@ -263,35 +56,38 @@ export default function MainlandVisa() {
             <div className="lg:col-span-7">
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="flex items-center gap-2 text-sm text-white/80 mb-6 font-medium flex-wrap">
                 <Link to="/" className="hover:text-white transition flex items-center gap-1.5"><HomeIcon size={14} />Home</Link>
-                <span>/</span><span>Mainland</span><span>/</span>
-                <span className="text-white font-bold">Mainland UAE Visa</span>
+                <span>/</span><span data-tina-field={tinaField(data.hero, 'breadcrumbParent')}>{data.hero.breadcrumbParent}</span><span>/</span>
+                <span className="text-white font-bold" data-tina-field={tinaField(data.hero, 'breadcrumbLabel')}>{data.hero.breadcrumbLabel}</span>
               </motion.div>
 
               <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 mb-6">
                 <Sparkles size={14} className="text-amber-300" />
-                <span className="text-xs font-bold tracking-wider uppercase text-white">Simplify Your Mainland Visa</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.hero, 'badge')}>{data.hero.badge}</span>
               </motion.div>
 
-              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-3xl mb-6 drop-shadow-lg">
-                Mainland UAE Visa <span className="text-amber-300">in Dubai & UAE</span>
+              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-3xl mb-6 drop-shadow-lg" data-tina-field={tinaField(data.hero, 'title')}>
+                {data.hero.title.replace(data.hero.titleHighlight, '')}
+                <span className="text-amber-300">{data.hero.titleHighlight}</span>
               </motion.h1>
 
-              <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/95 font-medium leading-relaxed max-w-2xl mb-10 drop-shadow">
-                Live, work, and establish your business across all 7 emirates without free zone restrictions. Full flexibility, unlimited opportunity.
+              <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/95 font-medium leading-relaxed max-w-2xl mb-10 drop-shadow" data-tina-field={tinaField(data.hero, 'subtitle')}>
+                {data.hero.subtitle}
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-wrap gap-4">
-                <a href="#contact" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
-                  Get Free Consultation
+                <a href={data.hero.ctaPrimaryLink} className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
+                  <span data-tina-field={tinaField(data.hero, 'ctaPrimaryText')}>{data.hero.ctaPrimaryText}</span>
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </a>
-                <a href={getWhatsAppLink("Hi! I'm interested in Mainland UAE Visa.")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
-                  <MessageCircle size={16} />WhatsApp
+                <a href={getWhatsAppLink(data.hero.ctaSecondaryMessage)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
+                  <WhatsAppIcon size={16} className="text-emerald-600" />
+
+                  <span data-tina-field={tinaField(data.hero, 'ctaSecondaryText')}>{data.hero.ctaSecondaryText}</span>
                 </a>
               </motion.div>
 
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.9 }} className="mt-10 flex flex-wrap gap-3">
-                {['2-Year Validity', '7 Emirates Access', 'Renewable', 'Family Sponsorship'].map((item, i) => (
+                {data.hero.badges.map((item: string, i: number) => (
                   <div key={i} className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs">
                     <CheckCircle2 size={12} className="text-amber-300" strokeWidth={3} />
                     <span className="font-semibold text-white">{item}</span>
@@ -316,7 +112,6 @@ export default function MainlandVisa() {
                   <div className="relative w-[320px] rounded-3xl bg-white/95 backdrop-blur-2xl border border-white shadow-2xl overflow-hidden">
                     <div className="bg-gradient-to-r from-amber-500 to-orange-600 px-5 py-3 flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        
                         <span className="text-[10px] font-black text-white uppercase tracking-widest">UAE Visa</span>
                       </div>
                       <span className="text-[10px] font-black text-white/80 uppercase tracking-widest">Live</span>
@@ -371,12 +166,12 @@ export default function MainlandVisa() {
         </div>
       </section>
 
-      {/* === 2. STATS ROW === */}
+      {/* ============ 2. STATS ============ */}
       <section className="relative py-14 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-            {stats.map((stat, i) => {
-              const Icon = stat.icon;
+            {data.stats.map((stat: any, i: number) => {
+              const Icon = iconMap[stat.icon] || Clock;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }} className="group relative">
                   <div className="relative overflow-hidden rounded-2xl bg-white border border-border hover:border-transparent transition-all duration-500 p-5 shadow-[0_5px_20px_rgba(15,23,42,0.05)] hover:shadow-[0_15px_40px_rgba(251,191,36,0.15)] hover:-translate-y-1">
@@ -386,8 +181,8 @@ export default function MainlandVisa() {
                         <Icon size={20} className="text-white" strokeWidth={2.5} />
                       </div>
                       <div>
-                        <div className="text-lg font-black text-[#0A0F1F] leading-none mb-0.5">{stat.value}</div>
-                        <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest">{stat.label}</div>
+                        <div className="text-lg font-black text-[#0A0F1F] leading-none mb-0.5" data-tina-field={tinaField(stat, 'value')}>{stat.value}</div>
+                        <div className="text-[10px] font-bold text-[#64748B] uppercase tracking-widest" data-tina-field={tinaField(stat, 'label')}>{stat.label}</div>
                       </div>
                     </div>
                   </div>
@@ -398,14 +193,14 @@ export default function MainlandVisa() {
         </div>
       </section>
 
-      {/* === 3. WHAT IS MAINLAND VISA — Split === */}
+      {/* ============ 3. WHAT IS MAINLAND VISA ============ */}
       <section className="relative py-14 md:py-20 bg-gradient-to-b from-white to-amber-50/40 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-12 gap-12 items-center">
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="lg:col-span-5 relative">
               <div className="absolute inset-0 bg-gradient-to-br from-amber-400 to-orange-600 opacity-20 blur-[80px] rounded-full" />
               <div className="relative rounded-3xl overflow-hidden border border-border shadow-[0_20px_60px_rgba(15,23,42,0.12)]">
-                <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&q=80" alt="UAE Mainland" className="w-full h-[500px] object-cover" />
+                <img src={data.whatIsVisa.image} alt="UAE Mainland" className="w-full h-[500px] object-cover" data-tina-field={tinaField(data.whatIsVisa, 'image')} />
                 <div className="absolute inset-0 bg-gradient-to-t from-amber-900/70 via-transparent to-transparent" />
                 <div className="absolute bottom-5 left-5 right-5 p-4 rounded-2xl bg-white/95 backdrop-blur-xl shadow-lg">
                   <div className="flex items-center gap-3">
@@ -413,8 +208,8 @@ export default function MainlandVisa() {
                       <Landmark size={18} className="text-white" />
                     </div>
                     <div>
-                      <div className="text-[10px] font-bold text-txt-muted uppercase tracking-wider">Full UAE Access</div>
-                      <div className="text-sm font-black text-[#0A0F1F]">No Restrictions</div>
+                      <div className="text-[10px] font-bold text-txt-muted uppercase tracking-wider" data-tina-field={tinaField(data.whatIsVisa, 'imageBadgeTitle')}>{data.whatIsVisa.imageBadgeTitle}</div>
+                      <div className="text-sm font-black text-[#0A0F1F]" data-tina-field={tinaField(data.whatIsVisa, 'imageBadgeText')}>{data.whatIsVisa.imageBadgeText}</div>
                     </div>
                   </div>
                 </div>
@@ -424,35 +219,29 @@ export default function MainlandVisa() {
             <motion.div initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }} className="lg:col-span-7">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
                 <Sparkles size={14} className="text-amber-600" />
-                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Unlimited Opportunities</span>
+                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.whatIsVisa, 'badge')}>{data.whatIsVisa.badge}</span>
               </div>
 
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6">
-                What is a <span className="gradient-text">Mainland UAE Visa?</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-6" data-tina-field={tinaField(data.whatIsVisa, 'title')}>
+                {data.whatIsVisa.title.replace(data.whatIsVisa.titleHighlight, '')}
+                <span className="gradient-text">{data.whatIsVisa.titleHighlight}</span>
               </h2>
 
-              <p className="text-base text-[#475569] font-medium leading-relaxed mb-6">
-                A Mainland UAE Visa allows foreign nationals to <span className="font-black text-[#0A0F1F]">live and work anywhere in the UAE</span> without free zone restrictions. It is the most flexible visa option for professionals, entrepreneurs, and investors looking to establish themselves or expand their businesses in the UAE.
+              <p className="text-base text-[#475569] font-medium leading-relaxed mb-6" data-tina-field={tinaField(data.whatIsVisa, 'paragraph1')}>
+                {data.whatIsVisa.paragraph1}
               </p>
 
               <div className="space-y-3">
-                {whatIsVisa.map((item, i) => {
-                  const Icon = item.icon;
+                {data.whatIsVisa.items.map((item: any, i: number) => {
+                  const Icon = iconMap[item.icon] || Landmark;
                   return (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: 20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: i * 0.08 }}
-                      className="flex items-start gap-3 p-4 rounded-2xl bg-white border border-border hover:shadow-md transition-all duration-300"
-                    >
+                    <motion.div key={i} initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }} className="flex items-start gap-3 p-4 rounded-2xl bg-white border border-border hover:shadow-md transition-all duration-300">
                       <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-md flex-shrink-0`}>
                         <Icon size={18} className="text-white" strokeWidth={2.5} />
                       </div>
                       <div className="flex-1 pt-0.5">
-                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1">{item.title}</h3>
-                        <p className="text-xs text-[#64748B] font-medium leading-relaxed">{item.description}</p>
+                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1" data-tina-field={tinaField(item, 'title')}>{item.title}</h3>
+                        <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(item, 'description')}>{item.description}</p>
                       </div>
                     </motion.div>
                   );
@@ -463,9 +252,9 @@ export default function MainlandVisa() {
         </div>
       </section>
 
-      {/* === 4. ADVANTAGES — Dark Premium === */}
+      {/* ============ 4. ADVANTAGES — Dark ============ */}
       <section className="relative py-14 md:py-20 overflow-hidden bg-gradient-to-br from-amber-950 via-orange-950 to-red-950">
-        <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.08]" style={{ backgroundImage: `url(${data.hero.image})` }} />
         <div className="absolute top-0 right-0 w-[700px] h-[700px] rounded-full bg-amber-500/20 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[700px] h-[700px] rounded-full bg-red-500/20 blur-[150px] pointer-events-none" />
 
@@ -473,17 +262,18 @@ export default function MainlandVisa() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
               <Award size={14} className="text-amber-300" />
-              <span className="text-xs font-bold tracking-wider uppercase text-white">UAE Mainland, Limitless Potential</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.advantages, 'badge')}>{data.advantages.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              Advantages of a <span className="bg-gradient-to-r from-amber-300 to-red-300 bg-clip-text text-transparent">Mainland UAE Visa</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.advantages, 'title')}>
+              {data.advantages.title.replace(data.advantages.titleHighlight, '')}
+              <span className="bg-gradient-to-r from-amber-300 to-red-300 bg-clip-text text-transparent">{data.advantages.titleHighlight}</span>
             </h2>
-            <p className="text-base text-white/70 font-medium">Six powerful benefits compared to free zone or other visa types.</p>
+            <p className="text-base text-white/70 font-medium" data-tina-field={tinaField(data.advantages, 'subtitle')}>{data.advantages.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {advantages.map((item, i) => {
-              const Icon = item.icon;
+            {data.advantages.items.map((item: any, i: number) => {
+              const Icon = iconMap[item.icon] || Globe2;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.08 }} className="group relative">
                   <div className={`absolute -inset-2 rounded-[28px] bg-gradient-to-r ${item.color} opacity-0 group-hover:opacity-30 blur-2xl transition-all duration-500`} />
@@ -491,8 +281,8 @@ export default function MainlandVisa() {
                     <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg mb-5 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                       <Icon size={26} className="text-white" strokeWidth={2.2} />
                     </div>
-                    <h3 className="text-base font-black text-white mb-3 leading-tight">{item.title}</h3>
-                    <p className="text-xs text-white/70 font-medium leading-relaxed">{item.description}</p>
+                    <h3 className="text-base font-black text-white mb-3 leading-tight" data-tina-field={tinaField(item, 'title')}>{item.title}</h3>
+                    <p className="text-xs text-white/70 font-medium leading-relaxed" data-tina-field={tinaField(item, 'description')}>{item.description}</p>
                   </div>
                 </motion.div>
               );
@@ -501,7 +291,7 @@ export default function MainlandVisa() {
         </div>
       </section>
 
-      {/* === 5. VISA TYPES — Swiping Carousel === */}
+      {/* ============ 5. VISA TYPES — Carousel ============ */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-amber-100/50 blur-[140px] pointer-events-none" />
 
@@ -509,15 +299,15 @@ export default function MainlandVisa() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-amber-200 shadow-soft mb-6">
               <UserCheck size={14} className="text-amber-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-amber-700">Your Business, Your Way</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-amber-700" data-tina-field={tinaField(data.licenseTypes, 'badge')}>{data.licenseTypes.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Types of <span className="gradient-text">Mainland UAE Visas</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.licenseTypes, 'title')}>
+              {data.licenseTypes.title.replace(data.licenseTypes.titleHighlight, '')}
+              <span className="gradient-text">{data.licenseTypes.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Swipe through 4 visa categories — find the right one for your profile.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.licenseTypes, 'subtitle')}>{data.licenseTypes.subtitle}</p>
           </motion.div>
 
-          {/* Main Carousel */}
           <div className="relative">
             <div className="relative rounded-[32px] overflow-hidden border border-border shadow-2xl h-[560px]">
               <AnimatePresence mode="wait">
@@ -530,11 +320,7 @@ export default function MainlandVisa() {
                   className="absolute inset-0"
                 >
                   <div className="absolute inset-0">
-                    <img
-                      src={visaTypes[activeVisa].image}
-                      alt={visaTypes[activeVisa].title}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={visaTypes[activeVisa].image} alt={visaTypes[activeVisa].title} className="w-full h-full object-cover" />
                     <div className={`absolute inset-0 bg-gradient-to-br ${visaTypes[activeVisa].color} opacity-80 mix-blend-multiply`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                   </div>
@@ -543,7 +329,7 @@ export default function MainlandVisa() {
                     <div>
                       <div className={`w-20 h-20 rounded-3xl bg-gradient-to-br ${visaTypes[activeVisa].color} flex items-center justify-center shadow-2xl mb-6 backdrop-blur-xl border border-white/30`}>
                         {(() => {
-                          const Icon = visaTypes[activeVisa].icon;
+                          const Icon = iconMap[visaTypes[activeVisa].icon] || Briefcase;
                           return <Icon size={36} className="text-white" strokeWidth={2.2} />;
                         })()}
                       </div>
@@ -558,15 +344,15 @@ export default function MainlandVisa() {
                     </div>
 
                     <div>
-                      <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4 drop-shadow-lg">
+                      <h3 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4 drop-shadow-lg" data-tina-field={tinaField(visaTypes[activeVisa], 'title')}>
                         {visaTypes[activeVisa].title}
                       </h3>
-                      <p className="text-base md:text-lg text-white/90 font-medium leading-relaxed max-w-2xl mb-6 drop-shadow">
+                      <p className="text-base md:text-lg text-white/90 font-medium leading-relaxed max-w-2xl mb-6 drop-shadow" data-tina-field={tinaField(visaTypes[activeVisa], 'description')}>
                         {visaTypes[activeVisa].description}
                       </p>
 
                       <div className="flex flex-wrap gap-2">
-                        {visaTypes[activeVisa].features.map((feature, fi) => (
+                        {visaTypes[activeVisa].features.map((feature: string, fi: number) => (
                           <span key={fi} className="px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-xs font-bold text-white">
                             {feature}
                           </span>
@@ -577,48 +363,33 @@ export default function MainlandVisa() {
                 </motion.div>
               </AnimatePresence>
 
-              <button
-                onClick={prevVisa}
-                className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group"
-                aria-label="Previous Visa"
-              >
+              <button onClick={prevVisa} className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group" aria-label="Previous Visa">
                 <ChevronLeft size={22} className="text-white group-hover:-translate-x-0.5 transition-transform" strokeWidth={2.5} />
               </button>
-              <button
-                onClick={nextVisa}
-                className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group"
-                aria-label="Next Visa"
-              >
+              <button onClick={nextVisa} className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center hover:bg-white/30 transition-all duration-300 z-10 group" aria-label="Next Visa">
                 <ChevronRight size={22} className="text-white group-hover:translate-x-0.5 transition-transform" strokeWidth={2.5} />
               </button>
 
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
-                {visaTypes.map((_, i) => (
+                {visaTypes.map((_: any, i: number) => (
                   <button
                     key={i}
                     onClick={() => setActiveVisa(i)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      i === activeVisa ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'
-                    }`}
+                    className={`h-2 rounded-full transition-all duration-300 ${i === activeVisa ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'}`}
                     aria-label={`Go to visa ${i + 1}`}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Thumbnails */}
             <div className="mt-6 grid grid-cols-4 gap-3">
-              {visaTypes.map((visa, i) => {
-                const Icon = visa.icon;
+              {visaTypes.map((visa: any, i: number) => {
+                const Icon = iconMap[visa.icon] || Briefcase;
                 return (
                   <button
                     key={i}
                     onClick={() => setActiveVisa(i)}
-                    className={`group relative rounded-2xl overflow-hidden transition-all duration-300 ${
-                      i === activeVisa
-                        ? 'ring-2 ring-amber-400 shadow-lg shadow-amber-500/30 scale-105'
-                        : 'ring-1 ring-white/10 hover:ring-white/30'
-                    }`}
+                    className={`group relative rounded-2xl overflow-hidden transition-all duration-300 ${i === activeVisa ? 'ring-2 ring-amber-400 shadow-lg shadow-amber-500/30 scale-105' : 'ring-1 ring-white/10 hover:ring-white/30'}`}
                   >
                     <div className="relative h-20">
                       <img src={visa.image} alt={visa.title} className="w-full h-full object-cover" />
@@ -638,9 +409,9 @@ export default function MainlandVisa() {
         </div>
       </section>
 
-      {/* === 6. STEP-BY-STEP PROCESS — Dark Vertical Timeline === */}
+      {/* ============ 6. STEPS — Vertical Timeline ============ */}
       <section className="relative py-14 md:py-20 overflow-hidden bg-gradient-to-br from-slate-950 via-amber-950 to-orange-950">
-        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80)' }} />
+        <div className="absolute inset-0 bg-cover bg-center opacity-[0.06]" style={{ backgroundImage: `url(${data.hero.image})` }} />
         <div className="absolute top-0 left-0 w-[700px] h-[700px] rounded-full bg-amber-500/20 blur-[150px] pointer-events-none" />
         <div className="absolute bottom-0 right-0 w-[700px] h-[700px] rounded-full bg-orange-500/20 blur-[150px] pointer-events-none" />
 
@@ -648,21 +419,20 @@ export default function MainlandVisa() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 mb-6">
               <Rocket size={14} className="text-amber-300" />
-              <span className="text-xs font-bold tracking-wider uppercase text-white">Prepare Documents, Get Visa</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.setupProcessSection, 'badge')}>{data.setupProcessSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4">
-              Step-by-Step Process <span className="bg-gradient-to-r from-amber-300 to-red-300 bg-clip-text text-transparent">for Mainland Visa</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.setupProcessSection, 'title')}>
+              {data.setupProcessSection.title.replace(data.setupProcessSection.titleHighlight, '')}
+              <span className="bg-gradient-to-r from-amber-300 to-red-300 bg-clip-text text-transparent">{data.setupProcessSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-white/70 font-medium">Five simple steps to your UAE residency.</p>
+            <p className="text-base text-white/70 font-medium" data-tina-field={tinaField(data.setupProcessSection, 'subtitle')}>{data.setupProcessSection.subtitle}</p>
           </motion.div>
 
-          {/* Vertical Timeline */}
           <div className="relative max-w-4xl mx-auto">
-            {/* Center Line */}
             <div className="absolute left-1/2 top-0 bottom-0 w-0.5 -translate-x-1/2 bg-gradient-to-b from-amber-400/0 via-amber-400/50 to-amber-400/0 hidden md:block" />
 
-            {steps.map((step, i) => {
-              const Icon = step.icon;
+            {data.setupProcessSection.steps.map((step: any, i: number) => {
+              const Icon = iconMap[step.icon] || Building2;
               const isLeft = i % 2 === 0;
               return (
                 <motion.div
@@ -673,7 +443,6 @@ export default function MainlandVisa() {
                   transition={{ duration: 0.6, delay: i * 0.12 }}
                   className={`relative mb-8 md:mb-12 ${isLeft ? 'md:pr-[calc(50%+2rem)]' : 'md:pl-[calc(50%+2rem)]'} md:text-${isLeft ? 'right' : 'left'}`}
                 >
-                  {/* Center Node */}
                   <div className="absolute left-1/2 top-8 -translate-x-1/2 hidden md:block z-10">
                     <div className="relative">
                       <div className="w-4 h-4 rounded-full bg-amber-400 border-4 border-slate-950 shadow-lg" />
@@ -692,8 +461,8 @@ export default function MainlandVisa() {
                           <div className="text-xs font-black text-amber-300 uppercase tracking-widest">STEP {step.step}</div>
                         </div>
                       </div>
-                      <h3 className="text-lg font-black text-white mb-2 leading-tight">{step.title}</h3>
-                      <p className="text-sm text-white/70 font-medium leading-relaxed">{step.description}</p>
+                      <h3 className="text-lg font-black text-white mb-2 leading-tight" data-tina-field={tinaField(step, 'title')}>{step.title}</h3>
+                      <p className="text-sm text-white/70 font-medium leading-relaxed" data-tina-field={tinaField(step, 'description')}>{step.description}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -703,7 +472,7 @@ export default function MainlandVisa() {
         </div>
       </section>
 
-      {/* === 7. REQUIRED DOCUMENTS === */}
+      {/* ============ 7. DOCUMENTS ============ */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-amber-100/50 blur-[140px] pointer-events-none" />
 
@@ -711,17 +480,18 @@ export default function MainlandVisa() {
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-amber-200 shadow-soft mb-6">
               <FileText size={14} className="text-amber-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-amber-700">Documentation</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-amber-700" data-tina-field={tinaField(data.documentsSection, 'badge')}>{data.documentsSection.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Required <span className="gradient-text">Documents</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.documentsSection, 'title')}>
+              {data.documentsSection.title.replace(data.documentsSection.titleHighlight, '')}
+              <span className="gradient-text">{data.documentsSection.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Documents generally needed for your Mainland UAE Visa application.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.documentsSection, 'subtitle')}>{data.documentsSection.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {documents.map((doc, i) => {
-              const Icon = doc.icon;
+            {data.documentsSection.items.map((doc: any, i: number) => {
+              const Icon = iconMap[doc.icon] || FileText;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.06 }} className="group relative">
                   <div className="absolute -inset-2 rounded-[28px] bg-gradient-to-r from-amber-400 to-orange-600 opacity-0 group-hover:opacity-25 blur-2xl transition-all duration-500" />
@@ -730,8 +500,8 @@ export default function MainlandVisa() {
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">
                       <Icon size={24} className="text-white" strokeWidth={2.2} />
                     </div>
-                    <h3 className="text-sm font-black text-[#0A0F1F] mb-1.5 leading-tight">{doc.label}</h3>
-                    <p className="text-xs text-[#64748B] font-medium leading-relaxed">{doc.desc}</p>
+                    <h3 className="text-sm font-black text-[#0A0F1F] mb-1.5 leading-tight" data-tina-field={tinaField(doc, 'label')}>{doc.label}</h3>
+                    <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(doc, 'desc')}>{doc.desc}</p>
                   </div>
                 </motion.div>
               );
@@ -740,23 +510,24 @@ export default function MainlandVisa() {
         </div>
       </section>
 
-      {/* === 8. WHY CHOOSE US === */}
+      {/* ============ 8. WHY CHOOSE US ============ */}
       <section className="relative py-14 md:py-20 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-14 max-w-3xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
               <Award size={14} className="text-amber-600" />
-              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Why Choose Setup Zone Dubai</span>
+              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.whyChooseUsSimple, 'badge')}>{data.whyChooseUsSimple.badge}</span>
             </div>
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4">
-              Why Trust Us for <span className="gradient-text">Mainland Visa Services?</span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-4" data-tina-field={tinaField(data.whyChooseUsSimple, 'title')}>
+              {data.whyChooseUsSimple.title.replace(data.whyChooseUsSimple.titleHighlight, '')}
+              <span className="gradient-text">{data.whyChooseUsSimple.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Compliance, accuracy, and speed — from start to finish.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.whyChooseUsSimple, 'subtitle')}>{data.whyChooseUsSimple.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {whyChooseUs.map((item, i) => {
-              const Icon = item.icon;
+            {data.whyChooseUsSimple.items.map((item: any, i: number) => {
+              const Icon = iconMap[item.icon] || ShieldCheck;
               return (
                 <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.08 }} className="group">
                   <div className="relative p-6 rounded-3xl bg-white border border-border shadow-md hover:shadow-xl hover:-translate-y-2 transition-all duration-500 h-full">
@@ -765,8 +536,8 @@ export default function MainlandVisa() {
                         <Icon size={22} className="text-white" strokeWidth={2.5} />
                       </div>
                       <div className="flex-1">
-                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1">{item.label}</h3>
-                        <p className="text-xs text-[#64748B] font-medium leading-relaxed">{item.desc}</p>
+                        <h3 className="text-sm font-black text-[#0A0F1F] leading-tight mb-1" data-tina-field={tinaField(item, 'label')}>{item.label}</h3>
+                        <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(item, 'desc')}>{item.desc}</p>
                       </div>
                     </div>
                   </div>
@@ -777,7 +548,7 @@ export default function MainlandVisa() {
         </div>
       </section>
 
-      {/* === 9. FAQ === */}
+      {/* ============ 9. FAQ ============ */}
       <section className="relative py-14 md:py-20 bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 overflow-hidden">
         <div className="absolute top-0 left-0 w-[600px] h-[600px] rounded-full bg-amber-100/50 blur-[140px] pointer-events-none" />
 
@@ -785,21 +556,20 @@ export default function MainlandVisa() {
           <div className="grid lg:grid-cols-12 gap-10 lg:gap-14 items-start">
             <motion.div initial={{ opacity: 0, x: -40 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="lg:col-span-5 lg:sticky lg:top-32">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-soft mb-6">
-                <MessageCircle size={14} className="text-amber-600" />
-                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">Common Questions</span>
+                <WhatsAppIcon size={14} className="text-emerald-600" />
+
+                <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data.faqs, 'badge')}>{data.faqs.badge}</span>
               </div>
 
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-[1.1] tracking-tight mb-5">
-                Frequently Asked <span className="gradient-text">Questions</span>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0A0F1F] leading-[1.1] tracking-tight mb-5" data-tina-field={tinaField(data.faqs, 'title')}>
+                {data.faqs.title.replace(data.faqs.titleHighlight, '')}
+                <span className="gradient-text">{data.faqs.titleHighlight}</span>
               </h2>
 
-              <p className="text-base text-[#475569] font-medium leading-relaxed mb-8">
-                Everything you need to know about the Mainland UAE Visa. Still have questions? We're one message away.
-              </p>
+              <p className="text-base text-[#475569] font-medium leading-relaxed mb-8" data-tina-field={tinaField(data.faqs, 'subtitle')}>{data.faqs.subtitle}</p>
 
               <div className="relative rounded-3xl overflow-hidden p-6 bg-gradient-to-br from-amber-500 via-orange-600 to-red-700 shadow-2xl">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                
                 <div className="relative">
                   <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center mb-4">
                     <Sparkles size={22} className="text-white" strokeWidth={2.2} />
@@ -808,7 +578,8 @@ export default function MainlandVisa() {
                   <p className="text-sm text-white/90 font-medium leading-relaxed mb-5">Get a free consultation with our Mainland Visa specialists.</p>
                   <div className="flex flex-wrap gap-3">
                     <a href={getWhatsAppLink("Hi! I have a question about Mainland UAE Visa.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-amber-700 font-bold text-xs shadow-lg hover:scale-105 transition-all duration-300">
-                      <MessageCircle size={14} />WhatsApp
+                      <WhatsAppIcon size={14} className="text-emerald-600" />
+WhatsApp
                     </a>
                     <a href="tel:+971566556645" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-xs hover:bg-white/25 transition-all duration-300">
                       <Phone size={14} />Call Us
@@ -819,17 +590,16 @@ export default function MainlandVisa() {
             </motion.div>
 
             <div className="lg:col-span-7 space-y-4">
-              {faqs.map((faq, i) => (
+              {data.faqs.items.map((faq: any, i: number) => (
                 <motion.details key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.04 }} className="group relative rounded-3xl bg-white border border-border hover:border-amber-200 hover:shadow-[0_20px_60px_rgba(251,191,36,0.15)] transition-all duration-500 overflow-hidden cursor-pointer">
                   <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-amber-400 to-orange-600 opacity-0 group-open:opacity-100 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 to-orange-600 opacity-0 group-open:opacity-100 transition-opacity duration-300" />
-
                   <summary className="flex items-start gap-4 p-6 list-none">
                     <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center shadow-lg flex-shrink-0 group-open:scale-110 transition-transform duration-300">
                       <span className="text-sm font-black text-white">{String(i + 1).padStart(2, '0')}</span>
                     </div>
                     <div className="flex-1 pt-1">
-                      <h3 className="font-black text-[#0A0F1F] text-base md:text-lg leading-snug tracking-tight pr-4 group-hover:text-amber-700 transition-colors">{faq.q}</h3>
+                      <h3 className="font-black text-[#0A0F1F] text-base md:text-lg leading-snug tracking-tight pr-4 group-hover:text-amber-700 transition-colors" data-tina-field={tinaField(faq, 'q')}>{faq.q}</h3>
                     </div>
                     <div className="relative flex-shrink-0 pt-1">
                       <div className="w-8 h-8 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center group-open:bg-gradient-to-br group-open:from-amber-400 group-open:to-orange-600 group-open:border-transparent transition-all duration-300">
@@ -839,7 +609,7 @@ export default function MainlandVisa() {
                   </summary>
                   <div className="px-6 pb-6 pl-20">
                     <div className="pt-2 border-t border-dashed border-border">
-                      <p className="pt-4 text-sm md:text-base text-[#475569] font-medium leading-relaxed">{faq.a}</p>
+                      <p className="pt-4 text-sm md:text-base text-[#475569] font-medium leading-relaxed" data-tina-field={tinaField(faq, 'a')}>{faq.a}</p>
                     </div>
                   </div>
                 </motion.details>
@@ -849,28 +619,29 @@ export default function MainlandVisa() {
         </div>
       </section>
 
-      {/* === 10. RELATED + FINAL CTA === */}
+      {/* ============ 10. RELATED + FINAL CTA ============ */}
       <section className="relative py-14 md:py-20 bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="text-center mb-12 max-w-2xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-3">
-              Related <span className="gradient-text">Services</span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-3" data-tina-field={tinaField(data.relatedServices, 'title')}>
+              {data.relatedServices.title.replace(data.relatedServices.titleHighlight, '')}
+              <span className="gradient-text">{data.relatedServices.titleHighlight}</span>
             </h2>
-            <p className="text-base text-[#475569] font-medium">Services that pair well with your Mainland Visa needs.</p>
+            <p className="text-base text-[#475569] font-medium" data-tina-field={tinaField(data.relatedServices, 'subtitle')}>{data.relatedServices.subtitle}</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
-            {relatedServices.map((service, i) => (
+            {data.relatedServices.items.map((service: any, i: number) => (
               <motion.div key={i} initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: i * 0.1 }}>
                 <Link to={`/mainland/${service.slug}`} className="group relative block h-full rounded-3xl bg-white border border-border overflow-hidden shadow-[0_10px_40px_rgba(15,23,42,0.06)] hover:shadow-[0_25px_70px_rgba(15,23,42,0.15)] hover:-translate-y-2 transition-all duration-500">
                   <div className="relative h-40 overflow-hidden">
                     <div className="absolute inset-0 bg-cover bg-center transition-transform duration-[1.2s] group-hover:scale-110" style={{ backgroundImage: `url(${service.image})` }} />
                     <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-70 mix-blend-multiply`} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <h3 className="absolute bottom-4 left-5 right-5 text-xl font-black text-white">{service.title}</h3>
+                    <h3 className="absolute bottom-4 left-5 right-5 text-xl font-black text-white" data-tina-field={tinaField(service, 'title')}>{service.title}</h3>
                   </div>
                   <div className="p-5">
-                    <p className="text-sm text-[#64748B] font-medium leading-relaxed mb-4">{service.description}</p>
+                    <p className="text-sm text-[#64748B] font-medium leading-relaxed mb-4" data-tina-field={tinaField(service, 'description')}>{service.description}</p>
                     <div className="flex items-center gap-2 text-sm font-black">
                       <span className="gradient-text">Read More</span>
                       <ArrowRight size={14} className="text-amber-600 group-hover:translate-x-1 transition-transform" />
@@ -882,7 +653,7 @@ export default function MainlandVisa() {
           </div>
 
           <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} className="relative rounded-[32px] overflow-hidden shadow-[0_30px_80px_rgba(15,23,42,0.2)]">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80)' }} />
+            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${data.hero.image})` }} />
             <div className="absolute inset-0 bg-gradient-to-r from-amber-950/90 via-orange-900/70 to-red-900/50" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
             <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
@@ -892,29 +663,32 @@ export default function MainlandVisa() {
                 <div className="lg:col-span-7">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 mb-6">
                     <Sparkles size={14} className="text-white" />
-                    <span className="text-xs font-bold tracking-wider uppercase text-white">Get Your Visa Today</span>
+                    <span className="text-xs font-bold tracking-wider uppercase text-white" data-tina-field={tinaField(data.finalCTA, 'badge')}>{data.finalCTA.badge}</span>
                   </div>
 
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5 drop-shadow-lg">
-                    Ready to Get Your <span className="text-amber-300">Mainland UAE Visa?</span>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white leading-[1.1] tracking-tight mb-5 drop-shadow-lg" data-tina-field={tinaField(data.finalCTA, 'title')}>
+                    {data.finalCTA.title.replace(data.finalCTA.titleHighlight, '')}
+                    <span className="text-amber-300">{data.finalCTA.titleHighlight}</span>
                   </h2>
 
-                  <p className="text-base md:text-lg text-white/95 font-medium leading-relaxed mb-8 max-w-xl drop-shadow">
-                    Book your consultation and get a customized Mainland UAE Visa quote. Start your UAE residency journey smarter, faster, and with complete peace of mind.
+                  <p className="text-base md:text-lg text-white/95 font-medium leading-relaxed mb-8 max-w-xl drop-shadow" data-tina-field={tinaField(data.finalCTA, 'subtitle')}>
+                    {data.finalCTA.subtitle}
                   </p>
 
                   <div className="flex flex-wrap gap-4 mb-8">
-                    <a href={getWhatsAppLink("Hi! I'd like a free consultation for Mainland UAE Visa.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
-                      <MessageCircle size={16} />WhatsApp Us
+                    <a href={getWhatsAppLink(data.finalCTA.whatsappMessage)} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
+                      <WhatsAppIcon size={16} className="text-emerald-600" />
+
+                      <span data-tina-field={tinaField(data.finalCTA, 'primaryCta')}>{data.finalCTA.primaryCta}</span>
                       <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                     </a>
-                    <a href="tel:+971566556645" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
+                    <a href={data.finalCTA.phoneHref} className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all duration-300">
                       <Phone size={16} />Call Now
                     </a>
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    {['Free Consultation', 'Fast Approvals', 'Full Compliance'].map((item, i) => (
+                    {data.finalCTA.badges.map((item: string, i: number) => (
                       <div key={i} className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs">
                         <CheckCircle2 size={12} className="text-amber-300" strokeWidth={3} />
                         <span className="font-semibold text-white">{item}</span>
@@ -924,14 +698,14 @@ export default function MainlandVisa() {
                 </div>
 
                 <div className="lg:col-span-5 space-y-4">
-                  <motion.a href={getWhatsAppLink("Hi! I'd like to discuss Mainland UAE Visa.")} target="_blank" rel="noreferrer" initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} className="group block relative p-5 rounded-2xl bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl hover:shadow-[0_20px_60px_rgba(255,255,255,0.2)] hover:-translate-y-1 transition-all duration-300">
+                  <motion.a href={getWhatsAppLink(data.finalCTA.whatsappMessage)} target="_blank" rel="noreferrer" initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.1 }} className="group block relative p-5 rounded-2xl bg-white/95 backdrop-blur-xl border border-white/50 shadow-2xl hover:shadow-[0_20px_60px_rgba(255,255,255,0.2)] hover:-translate-y-1 transition-all duration-300">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                        <MessageCircle size={22} className="text-white" strokeWidth={2.2} />
+<WhatsAppIcon size={22} className="text-emerald-600" />
                       </div>
                       <div className="flex-1">
                         <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-0.5">WhatsApp Us</p>
-                        <p className="text-base font-black text-[#0A0F1F]">+971 56 655 6645</p>
+                        <p className="text-base font-black text-[#0A0F1F]" data-tina-field={tinaField(data.finalCTA, 'phone')}>{data.finalCTA.phone}</p>
                         <p className="text-[11px] text-green-600 font-semibold mt-0.5">● Instant replies almost anytime</p>
                       </div>
                       <ArrowRight size={18} className="text-txt-muted group-hover:text-amber-600 group-hover:translate-x-1 transition-all" />
@@ -944,10 +718,10 @@ export default function MainlandVisa() {
                         <Building2 size={22} className="text-white" strokeWidth={2.2} />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-1">Visit Our Dubai Office</p>
-                        <p className="text-sm font-bold text-[#0A0F1F] leading-snug mb-1">Office M08-27, M1 Floor, Crystal Tower</p>
-                        <p className="text-xs text-[#64748B] font-medium leading-snug">Business Bay, Dubai, U.A.E — PO Box: 554552</p>
-                        <a href="https://maps.google.com/?q=Crystal+Tower+Business+Bay+Dubai" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 mt-2 text-xs font-black text-amber-600 hover:text-amber-700 transition">
+                        <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-1" data-tina-field={tinaField(data.finalCTA.office, 'label')}>{data.finalCTA.office.label}</p>
+                        <p className="text-sm font-bold text-[#0A0F1F] leading-snug mb-1" data-tina-field={tinaField(data.finalCTA.office, 'line1')}>{data.finalCTA.office.line1}</p>
+                        <p className="text-xs text-[#64748B] font-medium leading-snug" data-tina-field={tinaField(data.finalCTA.office, 'line2')}>{data.finalCTA.office.line2}</p>
+                        <a href={data.finalCTA.office.mapLink} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 mt-2 text-xs font-black text-amber-600 hover:text-amber-700 transition">
                           Get Directions<ArrowRight size={12} />
                         </a>
                       </div>
@@ -960,11 +734,11 @@ export default function MainlandVisa() {
                         <Clock size={22} className="text-white" strokeWidth={2.2} />
                       </div>
                       <div className="flex-1">
-                        <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-1">Working Hours</p>
+                        <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider mb-1" data-tina-field={tinaField(data.finalCTA.hours, 'label')}>{data.finalCTA.hours.label}</p>
                         <div className="space-y-1 text-xs">
-                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Mon – Fri</span><span className="font-black text-[#0A0F1F]">9 AM – 6 PM</span></div>
-                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Saturday</span><span className="font-black text-[#0A0F1F]">10 AM – 5 PM</span></div>
-                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Sunday</span><span className="font-black text-red-500">Closed</span></div>
+                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Mon – Fri</span><span className="font-black text-[#0A0F1F]" data-tina-field={tinaField(data.finalCTA.hours, 'monFri')}>{data.finalCTA.hours.monFri}</span></div>
+                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Saturday</span><span className="font-black text-[#0A0F1F]" data-tina-field={tinaField(data.finalCTA.hours, 'saturday')}>{data.finalCTA.hours.saturday}</span></div>
+                          <div className="flex justify-between items-center"><span className="text-[#64748B] font-medium">Sunday</span><span className="font-black text-red-500" data-tina-field={tinaField(data.finalCTA.hours, 'sunday')}>{data.finalCTA.hours.sunday}</span></div>
                         </div>
                       </div>
                     </div>
@@ -975,6 +749,7 @@ export default function MainlandVisa() {
           </motion.div>
         </div>
       </section>
+
     </div>
   );
 }

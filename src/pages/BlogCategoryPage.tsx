@@ -3,92 +3,40 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useTina, tinaField } from 'tinacms/dist/react';
 import {
   Home as HomeIcon, ChevronRight, Calendar, Clock, Tag,
-  ArrowRight, Star, Sparkles, Phone, Headset, BookOpen,
-  Search, Folder, ArrowUpRight, MessageCircle, CheckCircle2,
+  ArrowRight, Star, Sparkles, Phone, Headset,
+  Search, Folder, ArrowUpRight, MessageCircle,
 } from 'lucide-react';
 import { getWhatsAppLink } from '../lib/whatsapp';
+import postsData from '../content/blog/posts.json';
+import WhatsAppIcon from '../components/icons/WhatsAppIcon';
 
-// ============ ALL BLOG POSTS (with categories) ============
-const allPosts = [
-  { slug: 'how-to-notarize-uae-documents-for-business-use', title: 'How to Notarize UAE Documents for Business Use', date: 'Oct 15, 2026', readTime: '8 min', category: 'Legal', excerpt: 'A bank may request a notarized board resolution. Learn the full process for notarizing UAE documents.', image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80' },
-  { slug: 'dubai-lease-regulations-for-business-owners', title: 'Dubai Lease Regulations for Business Owners', date: 'Oct 12, 2026', readTime: '10 min', category: 'Legal', excerpt: 'Commercial leases in Dubai are governed by specific regulations every business owner must understand.', image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80' },
-  { slug: 'a-dubai-holding-structure-example-for-investors', title: 'A Dubai Holding Structure Example for Investors', date: 'Oct 10, 2026', readTime: '9 min', category: 'Business Setup', excerpt: 'A Dubai holding structure is a common way for investors to organize assets and subsidiaries.', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80' },
-  { slug: 'dmcc-license-review-costs-fit-and-key-rules', title: 'DMCC License Review: Costs, Fit, and Key Rules', date: 'Oct 08, 2026', readTime: '11 min', category: 'Free Zones', excerpt: 'The DMCC is one of the largest and most established free zones in Dubai. Is it right for you?', image: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80' },
-  { slug: 'how-to-issue-uae-invoices-without-compliance-errors', title: 'How to Issue UAE Invoices Without Compliance Errors', date: 'Oct 05, 2026', readTime: '8 min', category: 'Accounting', excerpt: 'UAE invoices are legal documents. If they don\'t meet FTA requirements, they cause problems.', image: 'https://images.unsplash.com/photo-1554224154-26032ffc0d07?w=800&q=80' },
-  { slug: 'are-flexi-desks-mandatory-in-uae-business-setup', title: 'Are Flexi Desks Mandatory in UAE Business Setup?', date: 'Oct 02, 2026', readTime: '6 min', category: 'Business Setup', excerpt: 'Do you really need a flexi desk? It depends on your license type and jurisdiction.', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80' },
-  { slug: 'shared-desk-versus-private-office-in-dubai', title: 'Shared Desk Versus Private Office in Dubai', date: 'Sep 28, 2026', readTime: '8 min', category: 'Living in Dubai', excerpt: 'Shared desks and private offices are the two most common workspace options in Dubai.', image: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800&q=80' },
-  { slug: 'foreign-investment-in-dubai-a-practical-guide', title: 'Foreign Investment in Dubai: A Practical Guide', date: 'Sep 25, 2026', readTime: '12 min', category: 'Entrepreneurship', excerpt: 'Dubai is one of the world\'s most attractive destinations for foreign investment.', image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80' },
-  { slug: 'how-to-change-uae-shareholders-without-delays', title: 'How to Change UAE Shareholders Without Delays', date: 'Sep 22, 2026', readTime: '8 min', category: 'Legal', excerpt: 'Changing shareholders in a UAE company is common but has specific steps to avoid delays.', image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80' },
-  { slug: 'uae-e-commerce-licensing-trends-shaping-2026', title: 'UAE E-Commerce Licensing Trends Shaping 2026', date: 'Sep 20, 2026', readTime: '9 min', category: 'Business Setup', excerpt: 'The UAE e-commerce market is projected to cross $30 billion by 2026.', image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80' },
-  { slug: 'dubai-business-districts-choose-the-right-base', title: 'Dubai Business Districts: Choose the Right Base', date: 'Sep 18, 2026', readTime: '10 min', category: 'Living in Dubai', excerpt: 'Choosing the right location affects cost, credibility, and growth potential.', image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=800&q=80' },
-  { slug: 'freezone-audit-requirements-for-uae-companies', title: 'Freezone Audit Requirements for UAE Companies', date: 'Sep 15, 2026', readTime: '9 min', category: 'Accounting', excerpt: 'Free zone companies have specific audit obligations. Ignoring them causes penalties.', image: 'https://images.unsplash.com/photo-1554224312-3bb0e02b0a8a?w=800&q=80' },
-  { slug: 'how-to-liquidate-a-uae-company-key-steps', title: 'How to Liquidate a UAE Company: Key Steps', date: 'Sep 12, 2026', readTime: '10 min', category: 'Legal', excerpt: 'Closing a UAE company requires a formal liquidation process. Cannot simply stop operating.', image: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&q=80' },
-  { slug: 'top-uae-accounting-mistakes-that-cost-firms', title: 'Top UAE Accounting Mistakes That Cost Firms', date: 'Sep 10, 2026', readTime: '8 min', category: 'Accounting', excerpt: 'Accounting mistakes in the UAE can cost businesses tens of thousands of dirhams.', image: 'https://images.unsplash.com/photo-1554224312-53e05c1c5a6d?w=800&q=80' },
-  { slug: 'uae-sole-proprietorship-versus-llc-compared', title: 'UAE Sole Proprietorship Versus LLC Compared', date: 'Sep 08, 2026', readTime: '8 min', category: 'Business Setup', excerpt: 'Sole proprietorship and LLC are the two most common structures. Which is right for you?', image: 'https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=800&q=80' },
-  { slug: 'how-to-get-uae-establishment-card-for-your-company', title: 'How to Get UAE Establishment Card for Your Company', date: 'Sep 05, 2026', readTime: '7 min', category: 'Business Setup', excerpt: 'The UAE Establishment Card is mandatory for any company that wants to sponsor visas.', image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=800&q=80' },
-  { slug: 'dubai-license-amendments-when-to-update', title: 'Dubai License Amendments: When to Update', date: 'Sep 02, 2026', readTime: '6 min', category: 'Legal', excerpt: 'Your Dubai trade license is not static. When your business changes, the license must update.', image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80' },
-  { slug: 'uae-ubo-compliance-requirements-for-businesses', title: 'UAE UBO Compliance Requirements for Businesses', date: 'Aug 28, 2026', readTime: '9 min', category: 'Legal', excerpt: 'Since 2020, all UAE companies must maintain a register of Ultimate Beneficial Owners.', image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80' },
-  { slug: '10-best-activities-for-online-businesses-in-uae', title: '10 Best Activities for Online Businesses in UAE', date: 'Aug 25, 2026', readTime: '10 min', category: 'Business Setup', excerpt: 'The UAE has become a hub for online businesses. Here are the top 10 activities.', image: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&q=80' },
-  { slug: 'uae-employee-sponsorship-for-growing-companies', title: 'UAE Employee Sponsorship for Growing Companies', date: 'Aug 22, 2026', readTime: '8 min', category: 'Human Resources', excerpt: 'If your UAE company is hiring, you\'ll need to sponsor employee visas.', image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&q=80' },
-  { slug: 'uae-holding-company-versus-spv-compared', title: 'UAE Holding Company Versus SPV Compared', date: 'Aug 20, 2026', readTime: '9 min', category: 'Business Setup', excerpt: 'Holding companies and SPVs serve different purposes. Learn which is right for you.', image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&q=80' },
-  { slug: 'consultant-license-options-in-dubai-and-the-uae', title: 'Consultant License Options in Dubai and the UAE', date: 'Aug 18, 2026', readTime: '8 min', category: 'Business Setup', excerpt: 'Consultants in Dubai can choose from several license types. Here\'s how to decide.', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80' },
-  { slug: 'investor-visa-versus-employment-visa-in-the-uae', title: 'Investor Visa Versus Employment Visa in the UAE', date: 'Aug 15, 2026', readTime: '7 min', category: 'Business Visa', excerpt: 'The two main visa routes for founders are investor visa and employment visa.', image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&q=80' },
-  { slug: 'dubai-economic-substance-regulations-guide', title: 'Dubai Economic Substance Regulations Guide', date: 'Aug 12, 2026', readTime: '10 min', category: 'Legal', excerpt: 'Economic Substance Regulations apply to certain UAE companies with specific activities.', image: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800&q=80' },
-  { slug: 'business-banking-in-dubai-for-new-companies', title: 'Business Banking in Dubai for New Companies', date: 'Aug 10, 2026', readTime: '9 min', category: 'Finance', excerpt: 'Opening a business bank account in Dubai is often the biggest challenge.', image: 'https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=800&q=80' },
-  { slug: 'does-uae-vat-apply-to-freelancers-key-rules', title: 'Does UAE VAT Apply to Freelancers? Key Rules', date: 'Aug 08, 2026', readTime: '7 min', category: 'Accounting', excerpt: 'Freelancers in the UAE often ask: do I need to register for VAT?', image: 'https://images.unsplash.com/photo-1554224312-3bb0e02b0a8a?w=800&q=80' },
-  { slug: 'restaurant-licensing-example-for-dubai-investors', title: 'Restaurant Licensing Example for Dubai Investors', date: 'Aug 05, 2026', readTime: '10 min', category: 'Business Setup', excerpt: 'Opening a restaurant in Dubai is popular but the licensing is complex.', image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&q=80' },
-  { slug: 'dubai-startup-expansion-for-smarter-market-entry', title: 'Dubai Startup Expansion for Smarter Market Entry', date: 'Aug 02, 2026', readTime: '8 min', category: 'Entrepreneurship', excerpt: 'Dubai is a strategic launchpad for startups expanding into MENA.', image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80' },
-  { slug: 'uae-trademark-registration-guide-for-business-owners', title: 'UAE Trademark Registration Guide for Business Owners', date: 'Jul 28, 2026', readTime: '10 min', category: 'Legal', excerpt: 'Registering a trademark protects your brand and gives you legal recourse.', image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80' },
-];
 
-// ============ ALL CATEGORIES ============
-const categories = [
-  { name: 'Accounting', slug: 'accounting', count: 5, description: 'VAT, corporate tax, bookkeeping, and financial compliance in the UAE.' },
-  { name: 'Business and Leadership Skills', slug: 'business-and-leadership-skills', count: 3, description: 'Guides for entrepreneurs, managers, and business leaders.' },
-  { name: 'Business Plan Templates', slug: 'business-plan-templates', count: 2, description: 'Templates and frameworks for planning your UAE business.' },
-  { name: 'Business Setup', slug: 'business-setup', count: 12, description: 'Company formation, licensing, and setup across the UAE.' },
-  { name: 'Business Software and Tools', slug: 'business-software-and-tools', count: 3, description: 'Software, apps, and tools for UAE business owners.' },
-  { name: 'Business Success and Challenges', slug: 'business-success-and-challenges', count: 4, description: 'Real stories and lessons from UAE entrepreneurs.' },
-  { name: 'Entrepreneurship', slug: 'entrepreneurship', count: 5, description: 'Insights for founders and entrepreneurs in Dubai.' },
-  { name: 'Featured Posts', slug: 'featured-posts', count: 6, description: 'Our top picks and editor favorites.' },
-  { name: 'Finance', slug: 'finance', count: 3, description: 'Banking, funding, and financial planning for UAE businesses.' },
-  { name: 'Free Zones', slug: 'free-zones', count: 5, description: 'Everything about UAE free zones and their benefits.' },
-  { name: 'Human Resources', slug: 'human-resources', count: 2, description: 'Hiring, payroll, and employee management in the UAE.' },
-  { name: 'Legal', slug: 'legal', count: 9, description: 'Legal compliance, contracts, and regulations for UAE companies.' },
-  { name: 'Living in Dubai', slug: 'living-in-dubai', count: 4, description: 'Lifestyle, districts, and daily life in Dubai.' },
-  { name: 'Mainland', slug: 'mainland', count: 3, description: 'Mainland company formation and operations in the UAE.' },
-  { name: 'UAE Company Setup', slug: 'uae-company-setup', count: 8, description: 'Complete guides to setting up a company in the UAE.' },
-];
-
-// Sidebar data
-const archives = [
-  'October 2026', 'September 2026', 'August 2026', 'July 2026',
-  'June 2026', 'May 2026', 'April 2026', 'March 2026',
-];
-
-const popularTags = [
-  'Business Visa', 'UAE Company Formation', 'Dubai Business License',
-  'Dubai Business Opportunities', 'Free Zone Company Setup', 'Golden Visa',
-  'UAE Investor Visa', 'UAE Mainland', 'UAE Business Setup', 'UAE Company Registration',
-];
-
-// ============ COMPONENT ============
-export default function BlogCategoryPage() {
+export default function BlogCategoryPage({ tinaData }: { tinaData?: any }) {
   const { slug } = useParams<{ slug: string }>();
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Tina se ya local JSON se data
+  const allPosts = tinaData?.data?.blogPosts?.posts || postsData.posts;
+  const categories = tinaData?.data?.blogPosts?.categories || postsData.categories;
+  const archiveNames = tinaData?.data?.blogPosts?.archiveNames || postsData.archiveNames;
+  const popularTags = tinaData?.data?.blogPosts?.popularTags || postsData.popularTags;
+
   // Find current category
-  const category = categories.find((c) => c.slug === slug) || categories[0];
+  const category = categories.find((c: any) => c.slug === slug) || categories[0];
 
   // Filter posts by category
   const categoryPosts = allPosts.filter(
-    (p) => p.category.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug
+    (p: any) => p.category.toLowerCase().replace(/[^a-z0-9]+/g, '-') === slug
   );
 
-  // If no posts found for this category, show first few (fallback for empty categories)
+  // Fallback: if no posts, show first few
   const displayPosts = categoryPosts.length > 0 ? categoryPosts : allPosts.slice(0, 3);
+
+  // Show top 8 archives in sidebar
+  const sidebarArchives = archiveNames.slice(0, 8);
 
   return (
     <div className="min-h-screen bg-white">
@@ -114,11 +62,11 @@ export default function BlogCategoryPage() {
             <span className="text-xs font-bold tracking-wider uppercase text-white">Category</span>
           </motion.div>
 
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-4xl mb-6">
+          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.2 }} className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight max-w-4xl mb-6" data-tina-field={tinaField(category, 'name')}>
             {category.name}
           </motion.h1>
 
-          <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/90 font-medium leading-relaxed max-w-3xl mb-6">
+          <motion.p initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.4 }} className="text-lg md:text-xl text-white/90 font-medium leading-relaxed max-w-3xl mb-6" data-tina-field={tinaField(category, 'description')}>
             {category.description}
           </motion.p>
 
@@ -144,41 +92,31 @@ export default function BlogCategoryPage() {
 
               {displayPosts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {displayPosts.map((post, i) => (
-                    <motion.article
-                      key={i}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5, delay: (i % 4) * 0.08 }}
-                      className="group relative"
-                    >
+                  {displayPosts.map((post: any, i: number) => (
+                    <motion.article key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: (i % 4) * 0.08 }} className="group relative">
                       <div className="relative rounded-3xl bg-white border border-slate-200 overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 h-full flex flex-col">
                         <div className="relative h-48 overflow-hidden">
-                          <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                          <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-tina-field={tinaField(post, 'image')} />
                           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
                           <div className="absolute top-4 left-4">
-                            <span className="px-3 py-1 rounded-full bg-white/95 backdrop-blur-xl border border-white text-[10px] font-black text-fuchsia-700 uppercase tracking-wider shadow-lg">
+                            <span className="px-3 py-1 rounded-full bg-white/95 backdrop-blur-xl border border-white text-[10px] font-black text-fuchsia-700 uppercase tracking-wider shadow-lg" data-tina-field={tinaField(post, 'category')}>
                               {post.category}
                             </span>
                           </div>
                         </div>
                         <div className="p-5 flex-1 flex flex-col">
                           <div className="flex items-center gap-3 text-[11px] text-slate-500 font-semibold mb-3">
-                            <span className="flex items-center gap-1.5"><Calendar size={11} />{post.date}</span>
+                            <span className="flex items-center gap-1.5"><Calendar size={11} /><span data-tina-field={tinaField(post, 'date')}>{post.date}</span></span>
                             <span className="w-1 h-1 rounded-full bg-slate-300" />
-                            <span className="flex items-center gap-1.5"><Clock size={11} />{post.readTime}</span>
+                            <span className="flex items-center gap-1.5"><Clock size={11} /><span data-tina-field={tinaField(post, 'readTime')}>{post.readTime}</span></span>
                           </div>
-                          <h3 className="text-base font-black text-[#0A0F1F] leading-snug mb-3 group-hover:text-fuchsia-700 transition-colors line-clamp-2">
+                          <h3 className="text-base font-black text-[#0A0F1F] leading-snug mb-3 group-hover:text-fuchsia-700 transition-colors line-clamp-2" data-tina-field={tinaField(post, 'title')}>
                             {post.title}
                           </h3>
-                          <p className="text-xs text-slate-500 font-medium leading-relaxed mb-4 line-clamp-3 flex-1">
+                          <p className="text-xs text-slate-500 font-medium leading-relaxed mb-4 line-clamp-3 flex-1" data-tina-field={tinaField(post, 'excerpt')}>
                             {post.excerpt}
                           </p>
-                          <Link
-                            to={`/blog/${post.slug}`}
-                            className="group/btn inline-flex items-center gap-2 text-xs font-black text-fuchsia-700 hover:text-fuchsia-900 uppercase tracking-widest transition-colors"
-                          >
+                          <Link to={`/blog/${post.slug}`} className="group/btn inline-flex items-center gap-2 text-xs font-black text-fuchsia-700 hover:text-fuchsia-900 uppercase tracking-widest transition-colors">
                             Read More
                             <ArrowUpRight size={14} className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" strokeWidth={2.5} />
                           </Link>
@@ -208,9 +146,7 @@ export default function BlogCategoryPage() {
                   <Search size={14} className="text-fuchsia-600" /> Search
                 </h3>
                 <div className="relative">
-                  <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search articles..."
-                    className="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-fuchsia-400 focus:bg-white outline-none transition text-sm font-medium text-slate-900 placeholder:text-slate-400" />
+                  <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search articles..." className="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-fuchsia-400 focus:bg-white outline-none transition text-sm font-medium text-slate-900 placeholder:text-slate-400" />
                   <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
                 </div>
               </div>
@@ -221,9 +157,8 @@ export default function BlogCategoryPage() {
                   <Clock size={14} className="text-fuchsia-600" /> Recent Posts
                 </h3>
                 <div className="space-y-3">
-                  {allPosts.slice(0, 5).map((p, i) => (
-                    <Link key={i} to={`/blog/${p.slug}`}
-                      className="group flex items-start gap-3 p-2 rounded-xl hover:bg-fuchsia-50 transition-colors">
+                  {allPosts.slice(0, 5).map((p: any, i: number) => (
+                    <Link key={i} to={`/blog/${p.slug}`} className="group flex items-start gap-3 p-2 rounded-xl hover:bg-fuchsia-50 transition-colors">
                       <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
                         <img src={p.image} alt={p.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
                       </div>
@@ -246,9 +181,8 @@ export default function BlogCategoryPage() {
                   <Calendar size={14} className="text-fuchsia-600" /> Archives
                 </h3>
                 <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1">
-                  {archives.map((month, i) => (
-                    <Link key={i} to={`/blog/archive/${month.toLowerCase().replace(' ', '-')}`}
-                      className="group flex items-center justify-between p-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-fuchsia-700 hover:bg-fuchsia-50 transition-colors">
+                  {sidebarArchives.map((month: string, i: number) => (
+                    <Link key={i} to={`/blog/archive/${month.toLowerCase().replace(' ', '-')}`} className="group flex items-center justify-between p-2 rounded-lg text-xs font-semibold text-slate-600 hover:text-fuchsia-700 hover:bg-fuchsia-50 transition-colors">
                       <span className="flex items-center gap-2">
                         <ChevronRight size={11} className="text-fuchsia-500 group-hover:translate-x-0.5 transition-transform" strokeWidth={3} />
                         {month}
@@ -264,20 +198,15 @@ export default function BlogCategoryPage() {
                   <Folder size={14} className="text-fuchsia-600" /> All Categories
                 </h3>
                 <div className="space-y-1.5 max-h-96 overflow-y-auto pr-1">
-                  {categories.map((cat, i) => {
+                  {categories.map((cat: any, i: number) => {
                     const isActive = cat.slug === slug;
                     return (
-                      <Link key={i} to={`/blog/category/${cat.slug}`}
-                        className={`group flex items-center justify-between p-2 rounded-lg text-xs font-semibold transition-colors ${
-                          isActive ? 'bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200' : 'text-slate-600 hover:text-fuchsia-700 hover:bg-fuchsia-50'
-                        }`}>
+                      <Link key={i} to={`/blog/category/${cat.slug}`} className={`group flex items-center justify-between p-2 rounded-lg text-xs font-semibold transition-colors ${isActive ? 'bg-fuchsia-100 text-fuchsia-700 border border-fuchsia-200' : 'text-slate-600 hover:text-fuchsia-700 hover:bg-fuchsia-50'}`}>
                         <span className="flex items-center gap-2 truncate">
                           <Tag size={11} className={`flex-shrink-0 ${isActive ? 'text-fuchsia-700' : 'text-fuchsia-500'}`} />
-                          <span className="truncate">{cat.name}</span>
+                          <span className="truncate" data-tina-field={tinaField(cat, 'name')}>{cat.name}</span>
                         </span>
-                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex-shrink-0 ${
-                          isActive ? 'bg-fuchsia-600 text-white' : 'text-fuchsia-600 bg-fuchsia-100'
-                        }`}>
+                        <span className={`text-[10px] font-black px-2 py-0.5 rounded-full flex-shrink-0 ${isActive ? 'bg-fuchsia-600 text-white' : 'text-fuchsia-600 bg-fuchsia-100'}`} data-tina-field={tinaField(cat, 'count')}>
                           {cat.count}
                         </span>
                       </Link>
@@ -292,9 +221,8 @@ export default function BlogCategoryPage() {
                   <Sparkles size={14} className="text-fuchsia-600" /> Popular Tags
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {popularTags.map((tag, i) => (
-                    <Link key={i} to={`/blog/tag/${tag.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-                      className="px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-[11px] font-bold text-slate-600 hover:bg-fuchsia-50 hover:border-fuchsia-300 hover:text-fuchsia-700 transition-all">
+                  {popularTags.map((tag: string, i: number) => (
+                    <Link key={i} to={`/blog/tag/${tag.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} className="px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-[11px] font-bold text-slate-600 hover:bg-fuchsia-50 hover:border-fuchsia-300 hover:text-fuchsia-700 transition-all">
                       {tag}
                     </Link>
                   ))}
@@ -312,12 +240,9 @@ export default function BlogCategoryPage() {
                     <Headset size={22} className="text-white" strokeWidth={2.2} />
                   </div>
                   <h3 className="text-lg font-black text-white leading-tight mb-2">Need Help with Setup?</h3>
-                  <p className="text-sm text-white/90 font-medium leading-relaxed mb-4">
-                    Talk to our experts — free consultation for your UAE business.
-                  </p>
-                  <a href={getWhatsAppLink("Hi! I need help with UAE business setup.")} target="_blank" rel="noreferrer"
-                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-white text-fuchsia-700 font-black text-xs uppercase tracking-widest shadow-lg hover:scale-105 transition-transform">
-                    <MessageCircle size={14} strokeWidth={2.5} />Ask Expert
+                  <p className="text-sm text-white/90 font-medium leading-relaxed mb-4">Talk to our experts — free consultation for your UAE business.</p>
+                  <a href={getWhatsAppLink("Hi! I need help with UAE business setup.")} target="_blank" rel="noreferrer" className="inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-white text-fuchsia-700 font-black text-xs uppercase tracking-widest shadow-lg hover:scale-105 transition-transform">
+<WhatsAppIcon size={14} className="text-emerald-600" />Ask Expert
                   </a>
                 </div>
               </div>
@@ -342,18 +267,9 @@ export default function BlogCategoryPage() {
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
-            {categories.filter(c => c.slug !== slug).slice(0, 9).map((cat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-              >
-                <Link
-                  to={`/blog/category/${cat.slug}`}
-                  className="group flex items-center justify-between gap-3 p-5 rounded-2xl bg-white border border-slate-200 hover:border-fuchsia-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-                >
+            {categories.filter((c: any) => c.slug !== slug).slice(0, 9).map((cat: any, i: number) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.05 }}>
+                <Link to={`/blog/category/${cat.slug}`} className="group flex items-center justify-between gap-3 p-5 rounded-2xl bg-white border border-slate-200 hover:border-fuchsia-300 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-fuchsia-400 to-purple-600 flex items-center justify-center shadow-md flex-shrink-0">
                       <Folder size={18} className="text-white" strokeWidth={2.5} />
@@ -391,7 +307,7 @@ export default function BlogCategoryPage() {
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <a href={getWhatsAppLink("Hi! I'd like a free consultation.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-fuchsia-700 font-bold text-sm shadow-xl hover:scale-105 transition-all">
-                  <MessageCircle size={16} />WhatsApp Us
+<WhatsAppIcon size={16} className="text-emerald-600" />WhatsApp Us
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </a>
                 <Link to="/contact" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/30 text-white font-bold text-sm hover:bg-white/25 transition-all">

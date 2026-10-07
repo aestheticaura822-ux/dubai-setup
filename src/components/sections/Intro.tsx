@@ -1,3 +1,5 @@
+// File: src/components/Home/Intro.tsx
+
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -11,42 +13,16 @@ import {
   Award,
   Users,
 } from 'lucide-react';
+import { useTina, tinaField } from 'tinacms/dist/react';
+import introData from '../../content/home/intro.json';
 
-const benefits = [
-  {
-    icon: ShieldCheck,
-    title: '100% Ownership',
-    description: 'Full control in Free Zones and selected Mainland sectors',
-    gradient: 'from-sky-400 to-blue-600',
-  },
-  {
-    icon: Zap,
-    title: '0% Personal Tax',
-    description: 'Zero corporate and personal tax in many Free Zone options',
-    gradient: 'from-amber-400 to-orange-500',
-  },
-  {
-    icon: Globe2,
-    title: 'Fast Licensing',
-    description: 'Quick access to license, visa, and bank account',
-    gradient: 'from-violet-400 to-purple-600',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Global Lifestyle',
-    description: 'Infrastructure valued by founders worldwide',
-    gradient: 'from-emerald-400 to-green-600',
-  },
-];
+const iconMap: any = {
+  ShieldCheck, Zap, Globe2, TrendingUp,
+};
 
-const highlights = [
-  'Solo freelancers to multinationals welcome',
-  'Personalized guidance from day one',
-  'End-to-end compliance support',
-  'Transparent pricing, no hidden fees',
-];
+export default function Intro({ tinaData }: { tinaData?: any }) {
+  const data = tinaData?.data?.home || introData;
 
-export default function Intro() {
   return (
     <section className="relative py-14 md:py-20 bg-gradient-to-b from-white via-slate-50/30 to-white overflow-hidden">
       {/* Soft mesh background */}
@@ -74,10 +50,8 @@ export default function Intro() {
             transition={{ duration: 0.8 }}
             className="lg:col-span-5 relative order-2 lg:order-1"
           >
-            {/* Glow behind */}
             <div className="absolute inset-0 bg-gradient-brand opacity-20 blur-[80px] rounded-full" />
 
-            {/* Main visual card */}
             <div className="relative">
               {/* Floating badge — top left */}
               <motion.div
@@ -90,10 +64,12 @@ export default function Intro() {
                     <Award size={16} className="text-white" strokeWidth={2.5} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider">
-                      Award
+                    <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider" data-tina-field={tinaField(data.dashboardCard.awardBadge, 'label')}>
+                      {data.dashboardCard.awardBadge.label}
                     </p>
-                    <p className="text-xs font-black text-[#0A0F1F]">Top Rated 2026</p>
+                    <p className="text-xs font-black text-[#0A0F1F]" data-tina-field={tinaField(data.dashboardCard.awardBadge, 'value')}>
+                      {data.dashboardCard.awardBadge.value}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -109,17 +85,18 @@ export default function Intro() {
                     <Users size={16} className="text-white" strokeWidth={2.5} />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider">
-                      Active
+                    <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider" data-tina-field={tinaField(data.dashboardCard.expertsBadge, 'label')}>
+                      {data.dashboardCard.expertsBadge.label}
                     </p>
-                    <p className="text-xs font-black text-[#0A0F1F]">25+ Experts</p>
+                    <p className="text-xs font-black text-[#0A0F1F]" data-tina-field={tinaField(data.dashboardCard.expertsBadge, 'value')}>
+                      {data.dashboardCard.expertsBadge.value}
+                    </p>
                   </div>
                 </div>
               </motion.div>
 
               {/* Main dashboard card */}
               <div className="relative rounded-3xl bg-white/90 backdrop-blur-xl border border-border shadow-[0_20px_60px_rgba(15,23,42,0.12)] p-6 md:p-8 overflow-hidden">
-                {/* Top gradient line */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-brand" />
 
                 {/* Header */}
@@ -129,31 +106,25 @@ export default function Intro() {
                       <Building2 size={20} className="text-white" strokeWidth={2.2} />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-txt-muted uppercase tracking-wider">
-                        Setup Zone Dubai
+                      <p className="text-xs font-bold text-txt-muted uppercase tracking-wider" data-tina-field={tinaField(data.dashboardCard, 'brandLabel')}>
+                        {data.dashboardCard.brandLabel}
                       </p>
-                      <h3 className="text-base font-black text-[#0A0F1F]">
-                        Business Launch
+                      <h3 className="text-base font-black text-[#0A0F1F]" data-tina-field={tinaField(data.dashboardCard, 'brandTitle')}>
+                        {data.dashboardCard.brandTitle}
                       </h3>
                     </div>
                   </div>
                   <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">
-                      Active
+                    <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider" data-tina-field={tinaField(data.dashboardCard, 'statusLabel')}>
+                      {data.dashboardCard.statusLabel}
                     </span>
                   </div>
                 </div>
 
                 {/* Steps list */}
                 <div className="space-y-3">
-                  {[
-                    { label: 'Consultation & Planning', status: 'done', week: 'Week 1' },
-                    { label: 'Document Preparation', status: 'done', week: 'Week 1' },
-                    { label: 'Company Registration', status: 'active', week: 'Week 2' },
-                    { label: 'Visa & Emirates ID', status: 'pending', week: 'Week 3' },
-                    { label: 'Bank Account Opening', status: 'pending', week: 'Week 3' },
-                  ].map((step, i) => (
+                  {data.dashboardCard.steps.map((step: any, i: number) => (
                     <motion.div
                       key={i}
                       initial={{ opacity: 0, x: 20 }}
@@ -181,23 +152,13 @@ export default function Intro() {
                         ) : (
                           <div className="w-6 h-6 rounded-full bg-slate-200 border border-slate-300" />
                         )}
-                        <span
-                          className={`text-xs font-bold ${
-                            step.status === 'pending' ? 'text-slate-400' : 'text-[#0A0F1F]'
-                          }`}
-                        >
+                        <span className={`text-xs font-bold ${step.status === 'pending' ? 'text-slate-400' : 'text-[#0A0F1F]'}`} data-tina-field={tinaField(step, 'label')}>
                           {step.label}
                         </span>
                       </div>
-                      <span
-                        className={`text-[10px] font-bold uppercase tracking-wider ${
-                          step.status === 'active'
-                            ? 'text-sky-600'
-                            : step.status === 'done'
-                            ? 'text-emerald-600'
-                            : 'text-slate-400'
-                        }`}
-                      >
+                      <span className={`text-[10px] font-bold uppercase tracking-wider ${
+                        step.status === 'active' ? 'text-sky-600' : step.status === 'done' ? 'text-emerald-600' : 'text-slate-400'
+                      }`} data-tina-field={tinaField(step, 'week')}>
                         {step.week}
                       </span>
                     </motion.div>
@@ -207,15 +168,17 @@ export default function Intro() {
                 {/* Progress bar */}
                 <div className="mt-6 pt-5 border-t border-border">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-txt-muted uppercase tracking-wider">
-                      Overall Progress
+                    <span className="text-xs font-bold text-txt-muted uppercase tracking-wider" data-tina-field={tinaField(data.dashboardCard, 'progressLabel')}>
+                      {data.dashboardCard.progressLabel}
                     </span>
-                    <span className="text-xs font-black text-[#0A0F1F]">60%</span>
+                    <span className="text-xs font-black text-[#0A0F1F]" data-tina-field={tinaField(data.dashboardCard, 'progressValue')}>
+                      {data.dashboardCard.progressValue}
+                    </span>
                   </div>
                   <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
-                      whileInView={{ width: '60%' }}
+                      whileInView={{ width: `${data.dashboardCard.progressPercent}%` }}
                       viewport={{ once: true }}
                       transition={{ duration: 1.5, delay: 0.5 }}
                       className="h-full rounded-full bg-gradient-brand"
@@ -223,7 +186,6 @@ export default function Intro() {
                   </div>
                 </div>
 
-                {/* Corner deco */}
                 <div className="absolute -bottom-12 -right-12 w-32 h-32 rounded-full bg-gradient-brand opacity-[0.08] blur-2xl" />
               </div>
             </div>
@@ -237,19 +199,17 @@ export default function Intro() {
             transition={{ duration: 0.8 }}
             className="lg:col-span-7 order-1 lg:order-2"
           >
-            {/* Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/90 backdrop-blur-xl border border-border shadow-soft mb-6">
               <Sparkles size={14} className="text-brand-sky" />
-              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted">
-                Why Setup Zone Dubai
+              <span className="text-xs font-bold tracking-wider uppercase text-txt-muted" data-tina-field={tinaField(data, 'badge')}>
+                {data.badge}
               </span>
             </div>
 
-            {/* Heading */}
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#0A0F1F] leading-[1.1] tracking-tight mb-6">
-              Dubai Offers Everything an{' '}
+              <span data-tina-field={tinaField(data.heading, 'line1')}>{data.heading.line1}</span>{' '}
               <span className="relative inline-block">
-                <span className="gradient-text">Entrepreneur</span>
+                <span className="gradient-text" data-tina-field={tinaField(data.heading, 'highlight')}>{data.heading.highlight}</span>
                 <svg
                   className="absolute -bottom-1 left-0 w-full"
                   height="10"
@@ -271,29 +231,20 @@ export default function Intro() {
                   </defs>
                 </svg>
               </span>{' '}
-              Can Ask For.
+              <span data-tina-field={tinaField(data.heading, 'line3')}>{data.heading.line3}</span>
             </h2>
 
-            {/* Paragraph 1 */}
-            <p className="text-base md:text-lg text-[#475569] font-medium leading-relaxed mb-5">
-              Dubai has become the world's top destination for founders — with
-              zero income tax, 100% foreign ownership, and world-class
-              infrastructure. But navigating the setup process alone can be
-              overwhelming, with confusing jurisdictions, changing regulations,
-              and hidden costs.
+            <p className="text-base md:text-lg text-[#475569] font-medium leading-relaxed mb-5" data-tina-field={tinaField(data, 'paragraph1')}>
+              {data.paragraph1}
             </p>
 
-            {/* Paragraph 2 */}
             <p className="text-base md:text-lg text-[#475569] font-medium leading-relaxed mb-8">
-              <span className="font-bold text-[#0A0F1F]">Setup Zone Dubai</span> handles
-              everything — so you can focus on growing your business, not
-              paperwork. From solo freelancers to multinationals, we make UAE
-              entry fast, transparent, and stress-free.
+              <span className="font-bold text-[#0A0F1F]" data-tina-field={tinaField(data, 'paragraph2BoldPart')}>{data.paragraph2BoldPart}</span>
+              <span data-tina-field={tinaField(data, 'paragraph2Rest')}>{data.paragraph2Rest}</span>
             </p>
 
-            {/* Highlights — checklist */}
             <div className="grid sm:grid-cols-2 gap-3 mb-10">
-              {highlights.map((item, i) => (
+              {data.highlights.map((item: string, i: number) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
@@ -305,36 +256,27 @@ export default function Intro() {
                   <div className="mt-0.5 w-5 h-5 rounded-full bg-gradient-brand flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                     <CheckCircle2 size={12} className="text-white" strokeWidth={3} />
                   </div>
-                  <span className="text-sm font-bold text-[#1E293B] leading-snug">
-                    {item}
-                  </span>
+                  <span className="text-sm font-bold text-[#1E293B] leading-snug">{item}</span>
                 </motion.div>
               ))}
             </div>
 
-            {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-4">
               <a
-                href="#contact"
+                href={data.ctaPrimary.link}
                 className="group relative inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-gradient-brand text-white font-bold text-sm shadow-[0_10px_40px_rgba(14,165,233,0.35)] hover:shadow-[0_15px_60px_rgba(14,165,233,0.5)] hover:scale-105 transition-all duration-300 overflow-hidden"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                <span className="relative">Start Your Journey</span>
-                <ArrowRight
-                  size={16}
-                  className="relative group-hover:translate-x-1 transition-transform"
-                />
+                <span className="relative" data-tina-field={tinaField(data.ctaPrimary, 'text')}>{data.ctaPrimary.text}</span>
+                <ArrowRight size={16} className="relative group-hover:translate-x-1 transition-transform" />
               </a>
 
               <a
-                href="#services"
+                href={data.ctaSecondary.link}
                 className="group inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white border border-border hover:border-brand-sky/40 hover:shadow-soft transition-all duration-300 text-sm font-bold text-[#0A0F1F]"
               >
-                Explore Services
-                <ArrowRight
-                  size={16}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
+                <span data-tina-field={tinaField(data.ctaSecondary, 'text')}>{data.ctaSecondary.text}</span>
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
           </motion.div>
@@ -350,14 +292,14 @@ export default function Intro() {
             className="text-center mb-10"
           >
             <h3 className="text-2xl md:text-3xl font-black text-[#0A0F1F] tracking-tight">
-              What Dubai{' '}
-              <span className="gradient-text">Offers You</span>
+              <span data-tina-field={tinaField(data.bottomSectionTitle, 'line1')}>{data.bottomSectionTitle.line1}</span>{' '}
+              <span className="gradient-text" data-tina-field={tinaField(data.bottomSectionTitle, 'highlight')}>{data.bottomSectionTitle.highlight}</span>
             </h3>
           </motion.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {benefits.map((benefit, i) => {
-              const Icon = benefit.icon;
+            {data.benefits.map((benefit: any, i: number) => {
+              const Icon = iconMap[benefit.icon] || ShieldCheck;
               return (
                 <motion.div
                   key={i}
@@ -373,37 +315,24 @@ export default function Intro() {
                   className="group relative"
                 >
                   <div className="relative p-6 rounded-3xl bg-white/80 backdrop-blur-xl border border-border shadow-[0_10px_40px_rgba(15,23,42,0.06)] hover:shadow-[0_20px_60px_rgba(15,23,42,0.12)] hover:-translate-y-2 transition-all duration-500 overflow-hidden">
-                    {/* Top gradient line */}
-                    <div
-                      className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${benefit.gradient}`}
-                    />
+                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${benefit.gradient}`} />
 
-                    {/* Icon */}
                     <div className="relative mb-5">
-                      <div
-                        className={`absolute inset-0 w-14 h-14 rounded-2xl bg-gradient-to-br ${benefit.gradient} blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-500`}
-                      />
-                      <div
-                        className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${benefit.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}
-                      >
+                      <div className={`absolute inset-0 w-14 h-14 rounded-2xl bg-gradient-to-br ${benefit.gradient} blur-md opacity-40 group-hover:opacity-70 transition-opacity duration-500`} />
+                      <div className={`relative w-14 h-14 rounded-2xl bg-gradient-to-br ${benefit.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500`}>
                         <Icon size={24} className="text-white" strokeWidth={2.2} />
                       </div>
                     </div>
 
-                    {/* Title */}
-                    <h4 className="text-base font-black text-[#0A0F1F] mb-2 tracking-tight">
+                    <h4 className="text-base font-black text-[#0A0F1F] mb-2 tracking-tight" data-tina-field={tinaField(benefit, 'title')}>
                       {benefit.title}
                     </h4>
 
-                    {/* Description */}
-                    <p className="text-xs text-[#64748B] font-medium leading-relaxed">
+                    <p className="text-xs text-[#64748B] font-medium leading-relaxed" data-tina-field={tinaField(benefit, 'description')}>
                       {benefit.description}
                     </p>
 
-                    {/* Corner deco */}
-                    <div
-                      className={`absolute -bottom-1 -right-1 w-20 h-20 rounded-tl-[80px] bg-gradient-to-br ${benefit.gradient} opacity-[0.06] group-hover:opacity-[0.12] transition-opacity duration-500`}
-                    />
+                    <div className={`absolute -bottom-1 -right-1 w-20 h-20 rounded-tl-[80px] bg-gradient-to-br ${benefit.gradient} opacity-[0.06] group-hover:opacity-[0.12] transition-opacity duration-500`} />
                   </div>
                 </motion.div>
               );

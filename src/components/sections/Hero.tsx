@@ -1,143 +1,19 @@
 // File: src/components/Home/Hero.tsx
 
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles, Building2, Globe, CreditCard, Check, Star, MessageCircle } from 'lucide-react';
+import { ArrowRight, Sparkles, Building2, Globe, CreditCard, Check, Star } from 'lucide-react';
+import WhatsAppIcon from '../icons/WhatsAppIcon';
 import { getWhatsAppLink } from '../../lib/whatsapp';
+import { useTina, tinaField } from 'tinacms/dist/react';
+import heroData from '../../content/home/hero.json';
 
-const floatingCards = [
-  {
-    icon: Building2,
-    title: 'Free Zone License',
-    price: 'AED 5,999',
-    tag: 'Most Popular',
-    tagColor: 'gold',
-    delay: 0.8,
-    position: { right: '0px', top: '20px' },
-    z: 30,
-  },
-  {
-    icon: Globe,
-    title: 'Mainland Setup',
-    price: 'AED 16,999',
-    tag: 'Best Value',
-    tagColor: 'sky',
-    delay: 1.0,
-    position: { right: '100px', top: '220px' },
-    z: 20,
-  },
-  {
-    icon: CreditCard,
-    title: 'Bank Account',
-    price: 'Fast Approval',
-    tag: 'Quick',
-    tagColor: 'violet',
-    delay: 1.2,
-    position: { right: '40px', top: '420px' },
-    z: 10,
-  },
-];
+const iconMap: any = {
+  Building2, Globe, CreditCard,
+};
 
-// ============ REAL GOOGLE REVIEWS ============
-const realReviews = [
-  {
-    name: 'ZeeShan Butt',
-    initials: 'ZB',
-    rating: 5,
-    date: '3 months ago',
-    text: 'Brightlink management deserved 100/100. Muhammad Bilal Saleem & his team is amazing, and they prove with work. Golden Visa and nationality change service A 2 Z completed in less than 36 hours. Entire process was smooth and stress-free. It\'s really VIP service (Super Sonic Team).',
-    color: 'from-blue-500 to-blue-700',
-  },
-  {
-    name: 'Muhammad',
-    initials: 'M',
-    rating: 5,
-    date: '3 months ago',
-    text: 'Great experience working with Brightlink Team for my Golden Visa. They were professional, responsive, and handled the entire process smoothly. Got the visa within 2 days. Highly recommended for anyone looking for fast and smooth golden visa process.',
-    color: 'from-violet-500 to-purple-700',
-  },
-  {
-    name: 'Ritik Gupta',
-    initials: 'RG',
-    rating: 5,
-    date: '6 months ago',
-    text: 'Hi, I got my 2 year residency visa done through Brightlink Management Consultancy and they were thoroughly professional and got it done in 4 business days — that too during Ramadan with shortened working hours. Highly recommend their VIP package!',
-    color: 'from-emerald-500 to-teal-700',
-  },
-  {
-    name: 'Sina Behfard',
-    initials: 'SB',
-    rating: 5,
-    date: '8 months ago',
-    text: 'The team is working very efficiently, professionally, and transparently. They were very supportive to quickly takeover my application which had got stuck for days with another company and took care of each step with great care.',
-    color: 'from-amber-500 to-orange-700',
-  },
-  {
-    name: 'M J',
-    initials: 'MJ',
-    rating: 5,
-    date: '3 months ago',
-    text: 'Excellent service with prompt response and follow-up action. Used their service for Golden Visa which took three days to process from start to finish.',
-    color: 'from-rose-500 to-pink-700',
-  },
-  {
-    name: 'Hakan TEKERCIOGLU',
-    initials: 'HT',
-    rating: 5,
-    date: '2 months ago',
-    text: 'Our family\'s Golden Visa application process was completed smoothly, on time, and at reasonable prices. I would definitely recommend this service to anyone who needs it.',
-    color: 'from-cyan-500 to-blue-700',
-  },
-  {
-    name: 'Amin K',
-    initials: 'AK',
-    rating: 5,
-    date: '8 months ago',
-    text: 'The service provided by Brightlink was nothing but excellent! From getting details and a price quote to fulfillment of my Emirates ID in hand was a seamless and expeditious process. Thank you Mr. Bilal, Mr. Abbas and the entire team!',
-    color: 'from-fuchsia-500 to-purple-700',
-  },
-  {
-    name: 'Tausif Ahmad',
-    initials: 'TA',
-    rating: 5,
-    date: '3 months ago',
-    text: 'Excellent service. Very honest and helpful team. Got all paperwork done in a week with no hidden charges. Especially thanks to Mr. Abbas.',
-    color: 'from-green-500 to-emerald-700',
-  },
-  {
-    name: 'Clay Mullens',
-    initials: 'CM',
-    rating: 5,
-    date: '10 months ago',
-    text: 'Abbas and the Brightlink team were amazing!! From my initial contact they were extremely helpful and responded swiftly. They delivered exactly what I was after. I highly recommend them to anyone looking for fast golden visa service.',
-    color: 'from-indigo-500 to-blue-700',
-  },
-  {
-    name: 'Manaqib Ashraf',
-    initials: 'MA',
-    rating: 5,
-    date: '1 year ago',
-    text: 'I recently processed my family visa through Brightlink, and I couldn\'t be happier with the service. The entire process was handled very quickly and professionally. Now I can live with my family here in the UAE. Highly recommended!',
-    color: 'from-red-500 to-rose-700',
-  },
-  {
-    name: 'Ahmed Ullah',
-    initials: 'AU',
-    rating: 5,
-    date: '1 year ago',
-    text: 'Just wanted to say a big thank you for the amazing support in getting my wife\'s visa done — and that too in just 2 days! I really appreciate how smoothly and quickly everything was handled. Your team\'s professionalism is truly exceptional.',
-    color: 'from-teal-500 to-cyan-700',
-  },
-  {
-    name: 'Numan Shabbir',
-    initials: 'NS',
-    rating: 5,
-    date: '2 years ago',
-    text: 'Loved the whole experience. Got our visas in just 3 days. Their whole team is very experienced and provide updates at all steps. Would recommend to anyone looking to setup business in Dubai or get Golden Visas.',
-    color: 'from-yellow-500 to-amber-700',
-  },
-];
+export default function Hero({ tinaData }: { tinaData?: any }) {
+  const data = tinaData?.data?.home || heroData;
 
-export default function Hero() {
   return (
     <section className="relative min-h-screen w-full overflow-hidden bg-white">
       {/* === BACKGROUND LAYERS === */}
@@ -147,10 +23,10 @@ export default function Hero() {
         loop
         muted
         playsInline
-        poster="/videos/hero-bg-poster.jpg"
+        poster={data.video.poster}
         className="absolute inset-0 w-full h-full object-cover"
       >
-        <source src="/videos/hero-bg.mp4" type="video/mp4" />
+        <source src={data.video.src} type="video/mp4" />
       </video>
 
       <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent" />
@@ -183,13 +59,15 @@ export default function Hero() {
               transition={{ duration: 0.6 }}
               className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/95 backdrop-blur-xl border border-border shadow-soft mb-8"
             >
-              <span className="relative flex w-2 h-2">
-                <span className="absolute inline-flex w-full h-full rounded-full bg-brand-green opacity-75 animate-ping" />
-                <span className="relative inline-flex w-2 h-2 rounded-full bg-brand-green" />
-              </span>
+              {data.badge.showPulse && (
+                <span className="relative flex w-2 h-2">
+                  <span className="absolute inline-flex w-full h-full rounded-full bg-brand-green opacity-75 animate-ping" />
+                  <span className="relative inline-flex w-2 h-2 rounded-full bg-brand-green" />
+                </span>
+              )}
               <Sparkles size={14} className="text-brand-sky" />
-              <span className="text-xs font-semibold tracking-wide text-txt">
-                Trusted by 500+ businesses across UAE
+              <span className="text-xs font-semibold tracking-wide text-txt" data-tina-field={tinaField(data.badge, 'text')}>
+                {data.badge.text}
               </span>
             </motion.div>
 
@@ -200,10 +78,10 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-5xl md:text-6xl lg:text-7xl font-black leading-[1.05] tracking-tight mb-6 text-[#0A0F1F] drop-shadow-[0_2px_10px_rgba(255,255,255,0.9)]"
             >
-              Launch Your
+              <span data-tina-field={tinaField(data.heading, 'line1')}>{data.heading.line1}</span>
               <br />
               <span className="relative inline-block">
-                <span className="gradient-text">Dubai Business</span>
+                <span className="gradient-text" data-tina-field={tinaField(data.heading, 'line2Highlight')}>{data.heading.line2Highlight}</span>
                 <svg
                   className="absolute -bottom-2 left-0 w-full"
                   height="12"
@@ -226,7 +104,7 @@ export default function Hero() {
                 </svg>
               </span>
               <br />
-              In Days, Not Months.
+              <span data-tina-field={tinaField(data.heading, 'line3')}>{data.heading.line3}</span>
             </motion.h1>
 
             {/* Subtext */}
@@ -235,10 +113,9 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-lg md:text-xl text-[#1E293B] max-w-2xl leading-relaxed mb-10 font-semibold drop-shadow-[0_1px_6px_rgba(255,255,255,0.95)]"
+              data-tina-field={tinaField(data, 'subtext')}
             >
-              From company formation to visas, banking, and tax — we handle
-              everything end-to-end so you can focus on growing your business
-              in the UAE's thriving economy.
+              {data.subtext}
             </motion.p>
 
             {/* CTAs */}
@@ -249,36 +126,30 @@ export default function Hero() {
               className="flex flex-wrap items-center gap-4"
             >
               <a
-                href="#contact"
+                href={data.ctaPrimary.link}
                 className="group relative inline-flex items-center gap-2 px-8 py-4 rounded-full bg-gradient-brand text-white font-bold text-base shadow-[0_10px_40px_rgba(14,165,233,0.4)] hover:shadow-[0_15px_60px_rgba(14,165,233,0.5)] hover:scale-105 transition-all duration-300 overflow-hidden"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
-                <span className="relative">Get Free Consultation</span>
+                <span className="relative" data-tina-field={tinaField(data.ctaPrimary, 'text')}>{data.ctaPrimary.text}</span>
                 <ArrowRight
                   size={18}
                   className="relative group-hover:translate-x-1 transition-transform"
                 />
               </a>
 
-              {/* ✅ WhatsApp Button (replaces video button) */}
               <a
-                href={getWhatsAppLink("Hi! I'd like to discuss my Dubai business setup.")}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center gap-3 px-6 py-4 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-[0_10px_30px_rgba(16,185,129,0.35)] hover:shadow-[0_15px_40px_rgba(16,185,129,0.5)] hover:scale-105 transition-all duration-300 border border-emerald-400/30"
-              >
-                <span className="relative flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm">
-                  <MessageCircle size={20} className="text-white" strokeWidth={2.5} />
-                  <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-white border-2 border-emerald-500">
-                    <span className="absolute inset-0 rounded-full bg-white animate-ping" />
-                  </span>
-                </span>
-                <span className="font-bold text-white">WhatsApp Us</span>
-                <ArrowRight
-                  size={16}
-                  className="text-white group-hover:translate-x-1 transition-transform"
-                />
-              </a>
+  href={getWhatsAppLink(data.ctaSecondary.message)}
+  target="_blank"
+  rel="noreferrer"
+  className="group inline-flex items-center gap-3 px-6 py-4 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 shadow-[0_10px_30px_rgba(16,185,129,0.35)] hover:shadow-[0_15px_40px_rgba(16,185,129,0.5)] hover:scale-105 transition-all duration-300 border border-emerald-400/30"
+>
+  <WhatsAppIcon size={22} className="text-white" />
+  <span className="font-bold text-white" data-tina-field={tinaField(data.ctaSecondary, 'text')}>{data.ctaSecondary.text}</span>
+  <ArrowRight
+    size={16}
+    className="text-white group-hover:translate-x-1 transition-transform"
+  />
+</a>
             </motion.div>
 
             {/* Trust pills */}
@@ -288,7 +159,7 @@ export default function Hero() {
               transition={{ duration: 0.8, delay: 0.9 }}
               className="mt-12 flex flex-wrap gap-3"
             >
-              {['100% Ownership', '0% Personal Tax', 'Fast Licensing'].map((label, i) => (
+              {data.trustPills.map((label: string, i: number) => (
                 <div
                   key={i}
                   className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-border shadow-soft text-sm"
@@ -301,7 +172,7 @@ export default function Hero() {
               ))}
             </motion.div>
 
-            {/* ✅ Google Reviews Trust Badge (Static) */}
+            {/* Google Reviews Trust Badge */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -309,7 +180,6 @@ export default function Hero() {
               className="mt-8 flex items-center gap-4"
             >
               <div className="flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/95 backdrop-blur-md border border-border shadow-soft">
-                {/* Google G icon */}
                 <svg viewBox="0 0 24 24" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -322,8 +192,8 @@ export default function Hero() {
                     <Star key={s} size={12} className="text-brand-gold" fill="currentColor" />
                   ))}
                 </div>
-                <span className="text-sm font-black text-[#0A0F1F]">4.8</span>
-                <span className="text-xs font-semibold text-slate-500">(34 reviews)</span>
+                <span className="text-sm font-black text-[#0A0F1F]" data-tina-field={tinaField(data.googleBadge, 'rating')}>{data.googleBadge.rating}</span>
+                <span className="text-xs font-semibold text-slate-500" data-tina-field={tinaField(data.googleBadge, 'reviewsText')}>{data.googleBadge.reviewsText}</span>
               </div>
             </motion.div>
           </div>
@@ -346,8 +216,8 @@ export default function Hero() {
               <div className="absolute top-1/2 left-0 w-2.5 h-2.5 -translate-y-1/2 rounded-full bg-brand-gold" />
             </motion.div>
 
-            {floatingCards.map((card, index) => {
-              const Icon = card.icon;
+            {data.floatingCards.map((card: any, index: number) => {
+              const Icon = iconMap[card.icon] || Building2;
               const tagColors: Record<string, string> = {
                 gold: 'bg-gradient-gold text-white',
                 sky: 'bg-gradient-sky text-white',
@@ -387,6 +257,7 @@ export default function Hero() {
                         <div className="absolute -top-2.5 -right-2.5">
                           <span
                             className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-md ${tagColors[card.tagColor]}`}
+                            data-tina-field={tinaField(card, 'tag')}
                           >
                             {card.tag}
                           </span>
@@ -403,7 +274,7 @@ export default function Hero() {
                             <p className="text-[10px] font-bold text-txt-muted uppercase tracking-wider">
                               Service
                             </p>
-                            <h3 className="text-base font-black text-[#0A0F1F] leading-tight">
+                            <h3 className="text-base font-black text-[#0A0F1F] leading-tight" data-tina-field={tinaField(card, 'title')}>
                               {card.title}
                             </h3>
                           </div>
@@ -416,7 +287,7 @@ export default function Hero() {
                             <p className="text-[10px] text-txt-muted font-semibold">
                               Starting from
                             </p>
-                            <p className="text-lg font-black gradient-text">
+                            <p className="text-lg font-black gradient-text" data-tina-field={tinaField(card, 'price')}>
                               {card.price}
                             </p>
                           </div>
@@ -497,12 +368,12 @@ export default function Hero() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              <span className="text-xs font-black tracking-widest uppercase text-slate-700">
-                Google Reviews
+              <span className="text-xs font-black tracking-widest uppercase text-slate-700" data-tina-field={tinaField(data.reviewsSection, 'badgeText')}>
+                {data.reviewsSection.badgeText}
               </span>
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-[#0A0F1F] leading-tight tracking-tight mb-3">
-              What Our <span className="gradient-text">Clients Say</span>
+              What Our <span className="gradient-text" data-tina-field={tinaField(data.reviewsSection, 'titleHighlight')}>{data.reviewsSection.titleHighlight}</span>
             </h2>
             <div className="flex items-center justify-center gap-3 mt-4">
               <div className="flex items-center gap-1">
@@ -510,8 +381,8 @@ export default function Hero() {
                   <Star key={s} size={18} className="text-amber-400" fill="currentColor" />
                 ))}
               </div>
-              <span className="text-xl font-black text-[#0A0F1F]">4.8</span>
-              <span className="text-sm font-bold text-slate-500">· 34 Verified Reviews</span>
+              <span className="text-xl font-black text-[#0A0F1F]" data-tina-field={tinaField(data.reviewsSection, 'rating')}>{data.reviewsSection.rating}</span>
+              <span className="text-sm font-bold text-slate-500" data-tina-field={tinaField(data.reviewsSection, 'reviewsCountText')}>{data.reviewsSection.reviewsCountText}</span>
             </div>
           </motion.div>
         </div>
@@ -526,24 +397,21 @@ export default function Hero() {
             transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
             className="flex gap-5 w-max"
           >
-            {[...realReviews, ...realReviews].map((review, i) => (
+            {[...data.reviews, ...data.reviews].map((review: any, i: number) => (
               <div
                 key={i}
                 className="flex-shrink-0 w-[380px] p-6 rounded-3xl bg-white border border-slate-200 shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:shadow-[0_15px_40px_rgba(15,23,42,0.12)] hover:-translate-y-1 transition-all duration-300"
               >
-                {/* Stars */}
                 <div className="flex items-center gap-1 mb-3">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <Star key={s} size={14} className="text-amber-400" fill="currentColor" />
                   ))}
                 </div>
 
-                {/* Review text */}
                 <p className="text-sm text-slate-700 font-medium leading-relaxed mb-5 line-clamp-4">
                   "{review.text}"
                 </p>
 
-                {/* Author */}
                 <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
                   <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${review.color} flex items-center justify-center text-white text-xs font-black shadow-md flex-shrink-0`}>
                     {review.initials}
@@ -556,7 +424,6 @@ export default function Hero() {
                       {review.date}
                     </div>
                   </div>
-                  {/* Google icon */}
                   <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                     <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -579,7 +446,7 @@ export default function Hero() {
             transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
             className="flex gap-5 w-max"
           >
-            {[...realReviews.slice().reverse(), ...realReviews.slice().reverse()].map((review, i) => (
+            {[...data.reviews.slice().reverse(), ...data.reviews.slice().reverse()].map((review: any, i: number) => (
               <div
                 key={i}
                 className="flex-shrink-0 w-[380px] p-6 rounded-3xl bg-white border border-slate-200 shadow-[0_4px_20px_rgba(15,23,42,0.06)] hover:shadow-[0_15px_40px_rgba(15,23,42,0.12)] hover:-translate-y-1 transition-all duration-300"
