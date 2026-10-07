@@ -250,7 +250,7 @@ const resourceCategories = [
     icon: Info,
     color: 'from-indigo-400 to-blue-600',
     links: [
-      { name: 'About DubaiSetupNow – Your Trusted UAE Business Setup Partner', slug: 'about', external: false },
+      { name: 'About SetupZoneDubai – Your Trusted UAE Business Setup Partner', slug: 'about', external: false },
     ],
   },
   {
@@ -266,7 +266,7 @@ const resourceCategories = [
     icon: Mail,
     color: 'from-rose-400 to-pink-600',
     links: [
-      { name: 'Contact Us | DubaiSetupNow', slug: 'contact', external: false },
+      { name: 'Contact Us | SetupZoneDubai', slug: 'contact', external: false },
       { name: 'Privacy Policy', slug: 'privacy-policy', external: false },
     ],
   },
@@ -1544,7 +1544,7 @@ export default function Navbar() {
                                     to="/about"
                                     className="block px-3 py-2 rounded-lg text-[13px] font-semibold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
                                   >
-                                    About DubaiSetupNow
+                                    About SetupZoneDubai
                                   </Link>
                                 </div>
 
