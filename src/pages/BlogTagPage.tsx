@@ -157,7 +157,7 @@ export default function BlogTagPage({ tinaData }: { tinaData?: any }) {
 
                   <div className="p-6 rounded-2xl bg-gradient-to-br from-pink-500 via-fuchsia-600 to-purple-600 shadow-lg">
                     <p className="text-base text-white font-medium leading-relaxed">
-                      Ready to get started? <span className="font-black">DubaiSetupNow</span> offers free consultations to help you plan your {tag.name.toLowerCase()} strategy.
+                      Ready to get started? <span className="font-black">SetupZoneDubai</span> offers free consultations to help you plan your {tag.name.toLowerCase()} strategy.
                     </p>
                   </div>
                 </div>
@@ -355,7 +355,7 @@ export default function BlogTagPage({ tinaData }: { tinaData?: any }) {
                 Ready to Start Your <span className="text-pink-200">Dubai Business</span>?
               </h2>
               <p className="text-base md:text-lg text-white/90 font-medium mb-8 max-w-2xl mx-auto">
-                Contact DubaiSetupNow for a free consultation and personalized cost estimate.
+                Contact SetupZoneDubai for a free consultation and personalized cost estimate.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <a href={getWhatsAppLink("Hi! I'd like a free consultation.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-pink-700 font-bold text-sm shadow-xl hover:scale-105 transition-all">

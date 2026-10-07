@@ -156,7 +156,7 @@ const archive = archivesList.find((a: any) => a.monthKey === slug)
 
                   <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-500 via-blue-600 to-indigo-600 shadow-lg">
                     <p className="text-base text-white font-medium leading-relaxed">
-                      Need help with your UAE business? <span className="font-black">DubaiSetupNow</span> offers free consultations to help you plan your {archive.name.toLowerCase()} {archive.year} strategy.
+                      Need help with your UAE business? <span className="font-black">SetupZoneDubai</span> offers free consultations to help you plan your {archive.name.toLowerCase()} {archive.year} strategy.
                     </p>
                   </div>
                 </div>
@@ -355,7 +355,7 @@ Ask Expert
                 Ready to Start Your <span className="text-indigo-200">Dubai Business</span>?
               </h2>
               <p className="text-base md:text-lg text-white/90 font-medium mb-8 max-w-2xl mx-auto">
-                Contact DubaiSetupNow for a free consultation and personalized cost estimate.
+                Contact SetupZoneDubai for a free consultation and personalized cost estimate.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <a href={getWhatsAppLink("Hi! I'd like a free consultation.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-indigo-700 font-bold text-sm shadow-xl hover:scale-105 transition-all">

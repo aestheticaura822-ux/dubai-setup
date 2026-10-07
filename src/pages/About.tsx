@@ -79,7 +79,7 @@ export default function About({ tinaData }: { tinaData?: any }) {
               </motion.p>
 
               <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.6 }} className="flex flex-wrap gap-4">
-                <a href={getWhatsAppLink("Hi! I'd like to know more about DubaiSetupNow.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
+                <a href={getWhatsAppLink("Hi! I'd like to know more about SetupZoneDubai.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-amber-700 font-bold text-sm shadow-xl hover:scale-105 transition-all duration-300">
 <WhatsAppIcon size={16} className="text-emerald-600" />
                   <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </a>

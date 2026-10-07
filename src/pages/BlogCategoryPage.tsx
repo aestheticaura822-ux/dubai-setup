@@ -303,7 +303,7 @@ export default function BlogCategoryPage({ tinaData }: { tinaData?: any }) {
                 Ready to Start Your <span className="text-fuchsia-200">Dubai Business</span>?
               </h2>
               <p className="text-base md:text-lg text-white/90 font-medium mb-8 max-w-2xl mx-auto">
-                Contact DubaiSetupNow for a free consultation and personalized cost estimate.
+                Contact SetupZoneDubai for a free consultation and personalized cost estimate.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <a href={getWhatsAppLink("Hi! I'd like a free consultation.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-fuchsia-700 font-bold text-sm shadow-xl hover:scale-105 transition-all">

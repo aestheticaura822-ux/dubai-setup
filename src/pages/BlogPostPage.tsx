@@ -81,7 +81,7 @@ export default function BlogPostPage({ tinaData }: { tinaData?: any }) {
               <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-400 to-purple-600 flex items-center justify-center shadow-md">
                 <User size={15} className="text-white" strokeWidth={2.5} />
               </div>
-              <span className="font-bold text-white">DubaiSetupNow Team</span>
+              <span className="font-bold text-white">SetupZoneDubai Team</span>
             </div>
             <span className="flex items-center gap-1.5"><Calendar size={14} /><span data-tina-field={tinaField(post, 'date')}>{post.date}</span></span>
             <span className="flex items-center gap-1.5"><Clock size={14} /><span data-tina-field={tinaField(post, 'readTime')}>{post.readTime}</span> read</span>
@@ -397,7 +397,7 @@ export default function BlogPostPage({ tinaData }: { tinaData?: any }) {
                 Ready to Start Your <span className="text-violet-200">Dubai Business</span>?
               </h2>
               <p className="text-base md:text-lg text-white/90 font-medium mb-8 max-w-2xl mx-auto">
-                Contact DubaiSetupNow for a free consultation and personalized cost estimate.
+                Contact SetupZoneDubai for a free consultation and personalized cost estimate.
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <a href={getWhatsAppLink("Hi! I'd like a free consultation.")} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white text-violet-700 font-bold text-sm shadow-xl hover:scale-105 transition-all">
